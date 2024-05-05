@@ -2,3 +2,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.lg-scr {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mg-top {
+  margin-top: calc(1vh + 70px);
+}
