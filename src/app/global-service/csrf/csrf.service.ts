@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '@/environments/environment';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { environment } from '@/environments/environment';
 })
 export class CsrfService {
   private readonly domain: string | undefined = environment.domain;
+  private readonly production: boolean | undefined = environment.production;
 
   private readonly http = inject(HttpClient);
 
@@ -16,8 +17,15 @@ export class CsrfService {
     parameterName: string;
     headerName: string;
   }> =>
-    this.http.get<{ token: string; parameterName: string; headerName: string }>(
-      `${this.domain}csrf`,
-      { withCredentials: true },
-    );
+    this.production
+      ? this.http.get<{
+          token: string;
+          parameterName: string;
+          headerName: string;
+        }>(`${this.domain}csrf`, { withCredentials: true })
+      : of({
+          token: 'token-1',
+          parameterName: 'csrf',
+          headerName: 'X-XSRF-TOKEN',
+        });
 }

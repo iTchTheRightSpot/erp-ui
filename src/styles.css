@@ -3,6 +3,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --active: #dddddd;
+  --white: #fff;
+  --border-outline: #ccc;
+  --app-theme: #a3c1ad;
+  --all-background: hsl(210, 36%, 96%);
+  --nav-mobile: #f6f6f6;
+}
+
 .lg-scr {
   width: 100%;
   max-width: 1200px;
