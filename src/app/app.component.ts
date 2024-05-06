@@ -7,10 +7,11 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterOutlet],
   template: `
-    Welcome to <h1>{{ title }}</h1>
+    Welcome to
+    <h1 class="">{{ title }}</h1>
     <router-outlet></router-outlet>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = 'landscape-ui';

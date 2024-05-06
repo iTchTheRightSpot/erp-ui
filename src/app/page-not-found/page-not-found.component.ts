@@ -9,8 +9,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <h1>Page not found :(</h1>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PageNotFoundComponent {
-
-}
+export class PageNotFoundComponent {}

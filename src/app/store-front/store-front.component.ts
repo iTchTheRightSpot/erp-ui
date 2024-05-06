@@ -9,8 +9,6 @@ import { RouterOutlet } from '@angular/router';
     <p>store-front works!</p>
     <router-outlet></router-outlet>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StoreFrontComponent {
-
-}
+export class StoreFrontComponent {}
