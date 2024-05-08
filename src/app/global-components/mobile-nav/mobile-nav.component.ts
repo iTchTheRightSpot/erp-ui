@@ -11,9 +11,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-mobile-nav',
   standalone: true,
-  imports: [
-    RouterLink,
-  ],
+  imports: [RouterLink],
   template: `
     <div class="h-full w-full flex flex-col gap-3 bg-white">
       <div class="flex justify-between w-full p-2">
@@ -58,8 +56,16 @@ import { RouterLink } from '@angular/router';
       <!-- drop down -->
       <ul class="flex-col list-none flex gap-3">
         @for (link of links; track link; let i = $index) {
-          <li class="p-2.5 border-b cursor-pointer active:border-black active:border-2 focus:border-black focus:border-2" tabindex="0">
-            <a [routerLink]="link" (click)="toggle.set(false)" class="uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]">{{ link }}</a>
+          <li
+            class="p-2.5 border-b cursor-pointer active:border-black active:border-2 focus:border-black focus:border-2"
+            tabindex="0"
+          >
+            <a
+              [routerLink]="link"
+              (click)="toggle.set(false)"
+              class="uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
+              >{{ link }}</a
+            >
           </li>
         }
       </ul>
