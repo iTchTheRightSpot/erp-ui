@@ -1,0 +1,27 @@
+<div class="lg-scr mg-top px-1.5 xl:px-0">
+  <div class="flex flex-col gap-3">
+    <h1
+      class="h-fit capitalize text-base sm:text-xl md:text-2xl lg:text-4xl font-bold"
+    >
+      Schedule an appointment
+    </h1>
+    <h4 class="h-fit text-sm sm:text-base md:text-lg font-bold">
+      Select a service that you wish to book a schedule for
+    </h4>
+  </div>
+  <div class="flex flex-col gap-2">
+    @for (service of services$ | async; track service) {
+      <div class="p-1.5 border rounded bg-">
+        <h3 class="capitalize underline pb-1 text-xs sm:text-sm md:text-base">
+          {{ service.name }}
+        </h3>
+        <p class="text-xs sm:text-sm md:text-base">
+          Rough Quote: {{ service.price }}
+        </p>
+        <p class="text-xs sm:text-sm md:text-base">
+          Rough Duration: {{ service.duration }}
+        </p>
+      </div>
+    }
+  </div>
+</div>

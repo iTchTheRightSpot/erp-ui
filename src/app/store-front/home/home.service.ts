@@ -9,10 +9,9 @@ export class HomeService {
   private readonly http = inject(HttpClient);
 
   private readonly images = [
-    'assets/images/home/landscape-1.jpg',
+    'assets/images/home/landscape-1.jpeg',
     'assets/images/home/landscape-2.jpeg',
-    'assets/images/home/landscape-3.jpg',
-    'assets/images/home/landscape-4.jpg',
+    'assets/images/home/landscape-3.jpeg',
   ];
 
   readonly image$ = of(this.images).pipe(

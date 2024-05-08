@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NavigationComponent } from '@/app/store-front/util/navigation/navigation.component';
+import { NavigationComponent } from '@/app/global-components/navigation/navigation.component';
 import { HomeService } from '@/app/store-front/home/home.service';
 import { AsyncPipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { BOOK_ROUTE } from '@/app/store-front/util';
 
 @Component({
   selector: 'app-home',
@@ -24,11 +26,12 @@ import { AsyncPipe } from '@angular/common';
         class="lg-scr h-full flex flex-col gap-5 lg:gap-8 justify-center items-center"
       >
         <h1
-          class="h-fit capitalize text-base sm:md:text-2xl md:text-4xl xl:text-7xl font-bold text-white"
+          class="h-fit capitalize text-base sm:text-xl md:text-2xl lg:text-4xl xl:text-7xl font-bold text-white"
         >
           perfecting landscapes one lawn at a time
         </h1>
         <button
+          (click)="route(BOOK_ROUTE)"
           class="h-fit p-1 md:p-2 uppercase rounded flex text-base lg:text-2xl text-white bg-[var(--app-theme)] items-center"
         >
           book now
@@ -41,4 +44,10 @@ import { AsyncPipe } from '@angular/common';
 export class HomeComponent {
   private readonly service = inject(HomeService);
   protected readonly image$ = this.service.image$;
+  protected readonly router = inject(Router);
+
+  route = (route: string): void => {
+    this.router.navigate([`${route}`]);
+  };
+  protected readonly BOOK_ROUTE = BOOK_ROUTE;
 }

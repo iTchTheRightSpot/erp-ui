@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  model,
+  Output,
+} from '@angular/core';
+import { BOOK_ROUTE } from '@/app/store-front/util';
 
 @Component({
   selector: 'app-mobile-nav',
@@ -27,7 +34,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 
         <!-- center (logo) -->
         <div class="my-0 mx-auto cursor-pointer">
-          <button type="button">
+          <button type="button" (click)="dropdown('')">
             <img
               src="{{ logo }}"
               alt="logo"
@@ -39,6 +46,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
         <!--    book now    -->
         <button
           class="p-1 uppercase rounded flex text-xs text-white bg-[var(--app-theme)] items-center"
+          (click)="dropdown(BOOK_ROUTE)"
         >
           book now
         </button>
@@ -50,7 +58,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
           <li class="p-2.5 border-b">
             <a
               class="uppercase text-[var(--app-theme)]"
-              (click)="toggle.set(false)"
+              (click)="dropdown(link)"
             >
               {{ link }}
             </a>
@@ -62,9 +70,17 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MobileNavComponent {
-  toggle = model<boolean>(false);
+  @Output() protected readonly routeEmitter = new EventEmitter<string>();
 
+  readonly toggle = model<boolean>(false);
   protected readonly links = ['about', 'service'];
-
   protected readonly logo = './assets/images/logo.jpeg';
+  protected readonly BOOK_ROUTE = BOOK_ROUTE;
+
+  route = (path: string): void => this.routeEmitter.emit(path);
+
+  dropdown = (path: string) => {
+    this.route(path);
+    this.toggle.set(false);
+  };
 }

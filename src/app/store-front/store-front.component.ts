@@ -1,7 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
-import { NavigationComponent } from '@/app/store-front/util/navigation/navigation.component';
+import { NavigationComponent } from '@/app/global-components/navigation/navigation.component';
 
 @Component({
   selector: 'app-store-front',
@@ -12,7 +17,7 @@ import { NavigationComponent } from '@/app/store-front/util/navigation/navigatio
       <div
         class="lg-scr h-fit rounded-b z-10 border-b border-transparent fixed left-0 top-0 right-0"
       >
-        <app-navigation />
+        <app-navigation (routeEmitter)="navigate($event)" />
       </div>
 
       <router-outlet></router-outlet>
@@ -20,4 +25,10 @@ import { NavigationComponent } from '@/app/store-front/util/navigation/navigatio
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StoreFrontComponent {}
+export class StoreFrontComponent {
+  readonly router = inject(Router);
+
+  navigate = (route: string): void => {
+    this.router.navigate([`${route}`]);
+  };
+}

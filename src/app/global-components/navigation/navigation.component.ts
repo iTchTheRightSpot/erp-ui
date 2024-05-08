@@ -1,10 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   HostListener,
+  Output,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { MobileNavComponent } from '@/app/store-front/util/mobile-nav/mobile-nav.component';
+import { MobileNavComponent } from '@/app/global-components/mobile-nav/mobile-nav.component';
+import { ABOUT_ROUTE, BOOK_ROUTE, SERVICE_ROUTE } from '@/app/store-front/util';
 
 @Component({
   selector: 'app-navigation',
@@ -37,7 +40,7 @@ import { MobileNavComponent } from '@/app/store-front/util/mobile-nav/mobile-nav
 
       <!-- center logo -->
       <div class="my-0 mx-auto cursor-pointer">
-        <button type="button">
+        <button type="button" (click)="route('')">
           <img
             src="{{ logo }}"
             alt="logo"
@@ -50,12 +53,13 @@ import { MobileNavComponent } from '@/app/store-front/util/mobile-nav/mobile-nav
         [style]="{ display: toggle ? 'block' : 'none' }"
         class="fixed top-0 right-0 bottom-0 left-0"
       >
-        <app-mobile-nav [(toggle)]="toggle" />
+        <app-mobile-nav [(toggle)]="toggle" (routeEmitter)="route($event)" />
       </div>
 
       <!--    Person icon    -->
       <button
         class="p-1 uppercase rounded flex text-xs text-white bg-[var(--app-theme)] items-center"
+        (click)="route(BOOK_ROUTE)"
       >
         book now
       </button>
@@ -70,6 +74,7 @@ import { MobileNavComponent } from '@/app/store-front/util/mobile-nav/mobile-nav
       <div class="flex items-center mr-auto">
         <div class="flex gap-8">
           <button
+            (click)="route(ABOUT_ROUTE)"
             type="button"
             class="h-full relative flex gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)]"
           >
@@ -93,6 +98,7 @@ import { MobileNavComponent } from '@/app/store-front/util/mobile-nav/mobile-nav
           <button
             type="button"
             class="h-full relative flex gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)]"
+            (click)="route(SERVICE_ROUTE)"
           >
             service
             <svg
@@ -115,7 +121,7 @@ import { MobileNavComponent } from '@/app/store-front/util/mobile-nav/mobile-nav
 
       <!-- center logo -->
       <div class="my-0 mx-auto cursor-pointer">
-        <button type="button">
+        <button type="button" (click)="route('')">
           <img
             src="{{ logo }}"
             alt="logo"
@@ -131,6 +137,7 @@ import { MobileNavComponent } from '@/app/store-front/util/mobile-nav/mobile-nav
             <button
               type="button"
               class="p-2 uppercase rounded flex text-white bg-[var(--app-theme)]"
+              (click)="route(BOOK_ROUTE)"
             >
               book now
             </button>
@@ -164,11 +171,15 @@ import { MobileNavComponent } from '@/app/store-front/util/mobile-nav/mobile-nav
 })
 export class NavigationComponent {
   protected navBg: any;
-  toggle = false;
   protected readonly logo = './assets/images/logo.jpeg';
+  protected readonly BOOK_ROUTE = BOOK_ROUTE;
+  protected readonly SERVICE_ROUTE = SERVICE_ROUTE;
+  protected readonly ABOUT_ROUTE = ABOUT_ROUTE;
+  toggle = false;
+  @Output() protected readonly routeEmitter = new EventEmitter<string>();
 
   @HostListener('document:scroll') scroll(): void {
-    let bool: boolean =
+    const bool =
       document.body.scrollTop > 0 || document.documentElement.scrollTop > 0;
     const css = {
       'background-color': 'var(--white)',
@@ -179,4 +190,6 @@ export class NavigationComponent {
 
     this.navBg = bool ? css : {};
   }
+
+  route = (path: string): void => this.routeEmitter.emit(path);
 }
