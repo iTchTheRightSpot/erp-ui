@@ -15,7 +15,27 @@ import { AsyncPipe } from '@angular/common';
       }
     `,
   ],
-  templateUrl: './home.component.html',
+  template: `
+    <div
+      class="trans w-full h-[100vh] bg-center bg-no-repeat bg-cover"
+      [style.background-image]="'url(' + (image$ | async) + ')'"
+    >
+      <div
+        class="lg-scr h-full flex flex-col gap-5 lg:gap-8 justify-center items-center"
+      >
+        <h1
+          class="h-fit capitalize text-base sm:md:text-2xl md:text-4xl xl:text-7xl font-bold text-white"
+        >
+          perfecting landscapes one lawn at a time
+        </h1>
+        <button
+          class="h-fit p-1 md:p-2 uppercase rounded flex text-base lg:text-2xl text-white bg-[var(--app-theme)] items-center"
+        >
+          book now
+        </button>
+      </div>
+    </div>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
