@@ -56,9 +56,8 @@ import { ABOUT_ROUTE, BOOK_ROUTE, SERVICE_ROUTE } from '@/app/store-front/util';
         <app-mobile-nav [(toggle)]="toggle" (routeEmitter)="route($event)" />
       </div>
 
-      <!--    Person icon    -->
       <button
-        class="p-1 uppercase rounded flex text-xs text-white bg-[var(--app-theme)] items-center"
+        class="p-1 uppercase rounded  items-center flex text-xs text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
         (click)="route(BOOK_ROUTE)"
       >
         book now
@@ -76,7 +75,7 @@ import { ABOUT_ROUTE, BOOK_ROUTE, SERVICE_ROUTE } from '@/app/store-front/util';
           <button
             (click)="route(ABOUT_ROUTE)"
             type="button"
-            class="h-full relative flex gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)]"
+            class="h-full relative flex gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
           >
             about
             <svg
@@ -97,7 +96,7 @@ import { ABOUT_ROUTE, BOOK_ROUTE, SERVICE_ROUTE } from '@/app/store-front/util';
 
           <button
             type="button"
-            class="h-full relative flex gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)]"
+            class="h-full relative flex gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
             (click)="route(SERVICE_ROUTE)"
           >
             service
@@ -136,7 +135,7 @@ import { ABOUT_ROUTE, BOOK_ROUTE, SERVICE_ROUTE } from '@/app/store-front/util';
           <li class="hidden md:block">
             <button
               type="button"
-              class="p-2 uppercase rounded flex text-white bg-[var(--app-theme)]"
+              class="p-2 uppercase rounded flex text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
               (click)="route(BOOK_ROUTE)"
             >
               book now
@@ -152,8 +151,7 @@ import { ABOUT_ROUTE, BOOK_ROUTE, SERVICE_ROUTE } from '@/app/store-front/util';
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-5 h-5"
-                style="color: var(--app-theme)"
+                class="w-5 h-5 text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
               >
                 <path
                   stroke-linecap="round"

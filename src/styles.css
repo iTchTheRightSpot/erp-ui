@@ -8,7 +8,9 @@
   --white: #fff;
   --border-outline: #ccc;
   --app-theme: #a3c1ad;
-  --all-background: hsl(210, 36%, 96%);
+  --app-theme-hover: #75a284;
+  --list-of-items-background: hsl(210, 36%, 96%);
+  --list-of-items-background-hover: hsl(210, 36%, 90%);
   --nav-mobile: #f6f6f6;
 }
 

@@ -26,13 +26,13 @@ import { BOOK_ROUTE } from '@/app/store-front/util';
         class="lg-scr h-full flex flex-col gap-5 lg:gap-8 justify-center items-center"
       >
         <h1
-          class="h-fit capitalize text-base sm:text-xl md:text-2xl lg:text-4xl xl:text-7xl font-bold text-white"
+          class="h-fit capitalize text-base sm:text-xl md:text-2xl lg:text-4xl xl:text-5xl font-bold text-white"
         >
           perfecting landscapes one lawn at a time
         </h1>
         <button
           (click)="route(BOOK_ROUTE)"
-          class="h-fit p-1 md:p-2 uppercase rounded flex text-base lg:text-2xl text-white bg-[var(--app-theme)] items-center"
+          class="h-fit p-1 md:p-2 uppercase rounded flex items-center text-base sm:text-xl lg:text-2xl text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
         >
           book now
         </button>
