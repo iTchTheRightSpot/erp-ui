@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { ServiceOfferedDto } from '@/app/store-front/book/service-offered/util';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { catchError, of, tap } from 'rxjs';
+import { ToastService } from '@/app/global-components/toast/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +11,8 @@ import { catchError, of, tap } from 'rxjs';
 export class ServiceOfferedService {
   private readonly domain: string | undefined = environment.domain;
   private readonly http = inject(HttpClient);
+  private readonly toastService = inject(ToastService);
 
-  private appLoaded = false;
   private readonly servicesOffered: ServiceOfferedDto[] = [
     {
       service_id: 1,
@@ -57,9 +58,9 @@ export class ServiceOfferedService {
    *
    * @returns An Observable that emits an array of {@link ServiceOfferedDto} objects.
    */
-  readonly services$ =
+  readonly servicesOffered$ =
     this.servicesOffered.length > 0
-      ? of<ServiceOfferedDto[]>(this.servicesOffered)
+      ? of(this.servicesOffered)
       : this.http
           .get<
             ServiceOfferedDto[]
@@ -76,6 +77,11 @@ export class ServiceOfferedService {
                 });
               else this.servicesOffered.push(...arr);
             }),
-            catchError((err) => of(err)),
+            catchError((e: HttpErrorResponse) => {
+              this.toastService.toastMessage(
+                e.error ? e.error.message : e.message,
+              );
+              return of([]);
+            }),
           );
 }

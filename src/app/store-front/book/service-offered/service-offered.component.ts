@@ -11,6 +11,6 @@ import { AsyncPipe } from '@angular/common';
 })
 export class ServiceOfferedComponent {
   private readonly service = inject(ServiceOfferedService);
-  protected readonly services$ = this.service.services$;
+  protected readonly services$ = this.service.servicesOffered$;
   protected readonly selected = (service: string) => {};
 }
