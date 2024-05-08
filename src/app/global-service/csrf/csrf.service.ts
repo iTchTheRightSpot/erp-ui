@@ -17,15 +17,9 @@ export class CsrfService {
     parameterName: string;
     headerName: string;
   }> =>
-    this.production
-      ? this.http.get<{
-          token: string;
-          parameterName: string;
-          headerName: string;
-        }>(`${this.domain}csrf`, { withCredentials: true })
-      : of({
-          token: 'token-1',
-          parameterName: 'csrf',
-          headerName: 'X-XSRF-TOKEN',
-        });
+    of({
+      token: 'token-1',
+      parameterName: 'csrf',
+      headerName: 'X-XSRF-TOKEN',
+    });
 }

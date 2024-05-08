@@ -26,7 +26,7 @@ COPY --from=builder /build/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
 RUN rm -rf /usr/share/nginx/html/*
 
 # copy product build into nginx html folder
-COPY --from=builder /build/dist/landscape /usr/share/nginx/html
+COPY --from=builder /build/dist/landscape/browser /usr/share/nginx/html
 
 # dynamic port
 EXPOSE ${ARG}
