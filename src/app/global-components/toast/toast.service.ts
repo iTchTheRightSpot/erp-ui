@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { concat, concatMap, Observable, of, Subject, timer } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +28,10 @@ export class ToastService {
     }),
   );
 
-  readonly toastMessage = (message: string) => this.subject.next(message);
+  readonly message = (message: string) => this.subject.next(message);
+
+  readonly messageHandleIterateError = (e: HttpErrorResponse) => {
+    this.message(e.error ? e.error.message : e.message);
+    return of([]);
+  };
 }

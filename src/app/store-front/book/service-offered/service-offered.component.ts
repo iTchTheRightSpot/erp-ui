@@ -11,6 +11,17 @@ import { AsyncPipe } from '@angular/common';
 })
 export class ServiceOfferedComponent {
   private readonly service = inject(ServiceOfferedService);
+
+  /**
+   * Returns all the services offered by the company from the server or
+   * cache.
+   * */
   protected readonly services$ = this.service.servicesOffered$;
-  protected readonly selected = (service: string) => {};
+
+  /**
+   * Retrieves all employees from the server of cache that offered the
+   * service selected.
+   * */
+  protected readonly selected = (service: string) =>
+    this.service.employeesByService(service);
 }
