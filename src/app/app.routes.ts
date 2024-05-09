@@ -14,7 +14,7 @@ export const routes: Routes = [
     path: '404',
     loadComponent: () =>
       import(
-        '@/app/global-components/page-not-found/page-not-found.component'
+        './global-components/page-not-found/page-not-found.component'
       ).then((m) => m.PageNotFoundComponent),
   },
   { path: '**', redirectTo: '/404' },

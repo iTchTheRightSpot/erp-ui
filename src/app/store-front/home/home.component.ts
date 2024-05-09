@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NavigationComponent } from '@/app/global-components/navigation/navigation.component';
 import { HomeService } from '@/app/store-front/home/home.service';
 import { AsyncPipe } from '@angular/common';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { BOOK_ROUTE } from '@/app/store-front/util';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NavigationComponent, AsyncPipe],
+  imports: [NavigationComponent, AsyncPipe, RouterLink],
   styles: [
     `
       .trans {
@@ -30,12 +30,12 @@ import { BOOK_ROUTE } from '@/app/store-front/util';
         >
           perfecting landscapes one lawn at a time
         </h1>
-        <button
-          (click)="route(BOOK_ROUTE)"
+        <a
+          [routerLink]="BOOK_ROUTE"
           class="h-fit p-1 md:p-2 uppercase rounded flex items-center text-base sm:text-xl lg:text-2xl text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
         >
           book now
-        </button>
+        </a>
       </div>
     </div>
   `,
@@ -44,10 +44,5 @@ import { BOOK_ROUTE } from '@/app/store-front/util';
 export class HomeComponent {
   private readonly service = inject(HomeService);
   protected readonly image$ = this.service.image$;
-  protected readonly router = inject(Router);
-
-  route = (route: string): void => {
-    this.router.navigate([`${route}`]);
-  };
   protected readonly BOOK_ROUTE = BOOK_ROUTE;
 }

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  model,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { BOOK_ROUTE } from '@/app/store-front/util';
 import { RouterLink } from '@angular/router';
 
@@ -35,22 +29,23 @@ import { RouterLink } from '@angular/router';
 
         <!-- center (logo) -->
         <div class="my-0 mx-auto cursor-pointer">
-          <button type="button" (click)="dropdown('')">
+          <a type="button" routerLink="" (click)="toggle.set(false)">
             <img
               src="{{ logo }}"
               alt="logo"
               class="h-[2.5rem] w-[4.375rem] object-contain"
             />
-          </button>
+          </a>
         </div>
 
         <!--    book now    -->
-        <button
+        <a
+          [routerLink]="BOOK_ROUTE"
+          (click)="toggle.set(false)"
           class="p-1 uppercase rounded flex items-center text-xs text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
-          (click)="dropdown(BOOK_ROUTE)"
         >
           book now
-        </button>
+        </a>
       </div>
 
       <!-- drop down -->
@@ -58,7 +53,6 @@ import { RouterLink } from '@angular/router';
         @for (link of links; track link; let i = $index) {
           <li
             class="p-2.5 border-b cursor-pointer active:border-black active:border-2 focus:border-black focus:border-2"
-            tabindex="0"
           >
             <a
               [routerLink]="link"
@@ -74,17 +68,8 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MobileNavComponent {
-  @Output() protected readonly routeEmitter = new EventEmitter<string>();
-
   readonly toggle = model<boolean>(false);
   protected readonly links = ['about', 'service'];
   protected readonly logo = './assets/images/logo.jpeg';
   protected readonly BOOK_ROUTE = BOOK_ROUTE;
-
-  route = (path: string): void => this.routeEmitter.emit(path);
-
-  dropdown = (path: string) => {
-    this.route(path);
-    this.toggle.set(false);
-  };
 }
