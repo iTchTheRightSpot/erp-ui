@@ -14,4 +14,5 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 export class BookAppointmentComponent {
   protected readonly today = new Date();
   protected selected: Date | null = new Date();
+  protected readonly altImage = './assets/images/staffs/chicken.jpg';
 }
