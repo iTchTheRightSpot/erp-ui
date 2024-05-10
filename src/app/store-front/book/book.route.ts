@@ -4,6 +4,10 @@ import {
   BOOK_SERVICE_OFFERED_ROUTE,
   BOOK_STAFF_ROUTE,
 } from '@/app/store-front/book/book.util';
+import {
+  BookAppointmentDateGuard,
+  BookStaffGuard,
+} from '@/app/store-front/book/book.guard';
 
 export const route: Routes = [
   {
@@ -19,6 +23,7 @@ export const route: Routes = [
       import('./book-staff/book-staff.component').then(
         (m) => m.BookStaffComponent,
       ),
+    canActivateChild: [BookStaffGuard],
   },
   {
     path: BOOK_APPOINTMENT_DATES_ROUTE,
@@ -26,5 +31,6 @@ export const route: Routes = [
       import('./book-appointment-dates/book-appointment-dates.component').then(
         (m) => m.BookAppointmentComponent,
       ),
+    canActivateChild: [BookAppointmentDateGuard],
   },
 ];

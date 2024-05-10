@@ -15,36 +15,31 @@ export class BookServiceOfferedService {
 
   private readonly servicesOffered: BookServiceOfferedDto[] = [
     {
-      service_id: 1,
-      name: 'power grooming',
+      service_name: 'power grooming',
       price: 35,
       duration: 100,
       clean_up_time: 60,
     },
     {
-      service_id: 2,
-      name: 'overgrown lawns',
+      service_name: 'overgrown lawns',
       price: 30,
       duration: 50,
       clean_up_time: 60,
     },
     {
-      service_id: 3,
-      name: 'utility cuts',
+      service_name: 'utility cuts',
       price: 840,
       duration: 50,
       clean_up_time: 60,
     },
     {
-      service_id: 4,
-      name: 'weekly trim and mow',
+      service_name: 'weekly trim and mow',
       price: 100,
       duration: 90,
       clean_up_time: 60,
     },
     {
-      service_id: 5,
-      name: 'pre-call service',
+      service_name: 'pre-call service',
       price: 30,
       duration: 10,
       clean_up_time: 60,
@@ -70,7 +65,7 @@ export class BookServiceOfferedService {
               if (arr.length === 0)
                 this.servicesOffered.push({
                   service_id: -1,
-                  name: 'no service yes',
+                  service_name: 'no service yes',
                   price: 0,
                   duration: 0,
                   clean_up_time: 0,

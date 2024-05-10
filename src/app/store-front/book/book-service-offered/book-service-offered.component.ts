@@ -30,12 +30,12 @@ import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.s
             >
               <a
                 [routerLink]="BOOK_STAFF_ROUTE"
-                (click)="selected(service.name)"
+                (click)="selected(service.service_name)"
               >
                 <h3
                   class="capitalize underline underline-offset-4 font-normal pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
                 >
-                  {{ service.name }}
+                  {{ service.service_name }}
                 </h3>
                 <p class="text-xs sm:text-sm whitespace-nowrap">
                   Price varies but starts at: {{ '$' + service.price }}

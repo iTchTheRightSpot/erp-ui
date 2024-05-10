@@ -1,6 +1,5 @@
 export interface BookServiceOfferedDto {
-  service_id: number;
-  name: string;
+  service_name: string;
   price: number;
   duration: number;
   clean_up_time: number;
