@@ -1,3 +1,27 @@
-<div class="lg-scr mg-top p-2">
-  <p>appointment calender works!</p>
+<div class="lg-scr mg-top px-1.5">
+  <div class="mb-2 flex flex-col gap-2">
+    <h1
+      class="h-fit font-normal underline underline-offset-4 decoration-1 text-base sm:text-xl md:text-2xl lg:text-4xl"
+    >
+      Schedule an appointment
+    </h1>
+    <h4 class="h-fit text-sm sm:text-base md:text-lg">
+      Select a day and time for your appointment
+    </h4>
+  </div>
+
+  <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <div class="">
+      <mat-card class="">
+        <mat-calendar [minDate]="today" [(selected)]="selected"></mat-calendar>
+      </mat-card>
+      <p class="mt-2">
+        Available time slots on
+        <span class="font-medium">{{ selected?.toDateString() }}</span>
+      </p>
+    </div>
+    <div class="">details</div>
+  </div>
+
+  <div class="w-full">dates</div>
 </div>
