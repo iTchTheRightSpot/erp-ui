@@ -43,7 +43,8 @@ export class BookAppointmentDatesService {
   readonly dates$ = (): Observable<ValidTimes> =>
     this.subject.asObservable().pipe(
       switchMap((date) => {
-        if (this.cache.has(date)) return of<ValidTimes>(this.cache.get(date));
+        const cache = this.cache.get(date);
+        if (this.cache.has(date) && cache) return of<ValidTimes>(cache);
 
         const dto = this.parent();
 
