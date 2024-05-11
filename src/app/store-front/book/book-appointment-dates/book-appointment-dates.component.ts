@@ -23,7 +23,7 @@ export class BookAppointmentDatesComponent {
 
   protected readonly dates$ = this.service
     .dates$()
-    .pipe(tap((arr) => (this.selected = arr[0].date)));
+    .pipe(tap((arr) => (this.selected = arr.date)));
 
   protected selectedAppointmentTime = (selected: Date) =>
     this.service.selectedAppointmentDate(selected);

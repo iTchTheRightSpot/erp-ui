@@ -24,7 +24,7 @@
         Available time slots on
         <span class="font-medium">{{ selected?.toDateString() }}</span>
       </p>
-      <div class="w-full grid gap-2 grid-cols-3 md:grid-cols-4 bg">
+      <div class="w-full grid gap-2 grid-cols-4 md:grid-cols-5">
         @for (date of (dates$ | async)?.times; track date) {
           <button
             type="button"

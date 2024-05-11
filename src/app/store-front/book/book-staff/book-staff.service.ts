@@ -18,10 +18,10 @@ export class BookStaffService {
   private readonly toastService = inject(ToastService);
   private readonly bookService = inject(BookService);
 
-  private readonly map = new Map<string, StaffDto[]>();
+  private readonly cache = new Map<string, StaffDto[]>();
 
   constructor() {
-    DUMMY_STAFFS(this.map);
+    DUMMY_STAFFS(this.cache);
   }
 
   readonly employeesByService = (service: string, duration: number) =>
@@ -29,16 +29,16 @@ export class BookStaffService {
 
   readonly staffs$ = () => {
     const parent = this.bookService.dto();
-    const bool = this.map.has(parent.service_name);
+    const bool = this.cache.has(parent.service_name);
 
-    if (bool) return of(this.map.get(parent.service_name));
+    if (bool) return of(this.cache.get(parent.service_name));
 
     return this.http
       .get<
         StaffDto[]
       >(`${this.domain}service-offered/employees`, { withCredentials: true })
       .pipe(
-        tap((arr) => this.map.set(parent.service_name, arr)),
+        tap((arr) => this.cache.set(parent.service_name, arr)),
         catchError((e: HttpErrorResponse) =>
           this.toastService.messageHandleIterateError<StaffDto>(e),
         ),
