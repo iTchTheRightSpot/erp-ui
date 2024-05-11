@@ -4,6 +4,7 @@ import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BOOK_STAFF_ROUTE } from '@/app/store-front/book/book.util';
 import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.service';
+import { BookService } from '@/app/store-front/book/book.service';
 
 @Component({
   selector: 'app-service-offered',
@@ -30,7 +31,9 @@ import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.s
             >
               <a
                 [routerLink]="BOOK_STAFF_ROUTE"
-                (click)="selected(service.service_name)"
+                (click)="
+                  selectedServiceOffered(service.service_name, service.duration)
+                "
               >
                 <h3
                   class="capitalize underline underline-offset-4 font-normal pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
@@ -56,6 +59,7 @@ import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.s
 export class BookServiceOfferedComponent {
   private readonly service = inject(BookServiceOfferedService);
   private readonly bookStaffService = inject(BookStaffService);
+  protected readonly BOOK_STAFF_ROUTE = BOOK_STAFF_ROUTE;
 
   /**
    * Returns all the services offered by the company from the server or
@@ -67,7 +71,8 @@ export class BookServiceOfferedComponent {
    * Retrieves all employees from the server of cache that offered the
    * service selected.
    * */
-  protected readonly BOOK_STAFF_ROUTE = BOOK_STAFF_ROUTE;
-  protected readonly selected = (service: string) =>
-    this.bookStaffService.employeesByService(service);
+  protected readonly selectedServiceOffered = (
+    service: string,
+    duration: number,
+  ) => this.bookStaffService.employeesByService(service, duration);
 }

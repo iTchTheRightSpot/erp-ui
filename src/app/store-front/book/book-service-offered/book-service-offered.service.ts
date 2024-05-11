@@ -13,7 +13,7 @@ export class BookServiceOfferedService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
 
-  private readonly servicesOffered: BookServiceOfferedDto[] = [
+  private servicesOffered: BookServiceOfferedDto[] | undefined = [
     {
       service_name: 'power grooming',
       price: 35,
@@ -53,29 +53,18 @@ export class BookServiceOfferedService {
    *
    * @returns An Observable that emits an array of {@link BookServiceOfferedDto} objects.
    */
-  readonly servicesOffered$ =
-    this.servicesOffered.length > 0
-      ? of(this.servicesOffered)
-      : this.http
-          .get<
-            BookServiceOfferedDto[]
-          >(`${this.domain}service-offered`, { withCredentials: true })
-          .pipe(
-            tap((arr) => {
-              if (arr.length === 0)
-                this.servicesOffered.push({
-                  service_id: -1,
-                  service_name: 'no service yes',
-                  price: 0,
-                  duration: 0,
-                  clean_up_time: 0,
-                });
-              else this.servicesOffered.push(...arr);
-            }),
-            catchError((e: HttpErrorResponse) =>
-              this.toastService.messageHandleIterateError<BookServiceOfferedDto>(
-                e,
-              ),
+  readonly servicesOffered$ = this.servicesOffered
+    ? of(this.servicesOffered)
+    : this.http
+        .get<
+          BookServiceOfferedDto[]
+        >(`${this.domain}service-offered`, { withCredentials: true })
+        .pipe(
+          tap((arr) => (this.servicesOffered = arr)),
+          catchError((e: HttpErrorResponse) =>
+            this.toastService.messageHandleIterateError<BookServiceOfferedDto>(
+              e,
             ),
-          );
+          ),
+        );
 }

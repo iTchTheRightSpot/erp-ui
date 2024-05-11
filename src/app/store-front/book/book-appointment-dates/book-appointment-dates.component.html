@@ -25,18 +25,13 @@
         <span class="font-medium">{{ selected?.toDateString() }}</span>
       </p>
       <div class="w-full grid gap-2 grid-cols-3 md:grid-cols-4 bg">
-        @for (d of dates; track d) {
+        @for (date of (dates$ | async)?.times; track date) {
           <button
             type="button"
+            (click)="selectedAppointmentTime(date)"
             class="px-1.5 py-3 h-fit border rounded text-left text-xs bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
           >
-            {{
-              d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }}
-            -
-            {{
-              d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }}
+            {{ toHrMins(date) }}
           </button>
         }
       </div>

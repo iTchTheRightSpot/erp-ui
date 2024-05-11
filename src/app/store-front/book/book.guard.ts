@@ -10,8 +10,8 @@ import {
 
 export const BookStaffGuard = () => {
   const service = inject(BookService);
-  const sig = service.sig();
-  const bool = sig && sig.service_name.length > 0;
+  const dto = service.dto();
+  const bool = dto.service_name.length > 0 && dto.duration > -1;
 
   if (!bool) {
     const router = inject(Router);
@@ -23,9 +23,11 @@ export const BookStaffGuard = () => {
 
 export const BookAppointmentDateGuard = () => {
   const service = inject(BookService);
-  const sig = service.sig();
+  const sig = service.dto();
   const bool =
-    sig && sig.service_name.length > 0 && sig.employee_email.length > 0;
+    sig.service_name.length > 0 &&
+    sig.duration > -1 &&
+    sig.employee_email.length > 0;
 
   if (!bool) {
     const router = inject(Router);
@@ -37,10 +39,10 @@ export const BookAppointmentDateGuard = () => {
 
 export const BookAppointmentClientInformationGuard = () => {
   const service = inject(BookService);
-  const sig = service.sig();
+  const sig = service.dto();
   const bool =
-    sig &&
     sig.service_name.length > 0 &&
+    sig.duration > -1 &&
     sig.employee_email.length > 0 &&
     sig.start;
 

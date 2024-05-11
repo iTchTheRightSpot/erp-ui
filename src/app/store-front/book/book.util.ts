@@ -4,6 +4,7 @@ export const BOOK_APPOINTMENT_DATES_ROUTE = 'dates';
 
 export interface BookDto {
   service_name: string;
+  duration: number;
   employee_email: string;
-  start?: Date;
+  start: Date;
 }

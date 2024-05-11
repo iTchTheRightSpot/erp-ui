@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AsyncPipe, NgOptimizedImage } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { BOOK_APPOINTMENT_DATES_ROUTE } from '@/app/store-front/book/book.util';
-import { BookAppointmentDatesService } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
 import { BOOK_ROUTE } from '@/app/store-front/util';
+import { BookService } from '@/app/store-front/book/book.service';
 
 @Component({
   selector: 'app-book-staff',
@@ -28,8 +28,8 @@ import { BOOK_ROUTE } from '@/app/store-front/util';
           @for (staff of staffs$ | async; track staff.email) {
             <li
               tabindex="0"
-              (click)="selected(staff.email)"
-              (keydown.enter)="selected(staff.email)"
+              (click)="selectedStaffEmail(staff.email)"
+              (keydown.enter)="selectedStaffEmail(staff.email)"
               class="px-1.5 py-3 h-fit cursor-pointer flex gap-2 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
               <div
@@ -64,16 +64,14 @@ import { BOOK_ROUTE } from '@/app/store-front/util';
 })
 export class BookStaffComponent {
   private readonly router = inject(Router);
+  private readonly bookService = inject(BookService);
   private readonly service = inject(BookStaffService);
-  private readonly appointmentDatesService = inject(
-    BookAppointmentDatesService,
-  );
-  readonly staffs$ = this.service.staffs$();
+  protected readonly staffs$ = this.service.staffs$();
 
   protected readonly altImage = './assets/images/staffs/engin-akyurt.jpg';
 
-  protected readonly selected = (staff: string) => {
-    this.appointmentDatesService.selectedEmployee(staff);
+  protected readonly selectedStaffEmail = (staff: string) => {
+    this.bookService.setStaffEmail(staff);
     this.router.navigate([`${BOOK_ROUTE}/${BOOK_APPOINTMENT_DATES_ROUTE}`]);
   };
 }

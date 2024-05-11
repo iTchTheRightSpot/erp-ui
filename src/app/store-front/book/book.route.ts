@@ -29,7 +29,7 @@ export const route: Routes = [
     path: BOOK_APPOINTMENT_DATES_ROUTE,
     loadComponent: () =>
       import('./book-appointment-dates/book-appointment-dates.component').then(
-        (m) => m.BookAppointmentComponent,
+        (m) => m.BookAppointmentDatesComponent,
       ),
     canActivateChild: [BookAppointmentDateGuard],
   },

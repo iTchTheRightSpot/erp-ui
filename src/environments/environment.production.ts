@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  domain: 'https://api.<landscape-domain>.com',
+  domain: 'https://landscape.emmanueluluabuike.com/api/v1/',
 };
