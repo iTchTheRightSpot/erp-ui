@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { BOOK_STAFF_ROUTE } from '@/app/store-front/book/book.util';
 import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.service';
 import { BookService } from '@/app/store-front/book/book.service';
+import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 
 @Component({
   selector: 'app-service-offered',
@@ -31,9 +32,7 @@ import { BookService } from '@/app/store-front/book/book.service';
             >
               <a
                 [routerLink]="BOOK_STAFF_ROUTE"
-                (click)="
-                  selectedServiceOffered(service.service_name, service.duration)
-                "
+                (click)="selectedServiceOffered(service)"
               >
                 <h3
                   class="capitalize underline underline-offset-4 font-normal pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
@@ -74,7 +73,6 @@ export class BookServiceOfferedComponent {
    * service selected.
    * */
   protected readonly selectedServiceOffered = (
-    service: string,
-    duration: number,
-  ) => this.bookStaffService.employeesByService(service, duration);
+    service: BookServiceOfferedDto,
+  ) => this.bookStaffService.employeesByServiceSelected(service);
 }

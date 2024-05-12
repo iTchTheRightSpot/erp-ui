@@ -5,7 +5,7 @@ import { environment } from '@/environments/environment.ts';
 import {
   BehaviorSubject,
   catchError,
-  find,
+  map,
   Observable,
   of,
   switchMap,
@@ -24,12 +24,12 @@ export class BookAppointmentDatesService {
   private readonly toastService = inject(ToastService);
 
   private readonly parent = this.bookService.dto;
-  private readonly subject = new BehaviorSubject<Date>(this.parent().start);
+  private readonly subject = new BehaviorSubject<Date>(new Date());
 
   private readonly cache = new Map<Date, ValidTimes>();
 
   readonly selectedAppointmentDate = (date: Date) => {
-    this.bookService.setStart(date);
+    this.bookService.setTimeSelected(date);
     this.subject.next(date);
   };
 
@@ -40,26 +40,33 @@ export class BookAppointmentDatesService {
    * */
   readonly deleteFromCache = (date: Date) => this.cache.delete(date);
 
-  readonly dates$ = (): Observable<ValidTimes> =>
+  readonly dates$ = (): Observable<ValidTimes | undefined> =>
     this.subject.asObservable().pipe(
       switchMap((date) => {
         const cache = this.cache.get(date);
         if (this.cache.has(date) && cache) return of<ValidTimes>(cache);
 
         const dto = this.parent();
+        const name = dto.serviceOffered ? dto.serviceOffered.service_name : '';
+        const email = dto.staff ? dto.staff.email : '';
 
-        const req = this.http.get<ValidTimes[]>(
-          `${this.domain}appointment?service_name=${dto.service_name}&employee_email=${dto.employee_email}&day=${date.getDate()}&month=${1 + date.getMonth()}&year=${date.getFullYear()}`,
-          { withCredentials: true },
-        );
+        const req = this.req$(name, email, date);
 
         return req.pipe(
-          tap((objs) => objs.forEach((obj) => this.cache.set(obj.date, obj))),
-          find((objs, index) => objs[index].date === date),
+          map((objs, index) =>
+            objs[index].date === date ? objs[index] : undefined,
+          ),
         );
       }),
-      catchError((e: HttpErrorResponse) =>
-        this.toastService.messageHandleIterateError<ValidTimes>(e),
-      ),
+      catchError((e: HttpErrorResponse) => this.toastService.messageObject(e)),
     );
+
+  private readonly req$ = (name: string, email: string, date: Date) =>
+    this.http
+      .get<
+        ValidTimes[]
+      >(`${this.domain}appointment?service_name=${name}&employee_email=${email}&day=${date.getDate()}&month=${1 + date.getMonth()}&year=${date.getFullYear()}`, { withCredentials: true })
+      .pipe(
+        tap((objs) => objs.forEach((obj) => this.cache.set(obj.date, obj))),
+      );
 }

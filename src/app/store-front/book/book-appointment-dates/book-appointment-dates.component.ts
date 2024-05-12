@@ -22,12 +22,12 @@ export class BookAppointmentDatesComponent {
   private readonly service = inject(BookAppointmentDatesService);
 
   protected readonly today = new Date();
-  protected selected: Date | null = null;
+  protected selected: Date | undefined = undefined;
   protected readonly altImage = './assets/images/staffs/engin-akyurt.jpg';
 
   protected readonly dates$ = this.service
     .dates$()
-    .pipe(tap((arr) => (this.selected = arr.date)));
+    .pipe(tap((arr) => (this.selected = arr?.date)));
 
   protected selectedAppointmentTime = (selected: Date) =>
     this.service.selectedAppointmentDate(selected);
@@ -37,5 +37,5 @@ export class BookAppointmentDatesComponent {
 
   protected readonly route = (): void => {
     this.router.navigate([`${BOOK_ROUTE}/${BOOK_STAFF_ROUTE}`]);
-  }
+  };
 }

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { BOOK_APPOINTMENT_DATES_ROUTE } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/util';
 import { BookService } from '@/app/store-front/book/book.service';
+import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Component({
   selector: 'app-book-staff',
@@ -25,19 +26,19 @@ import { BookService } from '@/app/store-front/book/book.service';
 
       <div class="w-full">
         <ul class="flex flex-col gap-2">
-          @for (staff of staffs$ | async; track staff.email) {
+          @for (staff of staffs$ | async; track staff) {
             <li
               tabindex="0"
-              (click)="selectedStaffEmail(staff.email)"
-              (keydown.enter)="selectedStaffEmail(staff.email)"
+              (click)="selectedStaff(staff)"
+              (keydown.enter)="selectedStaff(staff)"
               class="px-1.5 py-3 h-fit cursor-pointer flex gap-2 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
               <div
                 class="max-h-[6.5rem] max-w-[6.5rem] md:max-h-[7.5rem] md:max-w-[7.375rem] lg:max-h-[8.5rem] lg:max-w-[8.5rem] rounded-full overflow-hidden"
               >
                 <img
-                  [src]="staff.picture.length > 0 ? staff.picture : altImage"
-                  [alt]="altImage"
+                  [src]="staff.picture"
+                  alt="staff profile picture"
                   class="h-full w-full object-cover object-center ring-2 ring-gray-400"
                 />
               </div>
@@ -70,10 +71,8 @@ export class BookStaffComponent {
   private readonly service = inject(BookStaffService);
   protected readonly staffs$ = this.service.staffs$();
 
-  protected readonly altImage = './assets/images/staffs/engin-akyurt.jpg';
-
-  protected readonly selectedStaffEmail = (staff: string) => {
-    this.bookService.setStaffEmail(staff);
+  protected readonly selectedStaff = (staff: StaffDto) => {
+    this.bookService.setStaffSelected(staff);
     this.router.navigate([`${BOOK_ROUTE}/${BOOK_APPOINTMENT_DATES_ROUTE}`]);
   };
 }

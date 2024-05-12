@@ -30,6 +30,11 @@ export class ToastService {
 
   readonly message = (message: string) => this.subject.next(message);
 
+  readonly messageObject = (e: HttpErrorResponse) => {
+    this.message(e.error ? e.error.message : e.message);
+    return of();
+  };
+
   readonly messageHandleIterateError = <T>(
     e: HttpErrorResponse,
   ): Observable<T[]> => {

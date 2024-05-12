@@ -1,39 +1,37 @@
 import { Injectable, signal } from '@angular/core';
 import { BookDto } from '@/app/store-front/book/book.util';
+import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
+import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookService {
   private readonly sig = signal<BookDto>({
-    service_name: '',
-    duration: -1,
-    employee_email: '',
-    start: new Date(),
+    serviceOffered: undefined,
+    staff: undefined,
+    time: new Date(),
   });
   readonly dto = this.sig;
 
-  readonly setServiceName = (service: string, duration: number) =>
+  readonly setServiceOfferedSelected = (service: BookServiceOfferedDto) =>
     this.sig.set({
-      service_name: service,
-      duration: duration,
-      employee_email: this.sig().employee_email,
-      start: this.sig().start,
+      serviceOffered: service,
+      staff: this.sig().staff,
+      time: this.sig().time,
     });
 
-  readonly setStaffEmail = (email: string) =>
+  readonly setStaffSelected = (staff: StaffDto) =>
     this.sig.set({
-      service_name: this.sig().service_name,
-      duration: this.sig().duration,
-      employee_email: email,
-      start: this.sig().start,
+      serviceOffered: this.sig().serviceOffered,
+      staff: staff,
+      time: this.sig().time,
     });
 
-  readonly setStart = (date: Date) =>
+  readonly setTimeSelected = (date: Date) =>
     this.sig.set({
-      service_name: this.sig().service_name,
-      duration: this.sig().duration,
-      employee_email: this.sig().employee_email,
-      start: date,
+      serviceOffered: this.sig().serviceOffered,
+      staff: this.sig().staff,
+      time: date,
     });
 }

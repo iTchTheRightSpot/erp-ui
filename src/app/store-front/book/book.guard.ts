@@ -8,48 +8,44 @@ import {
   BOOK_STAFF_ROUTE,
 } from '@/app/store-front/book/book.util';
 
-export const BookStaffGuard = () => {
+export const BookStaffGuard = async () => {
   const service = inject(BookService);
   const dto = service.dto();
-  const bool = dto.service_name.length > 0 && dto.duration > -1;
+  const bool = dto.serviceOffered === undefined;
 
-  if (!bool) {
+  if (bool) {
     const router = inject(Router);
-    router.navigate([`${BOOK_ROUTE}/${BOOK_SERVICE_OFFERED_ROUTE}`]);
+    await router.navigate([`${BOOK_ROUTE}/${BOOK_SERVICE_OFFERED_ROUTE}`]);
   }
 
-  return bool;
+  return !bool;
 };
 
-export const BookAppointmentDateGuard = () => {
+export const BookAppointmentDateGuard = async () => {
+  const service = inject(BookService);
+  const sig = service.dto();
+  const bool = sig.serviceOffered === undefined || sig.staff === undefined;
+
+  if (bool) {
+    const router = inject(Router);
+    await router.navigate([`${BOOK_ROUTE}/${BOOK_STAFF_ROUTE}`]);
+  }
+
+  return !bool;
+};
+
+export const BookAppointmentClientInformationGuard = async () => {
   const service = inject(BookService);
   const sig = service.dto();
   const bool =
-    sig.service_name.length > 0 &&
-    sig.duration > -1 &&
-    sig.employee_email.length > 0;
+    sig.serviceOffered === undefined ||
+    sig.staff === undefined ||
+    sig.time == undefined;
 
-  if (!bool) {
+  if (bool) {
     const router = inject(Router);
-    router.navigate([`${BOOK_ROUTE}/${BOOK_STAFF_ROUTE}`]);
+    await router.navigate([`${BOOK_ROUTE}/${BOOK_APPOINTMENT_DATES_ROUTE}`]);
   }
 
-  return bool;
-};
-
-export const BookAppointmentClientInformationGuard = () => {
-  const service = inject(BookService);
-  const sig = service.dto();
-  const bool =
-    sig.service_name.length > 0 &&
-    sig.duration > -1 &&
-    sig.employee_email.length > 0 &&
-    sig.start;
-
-  if (!bool) {
-    const router = inject(Router);
-    router.navigate([`${BOOK_ROUTE}/${BOOK_APPOINTMENT_DATES_ROUTE}`]);
-  }
-
-  return bool;
+  return !bool;
 };
