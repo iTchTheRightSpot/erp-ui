@@ -5,6 +5,7 @@ import { environment } from '@/environments/environment.ts';
 import {
   BehaviorSubject,
   catchError,
+  find,
   Observable,
   of,
   switchMap,
@@ -12,7 +13,6 @@ import {
 } from 'rxjs';
 import { BookService } from '@/app/store-front/book/book.service';
 import { ToastService } from '@/app/global-components/toast/toast.service';
-import { filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -53,11 +53,10 @@ export class BookAppointmentDatesService {
           { withCredentials: true },
         );
 
-        req.pipe(
+        return req.pipe(
           tap((objs) => objs.forEach((obj) => this.cache.set(obj.date, obj))),
+          find((objs, index) => objs[index].date === date),
         );
-
-        return req.pipe(filter((obj, index) => obj[index].date === date));
       }),
       catchError((e: HttpErrorResponse) =>
         this.toastService.messageHandleIterateError<ValidTimes>(e),

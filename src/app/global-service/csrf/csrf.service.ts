@@ -12,20 +12,9 @@ export class CsrfService {
 
   private readonly http = inject(HttpClient);
 
-  readonly csrfProd = () =>
+  readonly csrf = () =>
     this.http.get<{ token: string; parameterName: string; headerName: string }>(
       `${this.domain}csrf`,
       { withCredentials: true },
     );
-
-  readonly csrf = (): Observable<{
-    token: string;
-    parameterName: string;
-    headerName: string;
-  }> =>
-    of({
-      token: 'token-1',
-      parameterName: 'csrf',
-      headerName: 'X-XSRF-TOKEN',
-    });
 }

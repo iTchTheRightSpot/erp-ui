@@ -49,6 +49,8 @@ import { BookService } from '@/app/store-front/book/book.service';
                 </p>
               </a>
             </li>
+          } @empty {
+            We are still in development, please check back some other time
           }
         </ul>
       </div>

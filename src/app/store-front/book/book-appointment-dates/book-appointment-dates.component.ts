@@ -5,6 +5,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { BookAppointmentDatesService } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
 import { AsyncPipe } from '@angular/common';
 import { tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { BOOK_STAFF_ROUTE } from '@/app/store-front/book/book.util';
+import { BOOK_ROUTE } from '@/app/store-front/util';
 
 @Component({
   selector: 'app-book-appointment-dates',
@@ -15,11 +18,12 @@ import { tap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookAppointmentDatesComponent {
+  private readonly router = inject(Router);
   private readonly service = inject(BookAppointmentDatesService);
 
   protected readonly today = new Date();
   protected selected: Date | null = null;
-  protected readonly altImage = './assets/images/staffs/chicken.jpg';
+  protected readonly altImage = './assets/images/staffs/engin-akyurt.jpg';
 
   protected readonly dates$ = this.service
     .dates$()
@@ -30,4 +34,8 @@ export class BookAppointmentDatesComponent {
 
   protected readonly toHrMins = (date: Date) =>
     date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  protected readonly route = (): void => {
+    this.router.navigate([`${BOOK_ROUTE}/${BOOK_STAFF_ROUTE}`]);
+  }
 }

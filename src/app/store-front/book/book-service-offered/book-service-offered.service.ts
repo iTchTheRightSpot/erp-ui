@@ -13,38 +13,7 @@ export class BookServiceOfferedService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
 
-  private servicesOffered: BookServiceOfferedDto[] | undefined = [
-    {
-      service_name: 'power grooming',
-      price: 35,
-      duration: 100,
-      clean_up_time: 60,
-    },
-    {
-      service_name: 'overgrown lawns',
-      price: 30,
-      duration: 50,
-      clean_up_time: 60,
-    },
-    {
-      service_name: 'utility cuts',
-      price: 840,
-      duration: 50,
-      clean_up_time: 60,
-    },
-    {
-      service_name: 'weekly trim and mow',
-      price: 100,
-      duration: 90,
-      clean_up_time: 60,
-    },
-    {
-      service_name: 'pre-call service',
-      price: 30,
-      duration: 10,
-      clean_up_time: 60,
-    },
-  ];
+  private servicesOffered: BookServiceOfferedDto[] | undefined = undefined;
 
   /**
    * Retrieves an Observable that emits an array of {@link BookServiceOfferedDto}

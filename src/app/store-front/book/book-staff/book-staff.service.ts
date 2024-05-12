@@ -20,10 +20,6 @@ export class BookStaffService {
 
   private readonly cache = new Map<string, StaffDto[]>();
 
-  constructor() {
-    DUMMY_STAFFS(this.cache);
-  }
-
   readonly employeesByService = (service: string, duration: number) =>
     this.bookService.setServiceName(service, duration);
 
