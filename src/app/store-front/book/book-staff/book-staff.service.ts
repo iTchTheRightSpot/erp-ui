@@ -22,8 +22,8 @@ export class BookStaffService {
     this.bookService.setServiceOfferedSelected(service);
 
   readonly staffs$ = () => {
-    const obj = this.bookService.dto().serviceOffered;
-    const name = obj ? obj.name : '';
+    const serviceOffered = this.bookService.bookingInfo().serviceOffered;
+    const name = serviceOffered ? serviceOffered.name : '';
     const bool = this.cache.has(name);
 
     if (bool) return of(this.cache.get(name));

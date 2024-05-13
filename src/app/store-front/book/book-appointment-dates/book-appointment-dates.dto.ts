@@ -1,4 +1,4 @@
-export interface ValidTimes {
+export interface ValidTime {
   date: Date;
   times: Date[];
 }

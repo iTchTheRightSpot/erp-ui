@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { BookService } from '@/app/store-front/book/book.service';
-import { CanActivateFn, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BOOK_ROUTE } from '@/app/store-front/util';
 import {
   BOOK_APPOINTMENT_DATES_ROUTE,
@@ -10,8 +10,8 @@ import {
 
 export const BookStaffGuard = async () => {
   const service = inject(BookService);
-  const dto = service.dto();
-  const bool = dto.serviceOffered === undefined;
+  const info = service.bookingInfo();
+  const bool = info.serviceOffered === undefined;
 
   if (bool) {
     const router = inject(Router);
@@ -23,8 +23,8 @@ export const BookStaffGuard = async () => {
 
 export const BookAppointmentDateGuard = async () => {
   const service = inject(BookService);
-  const sig = service.dto();
-  const bool = sig.serviceOffered === undefined || sig.staff === undefined;
+  const info = service.bookingInfo();
+  const bool = info.serviceOffered === undefined || info.staff === undefined;
 
   if (bool) {
     const router = inject(Router);
@@ -36,11 +36,11 @@ export const BookAppointmentDateGuard = async () => {
 
 export const BookAppointmentClientInformationGuard = async () => {
   const service = inject(BookService);
-  const sig = service.dto();
+  const info = service.bookingInfo();
   const bool =
-    sig.serviceOffered === undefined ||
-    sig.staff === undefined ||
-    sig.time == undefined;
+    info.serviceOffered === undefined ||
+    info.staff === undefined ||
+    info.time == undefined;
 
   if (bool) {
     const router = inject(Router);

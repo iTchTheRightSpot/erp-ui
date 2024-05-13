@@ -27,7 +27,7 @@ export class BookAppointmentDatesComponent {
   protected selected = new Date();
   protected readonly altImage = './assets/images/staffs/engin-akyurt.jpg';
 
-  protected readonly details = this.service.parent();
+  protected readonly details = this.service.bookingInfoSignal();
   protected readonly dates$ = this.service.dates$();
   protected readonly toHighlight = this.service.datesToHighlight();
 
@@ -39,12 +39,7 @@ export class BookAppointmentDatesComponent {
       minute: '2-digit',
     });
 
-  protected readonly format = (date: Date) =>
-    date.toLocaleDateString([], {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
+  protected readonly format = (date: Date) => this.service.format(date);
 
   protected readonly dateClass =
     () =>
