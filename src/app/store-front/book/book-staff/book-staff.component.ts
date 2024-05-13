@@ -31,7 +31,7 @@ import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
               tabindex="0"
               (click)="selectedStaff(staff)"
               (keydown.enter)="selectedStaff(staff)"
-              class="px-1.5 py-3 h-fit cursor-pointer flex gap-2 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
+              class="relative px-1.5 py-3 h-fit cursor-pointer flex gap-2 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
               <div
                 class="max-h-[6.5rem] max-w-[6.5rem] md:max-h-[7.5rem] md:max-w-[7.375rem] lg:max-h-[8.5rem] lg:max-w-[8.5rem] rounded-full overflow-hidden"
@@ -42,7 +42,7 @@ import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
                   class="h-full w-full object-cover object-center ring-2 ring-gray-400"
                 />
               </div>
-              <a class="relative">
+              <a class="">
                 <h3
                   class="capitalize underline-offset-4 font-medium pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
                 >
@@ -51,10 +51,10 @@ import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
                 <p class="text-xs sm:text-sm whitespace-wrap">
                   {{ staff.bio }}
                 </p>
-                <span
-                  class="absolute bottom-0 right-0 transform translate-y-1/4 w-3.5 h-3.5 border border-black bg-white rounded-full"
-                ></span>
               </a>
+              <span
+                class="absolute bottom-1 right-0 transform translate-y-1/4 w-3.5 h-3.5 border border-black bg-white rounded-full"
+              ></span>
             </li>
           } @empty {
             We are still in development, please check back some other time

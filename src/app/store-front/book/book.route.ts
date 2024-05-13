@@ -19,18 +19,18 @@ export const route: Routes = [
   },
   {
     path: BOOK_STAFF_ROUTE,
+    canActivate: [BookStaffGuard],
     loadComponent: () =>
       import('./book-staff/book-staff.component').then(
         (m) => m.BookStaffComponent,
       ),
-    canActivateChild: [BookStaffGuard],
   },
   {
     path: BOOK_APPOINTMENT_DATES_ROUTE,
+    canActivate: [BookAppointmentDateGuard],
     loadComponent: () =>
       import('./book-appointment-dates/book-appointment-dates.component').then(
         (m) => m.BookAppointmentDatesComponent,
       ),
-    canActivateChild: [BookAppointmentDateGuard],
   },
 ];

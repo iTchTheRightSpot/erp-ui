@@ -22,18 +22,19 @@ export class BookServiceOfferedService {
    *
    * @returns An Observable that emits an array of {@link BookServiceOfferedDto} objects.
    */
-  readonly servicesOffered$ = this.servicesOffered
-    ? of(this.servicesOffered)
-    : this.http
-        .get<
-          BookServiceOfferedDto[]
-        >(`${this.domain}service-offered`, { withCredentials: true })
-        .pipe(
-          tap((arr) => (this.servicesOffered = arr)),
-          catchError((e: HttpErrorResponse) =>
-            this.toastService.messageHandleIterateError<BookServiceOfferedDto>(
-              e,
+  readonly servicesOffered$ = () =>
+    this.servicesOffered !== undefined
+      ? of(this.servicesOffered)
+      : this.http
+          .get<
+            BookServiceOfferedDto[]
+          >(`${this.domain}service-offered`, { withCredentials: true })
+          .pipe(
+            tap((arr) => (this.servicesOffered = arr)),
+            catchError((e: HttpErrorResponse) =>
+              this.toastService.messageHandleIterateError<BookServiceOfferedDto>(
+                e,
+              ),
             ),
-          ),
-        );
+          );
 }

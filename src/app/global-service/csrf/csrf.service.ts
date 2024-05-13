@@ -8,9 +8,9 @@ import { environment } from '@/environments/environment';
 })
 export class CsrfService {
   private readonly domain: string | undefined = environment.domain;
-  private readonly production: boolean | undefined = environment.production;
-
   private readonly http = inject(HttpClient);
+
+  // readonly csrf = () => of({ token: 'token', parameterName: 'name', headerName: 'header' });
 
   readonly csrf = () =>
     this.http.get<{ token: string; parameterName: string; headerName: string }>(

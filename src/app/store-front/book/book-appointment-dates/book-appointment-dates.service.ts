@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ValidTimes } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
 import { environment } from '@/environments/environment.ts';
@@ -18,15 +18,18 @@ import { ToastService } from '@/app/global-components/toast/toast.service';
   providedIn: 'root',
 })
 export class BookAppointmentDatesService {
-  private readonly domain = environment;
+  private readonly domain = environment.domain;
   private readonly http = inject(HttpClient);
   private readonly bookService = inject(BookService);
   private readonly toastService = inject(ToastService);
 
-  private readonly parent = this.bookService.dto;
+  readonly parent = this.bookService.dto;
   private readonly subject = new BehaviorSubject<Date>(new Date());
 
-  private readonly cache = new Map<Date, ValidTimes>();
+  private readonly cache = new Map<string, Date[]>();
+  private readonly sig = signal<Date[]>([]);
+
+  readonly datesToHighlight = this.sig;
 
   readonly selectedAppointmentDate = (date: Date) => {
     this.bookService.setTimeSelected(date);
@@ -38,35 +41,72 @@ export class BookAppointmentDatesService {
    * In other words, the time a customer wants to pre-book has
    * been confirmed.
    * */
-  readonly deleteFromCache = (date: Date) => this.cache.delete(date);
+  readonly deleteFromCache = (date: Date) => {
+    const dto = this.parent();
+    const email = dto.staff ? dto.staff.email : '';
+    // TODO delete date from dates to highlight
+    this.cache.delete(
+      `${date.getDate()}_${1 + date.getMonth()}_${date.getFullYear()}_${email}`,
+    );
+  };
 
-  readonly dates$ = (): Observable<ValidTimes | undefined> =>
+  readonly dates$ = () =>
     this.subject.asObservable().pipe(
       switchMap((date) => {
-        const cache = this.cache.get(date);
-        if (this.cache.has(date) && cache) return of<ValidTimes>(cache);
-
         const dto = this.parent();
-        const name = dto.serviceOffered ? dto.serviceOffered.service_name : '';
         const email = dto.staff ? dto.staff.email : '';
 
-        const req = this.req$(name, email, date);
+        const key = `${date.getDate()}_${1 + date.getMonth()}_${date.getFullYear()}_${email}`;
 
-        return req.pipe(
-          map((objs, index) =>
-            objs[index].date === date ? objs[index] : undefined,
-          ),
-        );
+        const cache = this.cache.get(key);
+        if (this.cache.has(key) && cache) return of<Date[]>(cache);
+
+        const name = dto.serviceOffered ? dto.serviceOffered.name : '';
+        return this.req$(name, email, date);
       }),
-      catchError((e: HttpErrorResponse) => this.toastService.messageObject(e)),
+      catchError((e: HttpErrorResponse) =>
+        this.toastService.messageHandleIterateError<Date>(e),
+      ),
     );
 
-  private readonly req$ = (name: string, email: string, date: Date) =>
+  private readonly req$ = (
+    name: string,
+    email: string,
+    selected: Date,
+  ): Observable<Date[]> =>
     this.http
       .get<
         ValidTimes[]
-      >(`${this.domain}appointment?service_name=${name}&employee_email=${email}&day=${date.getDate()}&month=${1 + date.getMonth()}&year=${date.getFullYear()}`, { withCredentials: true })
+      >(`${this.domain}appointment?service_name=${name}&employee_email=${email}&day=${selected.getDate()}&month=${1 + selected.getMonth()}&year=${selected.getFullYear()}`, { withCredentials: true })
       .pipe(
-        tap((objs) => objs.forEach((obj) => this.cache.set(obj.date, obj))),
+        tap((objs) =>
+          objs.forEach((obj) => {
+            const date = new Date(obj.date);
+            this.sig().push(date);
+            this.cache.set(
+              `${date.getDate()}_${1 + date.getMonth()}_${date.getFullYear()}_${email}`,
+              obj.times,
+            );
+          }),
+        ),
+        map((objs: ValidTimes[]) => {
+          const found = objs.find((obj) => {
+            const format = selected.toLocaleDateString([], {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            });
+
+            const res = new Date(obj.date).toLocaleDateString([], {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            });
+
+            return format === res;
+          });
+
+          return found ? found.times : [];
+        }),
       );
 }

@@ -28,7 +28,7 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
         <ul class="flex flex-col gap-2">
           @for (service of services$ | async; track service) {
             <li
-              class="px-1.5 py-3 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
+              class="relative px-1.5 py-3 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
               <a
                 [routerLink]="BOOK_STAFF_ROUTE"
@@ -37,7 +37,7 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
                 <h3
                   class="capitalize underline underline-offset-4 font-normal pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
                 >
-                  {{ service.service_name }}
+                  {{ service.name }}
                 </h3>
                 <p class="text-xs sm:text-sm whitespace-nowrap">
                   Price varies but starts at: {{ '$' + service.price }}
@@ -47,6 +47,9 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
                   Duration: {{ service.duration }}
                 </p>
               </a>
+              <span
+                class="absolute bottom-1 right-0 transform translate-y-1/4 w-3.5 h-3.5 border border-black bg-white rounded-full"
+              ></span>
             </li>
           } @empty {
             We are still in development, please check back some other time
@@ -66,7 +69,7 @@ export class BookServiceOfferedComponent {
    * Returns all the services offered by the company from the server or
    * cache.
    * */
-  protected readonly services$ = this.service.servicesOffered$;
+  protected readonly services$ = this.service.servicesOffered$();
 
   /**
    * Retrieves all employees from the server of cache that offered the

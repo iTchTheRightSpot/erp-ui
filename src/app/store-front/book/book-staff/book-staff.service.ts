@@ -23,20 +23,20 @@ export class BookStaffService {
 
   readonly staffs$ = () => {
     const obj = this.bookService.dto().serviceOffered;
-    const service = obj ? obj.service_name : '';
-    const bool = this.cache.has(service);
+    const name = obj ? obj.name : '';
+    const bool = this.cache.has(name);
 
-    if (bool) return of(this.cache.get(service));
+    if (bool) return of(this.cache.get(name));
 
     return this.http
       .get<
         StaffDto[]
-      >(`${this.domain}service-offered/employees`, { withCredentials: true })
+      >(`${this.domain}service-offered/staffs?service_name=${name}`, { withCredentials: true })
       .pipe(
         tap((arr) => {
           const img = './assets/images/staffs/engin-akyurt.jpg';
           arr.forEach((obj) => (obj.picture.length === 0 ? img : obj.picture));
-          this.cache.set(service, arr);
+          this.cache.set(name, arr);
         }),
         catchError((e: HttpErrorResponse) =>
           this.toastService.messageHandleIterateError<StaffDto>(e),
