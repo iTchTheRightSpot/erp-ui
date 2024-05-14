@@ -3,7 +3,10 @@ import { environment } from '@/environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, of, tap } from 'rxjs';
 import { ToastService } from '@/app/global-components/toast/toast.service';
-import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
+import {
+  StaffDto,
+  staffs,
+} from '@/app/store-front/book/book-staff/book-staff.dto';
 import { BookService } from '@/app/store-front/book/book.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 
@@ -12,11 +15,14 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
 })
 export class BookStaffService {
   private readonly domain: string | undefined = environment.domain;
+  private readonly production = environment.production;
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
   private readonly bookService = inject(BookService);
 
-  private readonly cache = new Map<string, StaffDto[]>();
+  private readonly cache = this.production
+    ? new Map<string, StaffDto[]>()
+    : staffs();
 
   readonly employeesByServiceSelected = (service: BookServiceOfferedDto) =>
     this.bookService.setServiceOfferedSelected(service);

@@ -3,8 +3,6 @@ import { BookServiceOfferedService } from '@/app/store-front/book/book-service-o
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { BOOK_STAFF_ROUTE } from '@/app/store-front/book/book.util';
-import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.service';
-import { BookService } from '@/app/store-front/book/book.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 
 @Component({
@@ -62,7 +60,6 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
 })
 export class BookServiceOfferedComponent {
   private readonly service = inject(BookServiceOfferedService);
-  private readonly bookStaffService = inject(BookStaffService);
   protected readonly BOOK_STAFF_ROUTE = BOOK_STAFF_ROUTE;
 
   /**
@@ -77,5 +74,5 @@ export class BookServiceOfferedComponent {
    * */
   protected readonly selectedServiceOffered = (
     service: BookServiceOfferedDto,
-  ) => this.bookStaffService.employeesByServiceSelected(service);
+  ) => this.service.setSelectedServiceOffered(service);
 }

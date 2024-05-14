@@ -1,21 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatCard } from '@angular/material/card';
-import {
-  MatCalendar,
-  MatCalendarCellCssClasses,
-} from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { BookAppointmentDatesService } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { BOOK_STAFF_ROUTE } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/util';
+import { CalendarComponent } from '@/app/global-components/calendar/calendar.component';
 
 @Component({
   selector: 'app-book-appointment-dates',
   standalone: true,
-  imports: [MatCard, MatCalendar, AsyncPipe],
-  providers: [provideNativeDateAdapter()],
+  imports: [AsyncPipe, CalendarComponent],
   templateUrl: './book-appointment-dates.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -25,7 +19,6 @@ export class BookAppointmentDatesComponent {
 
   protected readonly today = new Date();
   protected selected = new Date();
-  protected readonly altImage = './assets/images/staffs/engin-akyurt.jpg';
 
   protected readonly details = this.service.bookingInfoSignal();
   protected readonly dates$ = this.service.dates$();
@@ -41,25 +34,15 @@ export class BookAppointmentDatesComponent {
 
   protected readonly format = (date: Date) => this.service.format(date);
 
-  protected readonly dateClass =
-    () =>
-    (date: Date): MatCalendarCellCssClasses =>
-      this.toHighlight.some((d) => this.format(date) === this.format(d))
-        ? 'highlight-date'
-        : '';
-
-  protected readonly filterDates = (date: Date) =>
-    this.toHighlight.some((d) => date.getDate() === d.getDate());
-
   protected readonly route = async () => {
     await this.router.navigate([`${BOOK_ROUTE}/${BOOK_STAFF_ROUTE}`]);
   };
 
-  protected readonly selectedAppointmentDate = (selected: Date | null) =>
+  protected readonly onSelectedAppointmentDate = (selected: Date | null) =>
     this.service.selectedAppointmentDate(
       selected === null ? new Date() : selected,
     );
 
-  protected readonly monthSelect = (date: Date) =>
+  protected readonly onPreviousNextBtn = (date: Date) =>
     this.service.selectedAppointmentDate(date);
 }

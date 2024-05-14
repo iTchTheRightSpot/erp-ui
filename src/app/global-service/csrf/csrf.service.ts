@@ -8,13 +8,17 @@ import { environment } from '@/environments/environment';
 })
 export class CsrfService {
   private readonly domain: string | undefined = environment.domain;
+  private readonly production = environment.production;
   private readonly http = inject(HttpClient);
 
   // readonly csrf = () => of({ token: 'token', parameterName: 'name', headerName: 'header' });
 
   readonly csrf = () =>
-    this.http.get<{ token: string; parameterName: string; headerName: string }>(
-      `${this.domain}csrf`,
-      { withCredentials: true },
-    );
+    this.production
+      ? this.http.get<{
+          token: string;
+          parameterName: string;
+          headerName: string;
+        }>(`${this.domain}csrf`, { withCredentials: true })
+      : of({ token: 'token', parameterName: 'name', headerName: 'header' });
 }

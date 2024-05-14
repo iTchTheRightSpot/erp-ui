@@ -8,13 +8,6 @@ import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 })
 export class BookService {
   /**
-   * To book an appointment, a few details need to be met so this signal
-   * holds the core information needed before a user can fill out their
-   * information to make a booking. The properties of BookDto also acts
-   * as a guard for each route. If one of the properties is not met, it
-   * returns the user back to the page where the necessary info is needed.
-   * */
-  /**
    * Manages the core information needed for booking appointments and acts as a
    * guard for each route. If any required property is not set, it redirects the
    * user to the page where the necessary info is needed.

@@ -19,6 +19,7 @@ import { ToastService } from '@/app/global-components/toast/toast.service';
 })
 export class BookAppointmentDatesService {
   private readonly domain = environment.domain;
+  private readonly production = environment.production;
   private readonly http = inject(HttpClient);
   private readonly bookService = inject(BookService);
   private readonly toastService = inject(ToastService);
@@ -83,8 +84,8 @@ export class BookAppointmentDatesService {
    * @param date The date used to construct the cache key.
    */
   readonly deleteFromCache = (name: string, date: Date) => {
-    const dto = this.bookingInfoSignal();
-    this.cache.delete(this.key(name, date, dto.staff ? dto.staff.email : ''));
+    const info = this.bookingInfoSignal();
+    this.cache.delete(this.key(name, date, info.staff ? info.staff.email : ''));
   };
 
   /**

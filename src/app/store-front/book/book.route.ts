@@ -27,7 +27,7 @@ export const route: Routes = [
   },
   {
     path: BOOK_APPOINTMENT_DATES_ROUTE,
-    canActivate: [BookAppointmentDateGuard],
+    // canActivate: [BookAppointmentDateGuard],
     loadComponent: () =>
       import('./book-appointment-dates/book-appointment-dates.component').then(
         (m) => m.BookAppointmentDatesComponent,

@@ -1,19 +1,30 @@
 import { inject, Injectable } from '@angular/core';
-import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
+import {
+  BookServiceOfferedDto,
+  development,
+} from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { catchError, of, tap } from 'rxjs';
 import { ToastService } from '@/app/global-components/toast/toast.service';
+import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookServiceOfferedService {
   private readonly domain: string | undefined = environment.domain;
+  private readonly production = environment.production;
   private readonly http = inject(HttpClient);
+  private readonly service = inject(BookStaffService);
   private readonly toastService = inject(ToastService);
 
-  private servicesOffered: BookServiceOfferedDto[] | undefined = undefined;
+  private servicesOffered: BookServiceOfferedDto[] | undefined = this.production
+    ? undefined
+    : development;
+
+  readonly setSelectedServiceOffered = (service: BookServiceOfferedDto) =>
+    this.service.employeesByServiceSelected(service);
 
   /**
    * Retrieves an Observable that emits an array of {@link BookServiceOfferedDto}

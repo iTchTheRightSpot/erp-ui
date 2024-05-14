@@ -6,6 +6,7 @@
 :root {
   --active: #dddddd;
   --white: #fff;
+  --calendar-background: #ccc;
   --border-outline: #ccc;
   --app-theme: #a3c1ad;
   --app-theme-hover: #75a284;
