@@ -19,7 +19,6 @@ import { ToastService } from '@/app/global-components/toast/toast.service';
 })
 export class BookAppointmentDatesService {
   private readonly domain = environment.domain;
-  private readonly production = environment.production;
   private readonly http = inject(HttpClient);
   private readonly bookService = inject(BookService);
   private readonly toastService = inject(ToastService);
@@ -35,6 +34,11 @@ export class BookAppointmentDatesService {
    * Cache to store fetched valid times.
    */
   private readonly cache = new Map<string, ValidTime[]>();
+
+  /**
+   * Cache to store fetched valid dates from {@link ValidTime}s.
+   * */
+  private readonly datesToHighlightCache = new Map<string, Date[]>();
 
   /**
    * Signal for dates to be highlighted on the calendar.
@@ -111,6 +115,11 @@ export class BookAppointmentDatesService {
           const found = objs.find(
             (obj) => this.format(selected) === this.format(new Date(obj.date)),
           );
+
+          const highlight = this.datesToHighlightCache.get(key);
+
+          if (highlight) this.datesToHighlight.set(highlight);
+
           return found ? of<Date[]>(found.times) : of<Date[]>([]);
         }
 
@@ -150,9 +159,12 @@ export class BookAppointmentDatesService {
       >(`${this.domain}appointment?service_name=${name}&employee_email=${email}&day=${selected.getDate()}&month=${1 + selected.getMonth()}&year=${selected.getFullYear()}`, { withCredentials: true })
       .pipe(
         tap((objs) => {
-          objs.forEach((obj) =>
-            this.datesToHighlightSignal().push(new Date(obj.date)),
-          );
+          const key = this.key(name, selected, email);
+          const value = objs.map((obj) => new Date(obj.date));
+
+          this.datesToHighlightCache.set(key, value);
+          this.datesToHighlight.set(value);
+
           this.cache.set(this.key(name, selected, email), objs);
         }),
         map((objs: ValidTime[]) => {

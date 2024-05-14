@@ -42,7 +42,7 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
                   <span
                     class="h-2 w-2 mx-2 rounded-full inline-block bg-white"
                   ></span>
-                  Duration: {{ service.duration }}
+                  Duration: {{ service.duration }} seconds
                 </p>
               </a>
               <span

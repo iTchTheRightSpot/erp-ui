@@ -22,7 +22,7 @@ export class BookAppointmentDatesComponent {
 
   protected readonly details = this.service.bookingInfoSignal();
   protected readonly dates$ = this.service.dates$();
-  protected readonly toHighlight = this.service.datesToHighlight();
+  protected readonly toHighlight = this.service.datesToHighlight;
 
   protected selectedAppointmentTime = (time: Date) => {};
 
@@ -38,10 +38,10 @@ export class BookAppointmentDatesComponent {
     await this.router.navigate([`${BOOK_ROUTE}/${BOOK_STAFF_ROUTE}`]);
   };
 
-  protected readonly onSelectedAppointmentDate = (selected: Date | null) =>
-    this.service.selectedAppointmentDate(
-      selected === null ? new Date() : selected,
-    );
+  protected readonly onSelectedAppointmentDate = (selected: Date) => {
+    this.selected = selected;
+    this.service.selectedAppointmentDate(selected);
+  };
 
   protected readonly onPreviousNextBtn = (date: Date) =>
     this.service.selectedAppointmentDate(date);
