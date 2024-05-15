@@ -93,11 +93,13 @@ import { CalendarService } from '@/app/global-components/calendar/calendar.servi
                   'bg-gray-200':
                     day.date.toDateString() === today.toDateString(),
                   'rounded-full':
-                    day.date.toDateString() === today.toDateString() || day.date.toDateString() === selected.toDateString(),
+                    day.date.toDateString() === today.toDateString() ||
+                    day.date.toDateString() === selected.toDateString(),
                   'opacity-25': day.disable,
                   'hover:bg-transparent': day.disable,
                   'hover:rounded-none': day.disable,
-                  'bg-[var(--app-theme)]': day.date.toDateString() === selected.toDateString()
+                  'bg-[var(--app-theme)]':
+                    day.date.toDateString() === selected.toDateString()
                 }"
               >
                 {{ day.date | date: 'd' }}
@@ -138,7 +140,7 @@ export class CalendarComponent {
   protected readonly onDateSelected = (day: CalendarDay) => {
     this.selected = day.date;
     this.onDateSelectedEmitter.emit(day.date);
-  }
+  };
 
   protected readonly yearBtn = () => console.log('year btn clicked');
 
