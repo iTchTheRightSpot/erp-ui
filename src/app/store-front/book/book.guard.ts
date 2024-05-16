@@ -11,7 +11,7 @@ import {
 export const BookStaffGuard = async () => {
   const service = inject(BookService);
   const info = service.bookingInfo();
-  const bool = info.serviceOffered === undefined;
+  const bool = !info.serviceOffered;
 
   if (bool) {
     const router = inject(Router);
@@ -24,7 +24,7 @@ export const BookStaffGuard = async () => {
 export const BookAppointmentDateGuard = async () => {
   const service = inject(BookService);
   const info = service.bookingInfo();
-  const bool = info.serviceOffered === undefined || info.staff === undefined;
+  const bool = !info.serviceOffered || !info.staff;
 
   if (bool) {
     const router = inject(Router);
@@ -34,13 +34,10 @@ export const BookAppointmentDateGuard = async () => {
   return !bool;
 };
 
-export const BookAppointmentClientInformationGuard = async () => {
+export const BookCheckoutGuard = async () => {
   const service = inject(BookService);
   const info = service.bookingInfo();
-  const bool =
-    info.serviceOffered === undefined ||
-    info.staff === undefined ||
-    info.time == undefined;
+  const bool = !info.serviceOffered || !info.staff || !info.time;
 
   if (bool) {
     const router = inject(Router);

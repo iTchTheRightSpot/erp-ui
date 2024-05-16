@@ -52,9 +52,17 @@ export class BookAppointmentDatesService {
    * @param date The date of the selected appointment.
    */
   readonly selectedAppointmentDate = (date: Date) => {
-    this.bookService.setTimeSelected(date);
+    this.bookService.setTimeDateSelected(date);
     this.subject.next(date);
   };
+
+  /**
+   * Updates the selected appointment time and notifies subscribers.
+   *
+   * @param time The time of the selected appointment.
+   */
+  readonly selectedAppointmentTime = (time: Date) =>
+    this.bookService.setTimeSelected(time);
 
   /**
    * Constructs the key for the cache based on the date and staff email.

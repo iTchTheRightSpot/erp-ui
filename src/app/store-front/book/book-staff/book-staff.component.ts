@@ -33,16 +33,14 @@ import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
               (keydown.enter)="selectedStaff(staff)"
               class="relative px-1.5 py-3 h-fit cursor-pointer flex gap-2 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
-              <div
-                class="max-h-[6.5rem] max-w-[6.5rem] md:max-h-[7.5rem] md:max-w-[7.375rem] lg:max-h-[8.5rem] lg:max-w-[8.5rem] rounded-full overflow-hidden"
-              >
+              <div class="flex-shrink-0">
                 <img
                   [src]="staff.picture"
                   alt="staff profile picture"
-                  class="h-full w-full object-cover object-center ring-2 ring-gray-400"
+                  class="w-20 h-20 rounded-full object-cover object-center"
                 />
               </div>
-              <a class="">
+              <a>
                 <h3
                   class="capitalize underline-offset-4 font-medium pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
                 >

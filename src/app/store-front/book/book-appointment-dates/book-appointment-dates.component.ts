@@ -2,7 +2,10 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { BookAppointmentDatesService } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { BOOK_STAFF_ROUTE } from '@/app/store-front/book/book.util';
+import {
+  BOOK_CHECKOUT_ROUTE,
+  BOOK_STAFF_ROUTE,
+} from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/util';
 import { CalendarComponent } from '@/app/global-components/calendar/calendar.component';
 
@@ -24,7 +27,10 @@ export class BookAppointmentDatesComponent {
   protected readonly dates$ = this.service.dates$();
   protected readonly toHighlight = this.service.datesToHighlight;
 
-  protected selectedAppointmentTime = (time: Date) => {};
+  protected readonly selectedAppointmentTime = async (time: Date) => {
+    this.service.selectedAppointmentTime(new Date(time));
+    await this.router.navigate([`${BOOK_ROUTE}/${BOOK_CHECKOUT_ROUTE}`]);
+  };
 
   protected readonly toHrMins = (time: Date) =>
     new Date(time).toLocaleTimeString([], {
@@ -43,6 +49,8 @@ export class BookAppointmentDatesComponent {
     this.service.selectedAppointmentDate(selected);
   };
 
-  protected readonly onPreviousNextBtn = (date: Date) =>
+  protected readonly onPreviousOrNextBtn = (date: Date) => {
+    this.selected = date;
     this.service.selectedAppointmentDate(date);
+  };
 }

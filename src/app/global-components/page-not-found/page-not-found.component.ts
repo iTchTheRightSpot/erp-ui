@@ -8,7 +8,7 @@ import { Router, RouterLink } from '@angular/router';
   imports: [RouterLink],
   template: `
     <div
-      class="lg-scr min-h-[100vh] bg-white dark:bg-slate-800 flex flex-col items-center"
+      class="min-h-[100vh] bg-white dark:bg-slate-800 flex flex-col items-center"
     >
       <h1
         class="text-slate-900 dark:text-white text-2xl lg:text-3xl mt-48 font-medium tracking-tight"

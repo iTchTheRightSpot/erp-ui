@@ -15,7 +15,8 @@ export class BookService {
   private readonly bookingInfoSignal = signal<BookDto>({
     serviceOffered: undefined,
     staff: undefined,
-    time: new Date(),
+    selectedDate: new Date(),
+    time: undefined,
   });
 
   readonly bookingInfo = this.bookingInfoSignal;
@@ -29,6 +30,7 @@ export class BookService {
     this.bookingInfoSignal.set({
       serviceOffered: service,
       staff: this.bookingInfoSignal().staff,
+      selectedDate: this.bookingInfoSignal().selectedDate,
       time: this.bookingInfoSignal().time,
     });
 
@@ -41,18 +43,33 @@ export class BookService {
     this.bookingInfoSignal.set({
       serviceOffered: this.bookingInfoSignal().serviceOffered,
       staff: staff,
+      selectedDate: this.bookingInfoSignal().selectedDate,
       time: this.bookingInfoSignal().time,
     });
 
   /**
-   * Sets the selected time/date for booking.
+   * Sets the selected date for booking.
    *
-   * @param date The selected time/date for booking.
+   * @param date The selected date for booking.
    */
-  readonly setTimeSelected = (date: Date) =>
+  readonly setTimeDateSelected = (date: Date) =>
     this.bookingInfoSignal.set({
       serviceOffered: this.bookingInfoSignal().serviceOffered,
       staff: this.bookingInfoSignal().staff,
-      time: date,
+      selectedDate: date,
+      time: this.bookingInfoSignal().time,
+    });
+
+  /**
+   * Sets the selected time for booking.
+   *
+   * @param time The selected time for booking.
+   */
+  readonly setTimeSelected = (time: Date) =>
+    this.bookingInfoSignal.set({
+      serviceOffered: this.bookingInfoSignal().serviceOffered,
+      staff: this.bookingInfoSignal().staff,
+      selectedDate: this.bookingInfoSignal().selectedDate,
+      time: time,
     });
 }

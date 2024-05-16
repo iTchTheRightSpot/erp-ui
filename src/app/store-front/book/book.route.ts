@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import {
   BOOK_APPOINTMENT_DATES_ROUTE,
+  BOOK_CHECKOUT_ROUTE,
   BOOK_SERVICE_OFFERED_ROUTE,
   BOOK_STAFF_ROUTE,
 } from '@/app/store-front/book/book.util';
 import {
+  BookCheckoutGuard,
   BookAppointmentDateGuard,
   BookStaffGuard,
 } from '@/app/store-front/book/book.guard';
@@ -32,5 +34,11 @@ export const route: Routes = [
       import('./book-appointment-dates/book-appointment-dates.component').then(
         (m) => m.BookAppointmentDatesComponent,
       ),
+  },
+  {
+    path: BOOK_CHECKOUT_ROUTE,
+    canActivate: [BookCheckoutGuard],
+    loadComponent: () =>
+      import('./checkout/checkout.component').then((m) => m.CheckoutComponent),
   },
 ];

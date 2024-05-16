@@ -16,7 +16,7 @@
       <app-calendar
         [minDate]="today"
         [toHighlight]="toHighlight()"
-        (previousNextEmitter)="onPreviousNextBtn($event)"
+        (previousNextEmitter)="onPreviousOrNextBtn($event)"
         (onDateSelectedEmitter)="onSelectedAppointmentDate($event)"
       />
       <p>

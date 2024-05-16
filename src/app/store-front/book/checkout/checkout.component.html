@@ -1,0 +1,100 @@
+<div class="lg-scr mg-top px-1.5">
+  <div class="mb-6 flex flex-col gap-2">
+    <h1
+      class="h-fit font-normal underline underline-offset-4 decoration-1 text-xl md:text-2xl lg:text-4xl"
+    >
+      Pre-schedule an appointment
+    </h1>
+  </div>
+
+  <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <!-- form -->
+    <div class="order-2 sm:order-1 pb-2">
+      <app-form />
+    </div>
+
+    <!-- appointment summary -->
+    <div class="flex flex-col gap-2 order-1 sm:order-2">
+      <div class="mb-1.5">
+        <h2
+          class="font-medium underline underline-offset-4 decoration-1 text-base lg:text-lg"
+        >
+          Appointment Summary
+        </h2>
+      </div>
+
+      <div class="p-3 rounded-lg border border-gray-300">
+        <div class="pb-2 flex items-center gap-2 border-b border-gray-300">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6 lg:w-10 lg:h-10"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
+            />
+          </svg>
+
+          <div class="flex flex-col gap-1.5 lg:gap-1">
+            <p class="text-xs lg:text-base font-bold">
+              {{ date.toDateString() }}
+            </p>
+            <p class="text-xs lg:text-base">{{ toHrMins(date) }}</p>
+          </div>
+        </div>
+
+        <div class="pb-2 pt-3 lg:pt-4 border-b border-gray-300">
+          <h4 class="mb-1.5 text-xs lg:text-base font-bold">Services</h4>
+          <ul class="max-w-md space-y-1 list-inside">
+            <li class="flex items-center text-xs lg:text-sm">
+              <svg
+                class="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
+                />
+              </svg>
+              At least 10 characters
+            </li>
+            <li class="flex items-center text-xs lg:text-sm">
+              <svg
+                class="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 me-2 text-green-500 dark:text-green-400 flex-shrink-0"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
+                />
+              </svg>
+              At least one lowercase character
+            </li>
+          </ul>
+        </div>
+
+        <div class="pt-2 flex items-center space-x-2 rtl:space-x-reverse">
+          <div class="flex-shrink-0">
+            <img
+              [src]="img"
+              alt="staff profile picture"
+              class="w-12 h-12 lg:w-20 lg:h-20 rounded-full object-cover object-center"
+            />
+          </div>
+          <div class="flex-1 min-w-0 pl-2 lg:pl-3 border-l border-gray-300">
+            <p class="text-xs lg:text-base font-medium">Letitia</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
