@@ -4,7 +4,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { MobileNavComponent } from '@/app/global-components/mobile-nav/mobile-nav.component';
+import { MobileNavComponent } from '@/app/store-front/navigation/mobile-nav.component';
 import { ABOUT_ROUTE, BOOK_ROUTE, SERVICE_ROUTE } from '@/app/store-front/util';
 import { RouterLink } from '@angular/router';
 

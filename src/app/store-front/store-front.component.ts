@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
-import { NavigationComponent } from '@/app/global-components/navigation/navigation.component';
+import { NavigationComponent } from '@/app/store-front/navigation/navigation.component';
 
 @Component({
   selector: 'app-store-front',

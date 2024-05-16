@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NavigationComponent } from '@/app/global-components/navigation/navigation.component';
 import { HomeService } from '@/app/store-front/home/home.service';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -8,7 +7,7 @@ import { BOOK_ROUTE } from '@/app/store-front/util';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NavigationComponent, AsyncPipe, RouterLink],
+  imports: [AsyncPipe, RouterLink],
   styles: [
     `
       .trans {
