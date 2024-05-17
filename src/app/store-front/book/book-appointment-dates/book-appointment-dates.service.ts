@@ -77,8 +77,11 @@ export class BookAppointmentDatesService {
    * @param staffEmail The email of the staff member.
    * @returns The constructed cache key.
    */
-  private readonly key = (name: string, date: Date, staffEmail: string) =>
-    `${name}_${1 + date.getMonth()}_${date.getFullYear()}_${staffEmail}`;
+  private readonly buildCacheKey = (
+    name: string,
+    date: Date,
+    staffEmail: string,
+  ) => `${name}_${1 + date.getMonth()}_${date.getFullYear()}_${staffEmail}`;
 
   /**
    * Formats the date in the "dd-mm-yyyy" format.
@@ -102,7 +105,9 @@ export class BookAppointmentDatesService {
    */
   readonly deleteFromCache = (name: string, date: Date) => {
     const info = this.bookingInfoSignal();
-    this.cache.delete(this.key(name, date, info.staff ? info.staff.email : ''));
+    this.cache.delete(
+      this.buildCacheKey(name, date, info.staff ? info.staff.email : ''),
+    );
   };
 
   /**
@@ -118,13 +123,20 @@ export class BookAppointmentDatesService {
     this.subject.asObservable().pipe(
       switchMap((selected) => {
         const info = this.bookingInfoSignal();
-        const services = info.servicesOffered ? info.servicesOffered : [];
+        const services = info.servicesOffered;
+        const staffEmail = info.staff?.name;
+
+        if (!services || !staffEmail) {
+          this.toastService.message(
+            'please select a service or staff pre-book',
+          );
+          throw new Error();
+        }
 
         let name = '';
         services.forEach((obj) => name.concat(obj.name, '_'));
-        const email = info.staff ? info.staff.email : '';
 
-        const key = this.key(name, selected, email);
+        const key = this.buildCacheKey(name, selected, staffEmail);
 
         if (this.cache.has(key)) {
           const objs = this.cache.get(key) || [];
@@ -144,8 +156,12 @@ export class BookAppointmentDatesService {
           (service) =>
             (params = params.append('service_name', service.name.trim())),
         );
+        params = params.append('employee_email', staffEmail);
+        params = params.append('day', selected.getDate());
+        params = params.append('month', 1 + selected.getMonth());
+        params = params.append('year', selected.getFullYear());
 
-        return this.req$(params, name, email, selected);
+        return this.req$(params, key, selected);
       }),
       catchError((e: HttpErrorResponse) =>
         this.toastService.messageHandleIterateError<Date>(e),
@@ -164,8 +180,7 @@ export class BookAppointmentDatesService {
    * to May 31, 2024.
    *
    * @param params
-   * @param name The {@link BookServiceOfferedDto} for which the user wants to book.
-   * @param email The email of the {@link StaffDto} the user wants to book with.
+   * @param key
    * @param selected The date the user wants to book for.
    * @returns An observable that emits an array of available booking times for
    *          the specified day. The times are contained in the {@link ValidTime}
@@ -173,28 +188,21 @@ export class BookAppointmentDatesService {
    */
   private readonly req$ = (
     params: HttpParams,
-    name: string,
-    email: string,
+    key: string,
     selected: Date,
   ): Observable<Date[]> => {
-    params = params.append('employee_email', email);
-    params = params.append('day', selected.getDate());
-    params = params.append('month', 1 + selected.getMonth());
-    params = params.append('year', selected.getFullYear());
-
     return this.http
       .get<
         ValidTime[]
       >(`${this.domain}appointment`, { withCredentials: true, params })
       .pipe(
         tap((validTimes) => {
-          const key = this.key(name, selected, email);
           const value = validTimes.map((obj) => new Date(obj.date));
 
           this.datesToHighlightCache.set(key, value);
           this.datesToHighlight.set(value);
 
-          this.cache.set(this.key(name, selected, email), validTimes);
+          this.cache.set(key, validTimes);
         }),
         map((objs: ValidTime[]) => {
           const found = objs.find(
