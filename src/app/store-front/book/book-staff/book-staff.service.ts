@@ -5,7 +5,7 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
-import { catchError, map, of, tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { ToastService } from '@/app/global-components/toast/toast.service';
 import {
   StaffDto,
@@ -13,11 +13,6 @@ import {
 } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { BookService } from '@/app/store-front/book/book.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
-
-interface Filtering {
-  serviceName: '';
-  cache: StaffDto[] | undefined;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -33,45 +28,39 @@ export class BookStaffService {
     ? new Map<string, StaffDto[]>()
     : staffs();
 
+  private readonly buildCacheKey = (services: BookServiceOfferedDto[]) => {
+    let key = '';
+    services.forEach((s) => key.concat(s.name, '_'));
+    return key;
+  };
+
   readonly employeesByServicesSelected = (services: BookServiceOfferedDto[]) =>
     this.bookService.setServicesOfferedSelected(services);
 
   readonly staffs$ = () => {
-    const servicesOffered = this.bookService.bookingInfo().servicesOffered;
-    const services = servicesOffered ? servicesOffered : [];
+    const services = this.bookService.bookingInfo().servicesOffered;
 
-    const set = new Set<string>();
-    const res: StaffDto[] = [];
-    let i = 0;
-
-    while (i < services.length) {
-      if (this.cache.has(services[i].name)) {
-        const value = this.cache.get(services[i].name);
-        if (!set.has(services[i].name) && value) res.push(...value);
-
-        const index = services.indexOf(services[i]);
-        services.slice(index);
-      }
-      i++;
+    if (!services) {
+      this.toastService.message('please select a service pre-book');
+      throw new Error();
     }
 
-    if (services.length === 0)
-      return of<StaffDto[]>(res.filter((staff) => set.has(staff.name)));
+    const key = this.buildCacheKey(services);
+
+    if (this.cache.has(key)) {
+      const value = this.cache.get(key);
+      if (value) return of<StaffDto[]>(value);
+    }
 
     let params = new HttpParams();
     services.forEach(
       (service) =>
         (params = params.append('service_name', service.name.trim())),
     );
-    return this.request$(params, services, res, set);
+    return this.request$(params, key);
   };
 
-  private readonly request$ = (
-    params: HttpParams,
-    services: BookServiceOfferedDto[],
-    res: StaffDto[],
-    set: Set<string>,
-  ) =>
+  private readonly request$ = (params: HttpParams, key: string) =>
     this.http
       .get<
         StaffDto[]
@@ -83,16 +72,7 @@ export class BookStaffService {
             (obj) =>
               (obj.picture = obj.picture.length === 0 ? img : obj.picture),
           );
-          services.forEach((service) => this.cache.set(service.name, staffs));
-        }),
-        map((staffs: StaffDto[]) => {
-          if (res.length < 1) return staffs;
-
-          staffs.forEach((staff) => {
-            if (!set.has(staff.name)) res.push(staff);
-          });
-
-          return res;
+          this.cache.set(key, staffs);
         }),
         catchError((e: HttpErrorResponse) =>
           this.toastService.messageHandleIterateError<StaffDto>(e),
