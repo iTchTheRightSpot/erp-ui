@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { CheckoutService } from '@/app/store-front/book/checkout/checkout.service';
 import { FormComponent } from '@/app/store-front/book/checkout/form.component';
+import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 
 @Component({
   selector: 'app-checkout',
@@ -11,16 +11,18 @@ import { FormComponent } from '@/app/store-front/book/checkout/form.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutComponent {
-  private readonly router = inject(Router);
   private readonly service = inject(CheckoutService);
 
-  protected readonly details = this.service.bookingInfoSignal();
-  protected readonly date = new Date();
-  protected readonly img = 'assets/images/staffs/engin-akyurt.jpg';
+  protected readonly bookingInfo = this.service.bookingInfoSignal();
 
   protected readonly toHrMins = (time: Date) =>
     new Date(time).toLocaleTimeString([], {
       hour: '2-digit',
       minute: '2-digit',
     });
+
+  protected readonly transform = (objs: BookServiceOfferedDto[]) =>
+    objs.map((obj) => ({ service_name: obj.name }));
+
+  protected readonly onSubmit = ($event: FormData) => {};
 }

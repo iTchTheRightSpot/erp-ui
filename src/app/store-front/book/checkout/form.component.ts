@@ -1,9 +1,34 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  output,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { CheckoutDto } from '@/app/store-front/book/checkout/checkout.dto';
+
+interface Form {
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  province: string;
+  postcode: string;
+  country: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   styles: [
     `
       /* Chrome, Safari, Edge, Opera */
@@ -26,7 +51,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       >
         Contact Information
       </h2>
-      <form class="space-y-8">
+      <form [formGroup]="form" class="space-y-8">
         <div>
           <label for="name" class="block mb-2 text-sm font-medium"
             >Full name <span class="text-red-500">*</span></label
@@ -34,6 +59,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           <input
             type="text"
             id="name"
+            formControlName="name"
             class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
             placeholder="full name"
             required
@@ -46,6 +72,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           <input
             type="email"
             id="email"
+            email="true"
+            formControlName="email"
             class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
             placeholder="email"
             required
@@ -74,6 +102,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <input
               type="number"
               id="phone-input"
+              formControlName="phone"
               aria-describedby="helper-text-explanation"
               class="block w-full ps-10 p-3 text-sm rounded-md bg-gray-50 border border-gray-300 text-gray-900"
               pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
@@ -98,6 +127,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           <input
             type="text"
             id="address"
+            formControlName="address"
             class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
             placeholder="address"
             required
@@ -111,6 +141,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           <input
             type="text"
             id="city"
+            formControlName="city"
             class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
             placeholder="city"
             required
@@ -124,6 +155,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           <input
             type="text"
             id="province"
+            formControlName="province"
             class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
             placeholder="province"
             required
@@ -137,6 +169,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           <input
             type="text"
             id="postcode"
+            formControlName="postcode"
             class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
             placeholder="postcode"
             required
@@ -152,6 +185,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             id="country"
             class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
             placeholder="country"
+            formControlName="country"
             required
           />
         </div>
@@ -163,6 +197,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           <input
             class="block w-full p-3 text-sm cursor-pointer text-gray-900 bg-gray-50 rounded-md border border-gray-300"
             id="multiple_files"
+            (change)="onFileSelected($event)"
             type="file"
             accept="image/*"
           />
@@ -174,6 +209,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           >
           <textarea
             id="detail"
+            formControlName="description"
             rows="6"
             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-md shadow-sm border border-gray-300"
             placeholder="Please enter a brief description about the job area"
@@ -182,8 +218,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         </div>
 
         <button
+          (click)="submit()"
           type="submit"
-          class="py-3 px-5 text-sm font-medium text-center text-white rounded-md sm:w-fit bg-[var(--app-theme)]"
+          class="py-3 px-5 text-sm font-medium text-center text-white rounded-md sm:w-fit bg-[var(--app-theme-hover)]"
         >
           Confirm booking
         </button>
@@ -192,4 +229,83 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormComponent {}
+export class FormComponent {
+  private readonly fb = inject(FormBuilder);
+
+  empEmail = input.required<string>();
+  services = input.required<{ service_name: string }[]>();
+  dateTime = input.required<Date>();
+  readonly formEmitter = output<FormData>();
+
+  readonly form = this.fb.group({
+    name: new FormControl('', [Validators.required, Validators.max(50)]),
+    email: new FormControl('', [Validators.required, Validators.max(255)]),
+    phone: new FormControl('', [Validators.required, Validators.max(11)]),
+    address: new FormControl('', [Validators.required]),
+    city: new FormControl('', [Validators.required]),
+    province: new FormControl('', [Validators.required]),
+    postcode: new FormControl('', [Validators.required]),
+    country: new FormControl('', [Validators.required]),
+    description: new FormControl('', [
+      Validators.required,
+      Validators.max(255),
+    ]),
+  });
+
+  private readonly buildForm = () => {
+    const name = this.form.controls['name'].value;
+    const email = this.form.controls['email'].value;
+    const phone = this.form.controls['phone'].value;
+    const address = this.form.controls['address'].value;
+    const city = this.form.controls['city'].value;
+    const postcode = this.form.controls['postcode'].value;
+    const province = this.form.controls['province'].value;
+    const country = this.form.controls['country'].value;
+    const description = this.form.controls['description'].value;
+
+    return {
+      name: name ? name : '',
+      email: email ? email : '',
+      phone: phone ? phone : '',
+      address: address ? address : '',
+      city: city ? city : '',
+      province: province ? province : '',
+      postcode: postcode ? postcode : '',
+      country: country ? country : '',
+      description: description ? description : '',
+    } as Form;
+  };
+
+  private file: File | null = null;
+
+  protected readonly onFileSelected = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+    if (!files) return;
+    this.file = files.item(0);
+  };
+
+  protected readonly submit = () => {
+    const builder = this.buildForm();
+
+    const dto: CheckoutDto = {
+      services: this.services(),
+      name: builder.name,
+      employee_email: this.empEmail(),
+      start: this.dateTime(),
+      email: builder.email,
+      phone: builder.phone,
+      description: builder.description,
+      address: `${builder.address}, ${builder.city}, ${builder.province} ${builder.postcode}, ${builder.country}`,
+    };
+
+    const data = new FormData();
+    data.append(
+      'dto',
+      new Blob([JSON.stringify(dto)], { type: 'application/json' }),
+    );
+    data.append('files', this.file ? this.file : new Blob());
+
+    this.formEmitter.emit(data);
+  };
+}

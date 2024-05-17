@@ -2,10 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
-  EventEmitter,
   inject,
   input,
-  Output,
+  output,
 } from '@angular/core';
 import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { CalendarDay } from '@/app/global-components/calendar/calendar.util';
@@ -120,8 +119,8 @@ export class CalendarComponent {
   minDate = input<Date>();
   toHighlight = input<Date[]>();
 
-  @Output() readonly onDateSelectedEmitter = new EventEmitter<Date>();
-  @Output() readonly previousNextEmitter = new EventEmitter<Date>();
+  readonly onDateSelectedEmitter = output<Date>();
+  readonly previousNextEmitter = output<Date>();
 
   protected readonly today = new Date();
 

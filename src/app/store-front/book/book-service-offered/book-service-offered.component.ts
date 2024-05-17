@@ -50,7 +50,7 @@ import { map } from 'rxjs';
               </a>
               <span
                 class="absolute bottom-1 right-0 transform translate-y-1/4 w-3.5 h-3.5 border border-black bg-transparent rounded-full"
-                [ngClass]="{ 'bg-green-600': service.toggle }"
+                [ngClass]="{ 'bg-black': service.toggle }"
               ></span>
             </li>
           } @empty {

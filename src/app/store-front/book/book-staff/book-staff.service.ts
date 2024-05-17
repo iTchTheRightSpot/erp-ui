@@ -63,7 +63,6 @@ export class BookStaffService {
       (service) =>
         (params = params.append('service_name', service.name.trim())),
     );
-    console.log('params ', params);
     return this.request$(params, services, res, set);
   };
 
