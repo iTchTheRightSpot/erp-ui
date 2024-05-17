@@ -1,13 +1,10 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { concatMap, delay, from, of, repeat, startWith, switchMap } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { concatMap, delay, from, of, repeat, startWith } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HomeService {
-  private readonly http = inject(HttpClient);
-
   private readonly images = [
     'assets/images/home/landscape-1.jpeg',
     'assets/images/home/landscape-2.jpeg',

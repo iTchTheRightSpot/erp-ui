@@ -1,5 +1,9 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
 import { environment } from '@/environments/environment.ts';
 import {
@@ -13,6 +17,7 @@ import {
 } from 'rxjs';
 import { BookService } from '@/app/store-front/book/book.service';
 import { ToastService } from '@/app/global-components/toast/toast.service';
+import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -112,9 +117,12 @@ export class BookAppointmentDatesService {
   readonly dates$ = () =>
     this.subject.asObservable().pipe(
       switchMap((selected) => {
-        const dto = this.bookingInfoSignal();
-        const name = dto.serviceOffered ? dto.serviceOffered.name : '';
-        const email = dto.staff ? dto.staff.email : '';
+        const info = this.bookingInfoSignal();
+        const services = info.servicesOffered ? info.servicesOffered : [];
+
+        let name = '';
+        services.forEach((obj) => name.concat(obj.name, '_'));
+        const email = info.staff ? info.staff.email : '';
 
         const key = this.key(name, selected, email);
 
@@ -131,7 +139,13 @@ export class BookAppointmentDatesService {
           return found ? of<Date[]>(found.times) : of<Date[]>([]);
         }
 
-        return this.req$(name, email, selected);
+        let params = new HttpParams();
+        services.forEach(
+          (service) =>
+            (params = params.append('service_name', service.name.trim())),
+        );
+
+        return this.req$(params, name, email, selected);
       }),
       catchError((e: HttpErrorResponse) =>
         this.toastService.messageHandleIterateError<Date>(e),
@@ -149,6 +163,7 @@ export class BookAppointmentDatesService {
    * date is May 15, 2024, the server returns available booking times from May 15
    * to May 31, 2024.
    *
+   * @param params
    * @param name The {@link BookServiceOfferedDto} for which the user wants to book.
    * @param email The email of the {@link StaffDto} the user wants to book with.
    * @param selected The date the user wants to book for.
@@ -157,23 +172,29 @@ export class BookAppointmentDatesService {
    *          property.
    */
   private readonly req$ = (
+    params: HttpParams,
     name: string,
     email: string,
     selected: Date,
-  ): Observable<Date[]> =>
-    this.http
+  ): Observable<Date[]> => {
+    params = params.append('employee_email', email);
+    params = params.append('day', selected.getDate());
+    params = params.append('month', 1 + selected.getMonth());
+    params = params.append('year', selected.getFullYear());
+
+    return this.http
       .get<
         ValidTime[]
-      >(`${this.domain}appointment?service_name=${name}&employee_email=${email}&day=${selected.getDate()}&month=${1 + selected.getMonth()}&year=${selected.getFullYear()}`, { withCredentials: true })
+      >(`${this.domain}appointment`, { withCredentials: true, params })
       .pipe(
-        tap((objs) => {
+        tap((validTimes) => {
           const key = this.key(name, selected, email);
-          const value = objs.map((obj) => new Date(obj.date));
+          const value = validTimes.map((obj) => new Date(obj.date));
 
           this.datesToHighlightCache.set(key, value);
           this.datesToHighlight.set(value);
 
-          this.cache.set(this.key(name, selected, email), objs);
+          this.cache.set(this.key(name, selected, email), validTimes);
         }),
         map((objs: ValidTime[]) => {
           const found = objs.find(
@@ -182,4 +203,5 @@ export class BookAppointmentDatesService {
           return found ? found.times : [];
         }),
       );
+  };
 }

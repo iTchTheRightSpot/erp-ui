@@ -7,7 +7,7 @@ export const BOOK_APPOINTMENT_DATES_ROUTE = 'dates-available';
 export const BOOK_CHECKOUT_ROUTE = 'checkout';
 
 export interface BookDto {
-  serviceOffered: BookServiceOfferedDto | undefined;
+  servicesOffered: BookServiceOfferedDto[] | undefined;
   staff: StaffDto | undefined;
   selectedDate: Date | undefined;
   time: Date | undefined;

@@ -23,8 +23,8 @@ export class BookServiceOfferedService {
     ? undefined
     : development;
 
-  readonly setSelectedServiceOffered = (service: BookServiceOfferedDto) =>
-    this.service.employeesByServiceSelected(service);
+  readonly setSelectedServicesOffered = (services: BookServiceOfferedDto[]) =>
+    this.service.employeesByServicesSelected(services);
 
   /**
    * Retrieves an Observable that emits an array of {@link BookServiceOfferedDto}

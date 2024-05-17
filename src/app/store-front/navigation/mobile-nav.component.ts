@@ -50,7 +50,7 @@ import { RouterLink } from '@angular/router';
 
       <!-- drop down -->
       <ul class="flex-col list-none flex gap-3">
-        @for (link of links; track link; let i = $index) {
+        @for (link of links; track link) {
           <li
             class="p-2.5 border-b cursor-pointer active:border-black active:border-2 focus:border-black focus:border-2"
           >

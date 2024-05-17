@@ -13,7 +13,7 @@ export class BookService {
    * user to the page where the necessary info is needed.
    */
   private readonly bookingInfoSignal = signal<BookDto>({
-    serviceOffered: undefined,
+    servicesOffered: undefined,
     staff: undefined,
     selectedDate: new Date(),
     time: undefined,
@@ -22,13 +22,13 @@ export class BookService {
   readonly bookingInfo = this.bookingInfoSignal;
 
   /**
-   * Sets the selected service offered for booking.
+   * Sets the selected services offered for booking.
    *
-   * @param service The selected service offered for booking.
+   * @param services The selected services offered for booking.
    */
-  readonly setServiceOfferedSelected = (service: BookServiceOfferedDto) =>
+  readonly setServicesOfferedSelected = (services: BookServiceOfferedDto[]) =>
     this.bookingInfoSignal.set({
-      serviceOffered: service,
+      servicesOffered: services,
       staff: this.bookingInfoSignal().staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
       time: this.bookingInfoSignal().time,
@@ -41,7 +41,7 @@ export class BookService {
    */
   readonly setStaffSelected = (staff: StaffDto) =>
     this.bookingInfoSignal.set({
-      serviceOffered: this.bookingInfoSignal().serviceOffered,
+      servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
       time: this.bookingInfoSignal().time,
@@ -54,7 +54,7 @@ export class BookService {
    */
   readonly setTimeDateSelected = (date: Date) =>
     this.bookingInfoSignal.set({
-      serviceOffered: this.bookingInfoSignal().serviceOffered,
+      servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: this.bookingInfoSignal().staff,
       selectedDate: date,
       time: this.bookingInfoSignal().time,
@@ -67,7 +67,7 @@ export class BookService {
    */
   readonly setTimeSelected = (time: Date) =>
     this.bookingInfoSignal.set({
-      serviceOffered: this.bookingInfoSignal().serviceOffered,
+      servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: this.bookingInfoSignal().staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
       time: time,

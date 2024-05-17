@@ -1,7 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@/environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, of, tap } from 'rxjs';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
+import { catchError, map, of, tap } from 'rxjs';
 import { ToastService } from '@/app/global-components/toast/toast.service';
 import {
   StaffDto,
@@ -9,6 +13,11 @@ import {
 } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { BookService } from '@/app/store-front/book/book.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
+
+interface Filtering {
+  serviceName: '';
+  cache: StaffDto[] | undefined;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -24,29 +33,70 @@ export class BookStaffService {
     ? new Map<string, StaffDto[]>()
     : staffs();
 
-  readonly employeesByServiceSelected = (service: BookServiceOfferedDto) =>
-    this.bookService.setServiceOfferedSelected(service);
+  readonly employeesByServicesSelected = (services: BookServiceOfferedDto[]) =>
+    this.bookService.setServicesOfferedSelected(services);
 
   readonly staffs$ = () => {
-    const serviceOffered = this.bookService.bookingInfo().serviceOffered;
-    const name = serviceOffered ? serviceOffered.name : '';
-    const bool = this.cache.has(name);
+    const servicesOffered = this.bookService.bookingInfo().servicesOffered;
+    const services = servicesOffered ? servicesOffered : [];
 
-    if (bool) return of(this.cache.get(name));
+    const set = new Set<string>();
+    const res: StaffDto[] = [];
+    let i = 0;
 
-    return this.http
+    while (i < services.length) {
+      if (this.cache.has(services[i].name)) {
+        const value = this.cache.get(services[i].name);
+        if (!set.has(services[i].name) && value) res.push(...value);
+
+        const index = services.indexOf(services[i]);
+        services.slice(index);
+      }
+      i++;
+    }
+
+    if (services.length === 0)
+      return of<StaffDto[]>(res.filter((staff) => set.has(staff.name)));
+
+    let params = new HttpParams();
+    services.forEach(
+      (service) =>
+        (params = params.append('service_name', service.name.trim())),
+    );
+    console.log('params ', params);
+    return this.request$(params, services, res, set);
+  };
+
+  private readonly request$ = (
+    params: HttpParams,
+    services: BookServiceOfferedDto[],
+    res: StaffDto[],
+    set: Set<string>,
+  ) =>
+    this.http
       .get<
         StaffDto[]
-      >(`${this.domain}service-offered/staffs?service_name=${name}`, { withCredentials: true })
+      >(`${this.domain}service-offered/staffs`, { withCredentials: true, params: params })
       .pipe(
-        tap((arr) => {
+        tap((staffs) => {
           const img = './assets/images/staffs/engin-akyurt.jpg';
-          arr.forEach((obj) => (obj.picture.length === 0 ? img : obj.picture));
-          this.cache.set(name, arr);
+          staffs.forEach(
+            (obj) =>
+              (obj.picture = obj.picture.length === 0 ? img : obj.picture),
+          );
+          services.forEach((service) => this.cache.set(service.name, staffs));
+        }),
+        map((staffs: StaffDto[]) => {
+          if (res.length < 1) return staffs;
+
+          staffs.forEach((staff) => {
+            if (!set.has(staff.name)) res.push(staff);
+          });
+
+          return res;
         }),
         catchError((e: HttpErrorResponse) =>
           this.toastService.messageHandleIterateError<StaffDto>(e),
         ),
       );
-  };
 }
