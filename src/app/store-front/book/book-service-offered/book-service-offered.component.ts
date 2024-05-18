@@ -34,24 +34,25 @@ import { map } from 'rxjs';
               tabIndex="0"
               class="relative cursor-pointer px-1.5 py-3 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
-              <a>
+              <div class="w-full flex justify-between items-center">
                 <h3
                   class="capitalize underline underline-offset-4 font-normal pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
                 >
                   {{ service.obj.name }}
                 </h3>
-                <p class="text-xs sm:text-sm whitespace-nowrap">
-                  Price varies but starts at: {{ '$' + service.obj.price }}
+                @if (service.toggle) {
+                  <span class="w-3.5 h-3.5 rounded-full bg-green-500"></span>
+                } @else {
                   <span
-                    class="h-2 w-2 mx-2 rounded-full inline-block bg-white"
+                    class="w-3.5 h-3.5 border border-black rounded-full bg-white"
                   ></span>
-                  Duration: {{ service.obj.duration }} seconds
-                </p>
-              </a>
-              <span
-                class="absolute bottom-1 right-0 transform translate-y-1/4 w-3.5 h-3.5 border border-black bg-transparent rounded-full"
-                [ngClass]="{ 'bg-black': service.toggle }"
-              ></span>
+                }
+              </div>
+              <p class="text-xs sm:text-sm whitespace-nowrap">
+                Price varies but starts at: {{ '$' + service.obj.price }}
+                <strong>|</strong>
+                Duration: {{ service.obj.duration }} seconds
+              </p>
             </li>
           } @empty {
             We are still in development, please check back some other time

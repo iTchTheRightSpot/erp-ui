@@ -21,6 +21,7 @@
           [empEmail]="bookingInfo.staff.email"
           [services]="transform(bookingInfo.servicesOffered)"
           [dateTime]="bookingInfo.time"
+          [buttonLoading]="(loadingBtn | async) || false"
           (formEmitter)="onSubmit($event)"
         />
       </div>

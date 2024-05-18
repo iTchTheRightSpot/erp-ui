@@ -1,0 +1,281 @@
+<div class="mb-1.5">
+  <h2
+    class="mb-4 underline underline-offset-4 decoration-1 font-medium text-base lg:text-lg"
+  >
+    Contact Information
+  </h2>
+  <form [formGroup]="form" class="space-y-8">
+    <div>
+      <label for="name" class="block mb-2 text-sm font-medium"
+        >Full name <span class="text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
+        placeholder="full name"
+        required
+      />
+      @if (form.controls['name'].invalid && form.controls['name'].touched) {
+        <div>
+          <small class="text-red-500">Name required.</small>
+        </div>
+      }
+    </div>
+    <div>
+      <label for="email" class="block mb-2 text-sm font-medium"
+        >Email <span class="text-red-500">*</span></label
+      >
+      <input
+        type="email"
+        id="email"
+        email="true"
+        formControlName="email"
+        class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
+        placeholder="email"
+        required
+      />
+      @if (form.controls['email'].invalid && form.controls['email'].touched) {
+        <div>
+          <small class="text-red-500">Email required.</small>
+        </div>
+      }
+    </div>
+    <div>
+      <label for="name" class="block mb-2 text-sm font-medium"
+        >Phone <span class="text-red-500">*</span></label
+      >
+      <div class="relative">
+        <div
+          class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none"
+        >
+          <svg
+            class="w-4 h-4 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 19 18"
+          >
+            <path
+              d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z"
+            />
+          </svg>
+        </div>
+        <input
+          type="text"
+          id="phone-input"
+          formControlName="phone"
+          aria-describedby="helper-text-explanation"
+          class="block w-full ps-10 p-3 text-sm rounded-md bg-gray-50 border border-gray-300 text-gray-900"
+          placeholder="phone"
+          required
+        />
+      </div>
+      @if (form.controls['phone'].invalid && form.controls['phone'].touched) {
+        <div>
+          <small class="text-red-500"
+            >Phone number is required. E.g 1234567890</small
+          >
+        </div>
+      }
+    </div>
+
+    <div class="my-3">
+      <h2
+        class="font-medium underline underline-offset-4 decoration-1 text-base lg:text-lg"
+      >
+        Landscape Information
+      </h2>
+    </div>
+
+    <div>
+      <label for="address" class="block mb-2 text-sm font-medium"
+        >Address <span class="text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        id="address"
+        formControlName="address"
+        class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
+        placeholder="address"
+        required
+      />
+      @if (
+        form.controls['address'].invalid && form.controls['address'].touched
+      ) {
+        <div>
+          <small class="text-red-500">Address required</small>
+        </div>
+      }
+    </div>
+
+    <div>
+      <label for="city" class="block mb-2 text-sm font-medium"
+        >City <span class="text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        id="city"
+        formControlName="city"
+        class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
+        placeholder="city"
+        required
+      />
+      @if (form.controls['city'].invalid && form.controls['city'].touched) {
+        <div>
+          <small class="text-red-500">City required</small>
+        </div>
+      }
+    </div>
+
+    <div>
+      <label for="postcode" class="block mb-2 text-sm font-medium"
+        >Postcode <span class="text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        id="postcode"
+        formControlName="postcode"
+        class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
+        placeholder="postcode"
+        required
+      />
+      @if (
+        form.controls['postcode'].invalid && form.controls['postcode'].touched
+      ) {
+        <div>
+          <small class="text-red-500">Postcode required</small>
+        </div>
+      }
+    </div>
+
+    <div>
+      <p class="block mb-2 text-sm font-medium">
+        Country & Province <span class="text-red-500">*</span>
+      </p>
+      <div class="flex">
+        <button
+          id="states-button"
+          data-dropdown-toggle="dropdown-states"
+          class="flex-shrink-0 z-10 inline-flex items-center p-2 lg:p-3 text-sm font-medium text-center rounded-md border border-gray-300 text-gray-900 bg-gray-50"
+          type="button"
+        >
+          <span class="fi fi-ca mr-1.5"></span>
+          CA
+          <svg
+            class="w-2.5 h-2.5 ms-2.5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+        <label for="provinces" class="sr-only">Select your province</label>
+        <select
+          formControlName="province"
+          id="provinces"
+          class="block w-full p-3 cursor-pointer border border-gray-300 text-gray-900 text-sm rounded-md border-s-gray-100 border-s-2 bg-gray-50"
+        >
+          <option value="" disabled [selected]="true">
+            Select your province
+          </option>
+          @for (province of provinces; track province) {
+            <option [value]="province.abbreviation">
+              {{ province.country }}
+            </option>
+          }
+        </select>
+      </div>
+      @if (
+        form.controls['province'].invalid && form.controls['province'].touched
+      ) {
+        <div>
+          <small class="text-red-500">Province required</small>
+        </div>
+      }
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium" for="file"
+        >Upload an image of the job site</label
+      >
+      <input
+        class="block w-full p-3 text-sm cursor-pointer text-gray-900 bg-gray-50 rounded-md border border-gray-300"
+        id="file"
+        (change)="onFileSelected($event)"
+        type="file"
+        accept="image/*"
+      />
+    </div>
+
+    <div class="sm:col-span-2">
+      <label for="detail" class="block mb-2 text-sm font-medium"
+        >Description <span class="text-red-500">*</span></label
+      >
+      <textarea
+        id="detail"
+        formControlName="description"
+        rows="6"
+        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-md shadow-sm border border-gray-300"
+        placeholder="Please enter a brief description about the job area"
+        required
+      ></textarea>
+      @if (
+        form.controls['description'].invalid &&
+        form.controls['description'].touched
+      ) {
+        <div>
+          <small class="text-red-500"
+            >Please enter a brief description about the job site.</small
+          >
+        </div>
+      }
+    </div>
+
+    @if (buttonLoading()) {
+      <button
+        disabled
+        type="button"
+        class="font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 inline-flex items-center text-white bg-[var(--app-theme-hover)]"
+      >
+        <svg
+          aria-hidden="true"
+          role="status"
+          class="inline w-4 h-4 me-3 text-white animate-spin"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+            fill="#E5E7EB"
+          />
+          <path
+            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+            fill="currentColor"
+          />
+        </svg>
+        Loading...
+      </button>
+    } @else {
+      <button
+        (click)="submit()"
+        [disabled]="form.invalid"
+        type="submit"
+        class="py-3 px-5 text-sm font-medium text-center text-white rounded-md sm:w-fit bg-[var(--app-theme)]"
+        [ngClass]="{ 'bg-[var(--app-theme-hover)]': form.valid }"
+      >
+        Pre-book appointment
+      </button>
+    }
+  </form>
+</div>

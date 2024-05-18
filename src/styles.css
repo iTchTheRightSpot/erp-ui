@@ -25,14 +25,6 @@
   margin-top: calc(1vh + 70px);
 }
 
-.mat-calendar-body-selected {
-  background-color: var(--app-theme-hover) !important;
-}
-
-.highlight-date.mat-calendar-body-cell::before {
-  /*border-bottom: 1px solid #ccc;*/
-}
-
 html,
 body {
   height: 100%;

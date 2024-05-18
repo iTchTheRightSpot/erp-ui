@@ -124,7 +124,7 @@ export class BookAppointmentDatesService {
       switchMap((selected) => {
         const info = this.bookingInfoSignal();
         const services = info.servicesOffered;
-        const staffEmail = info.staff?.name;
+        const staffEmail = info.staff?.email;
 
         if (!services || !staffEmail) {
           this.toastService.message(
