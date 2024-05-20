@@ -1,14 +1,24 @@
 import { Routes } from '@angular/router';
+import { EMPLOYEE_FRONT_HOME, STORE_FRONT_HOME } from '@/app/app.util';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: STORE_FRONT_HOME,
     loadComponent: () =>
       import('./store-front/store-front.component').then(
         (m) => m.StoreFrontComponent,
       ),
     loadChildren: () =>
-      import('./store-front/store.route').then((m) => m.route),
+      import('./store-front/store.routes').then((m) => m.route),
+  },
+  {
+    path: EMPLOYEE_FRONT_HOME,
+    loadComponent: () =>
+      import('./employee-front/employee-front.component').then(
+        (m) => m.EmployeeFrontComponent,
+      ),
+    loadChildren: () =>
+      import('./employee-front/employee-front.routes').then((m) => m.routes),
   },
   {
     path: '404',

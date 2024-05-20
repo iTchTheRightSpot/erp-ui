@@ -3,6 +3,7 @@
 ## 3rd party technologies
 
 1. TailwindCSS
+2. [Flag Icon](https://github.com/lipis/flag-icons)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.9.
 

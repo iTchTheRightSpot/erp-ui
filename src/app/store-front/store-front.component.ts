@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
 import { NavigationComponent } from '@/app/store-front/navigation/navigation.component';
 
 @Component({
   selector: 'app-store-front',
   standalone: true,
-  imports: [RouterOutlet, AsyncPipe, NavigationComponent],
+  imports: [RouterOutlet, NavigationComponent],
   template: `
     <div class="w-full h-full">
       <div
