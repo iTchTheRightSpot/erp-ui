@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import { BOOK_ROUTE } from '@/app/store-front/util';
+import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { RouterLink } from '@angular/router';
 
 @Component({

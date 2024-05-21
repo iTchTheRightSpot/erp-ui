@@ -9,7 +9,7 @@ export const routes: Routes = [
         (m) => m.StoreFrontComponent,
       ),
     loadChildren: () =>
-      import('./store-front/store.routes').then((m) => m.route),
+      import('./store-front/store-front.routes').then((m) => m.route),
   },
   {
     path: EMPLOYEE_FRONT_HOME,

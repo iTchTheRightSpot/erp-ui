@@ -3,7 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.service';
 import { Router } from '@angular/router';
 import { BOOK_APPOINTMENT_DATES_ROUTE } from '@/app/store-front/book/book.util';
-import { BOOK_ROUTE } from '@/app/store-front/util';
+import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { BookService } from '@/app/store-front/book/book.service';
 import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 

@@ -6,7 +6,7 @@ import {
   BOOK_CHECKOUT_ROUTE,
   BOOK_STAFF_ROUTE,
 } from '@/app/store-front/book/book.util';
-import { BOOK_ROUTE } from '@/app/store-front/util';
+import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { CalendarComponent } from '@/app/global-components/calendar/calendar.component';
 
 @Component({

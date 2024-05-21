@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
-import { ABOUT_ROUTE, BOOK_ROUTE, SERVICE_ROUTE } from '@/app/store-front/util';
+import {
+  ABOUT_ROUTE,
+  BOOK_ROUTE,
+  SERVICE_ROUTE,
+} from '@/app/store-front/store-front.util';
 
 export const route: Routes = [
   {

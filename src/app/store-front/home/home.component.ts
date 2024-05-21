@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { HomeService } from '@/app/store-front/home/home.service';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { BOOK_ROUTE } from '@/app/store-front/util';
+import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 
 @Component({
   selector: 'app-home',

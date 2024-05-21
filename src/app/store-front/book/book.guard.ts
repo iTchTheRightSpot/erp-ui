@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { BookService } from '@/app/store-front/book/book.service';
 import { Router } from '@angular/router';
-import { BOOK_ROUTE } from '@/app/store-front/util';
+import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import {
   BOOK_APPOINTMENT_DATES_ROUTE,
   BOOK_SERVICE_OFFERED_ROUTE,
