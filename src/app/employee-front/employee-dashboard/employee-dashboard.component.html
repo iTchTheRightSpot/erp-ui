@@ -42,12 +42,12 @@
     </div>
 
     <div class="flex-1">
-      <h1 class="font-base">Today's appointment - {{ date.toDateString() }}</h1>
+      <h1 class="font-base">Appointment(s) - {{ selected.toDateString() }}</h1>
 
       <div class="">
         <app-table
           [tHead]="thead"
-          [tBody]="tBody"
+          [tBody]="(appointments$ | async) || []"
           (actionClickEmitter)="actionClick($event)"
           (rowClickEmitter)="rowClick($event)"
         />
@@ -64,13 +64,8 @@
     <div class="">
       <h1 class="font-base">Up coming appointments</h1>
 
-      <div class="">
-        <app-table
-          [tHead]="thead"
-          [tBody]="tBody"
-          (actionClickEmitter)="actionClick($event)"
-          (rowClickEmitter)="rowClick($event)"
-        />
+      <div class="hidden lg:block">
+        TODO not quite sure what I want to render here
       </div>
     </div>
   </div>
@@ -106,7 +101,11 @@
     </div>
 
     <div class="bg-white 2xl:max-w-[75%] mx-auto">
-      <app-calendar />
+      <app-calendar
+        [toHighlight]="(daysToHighlight | async) || []"
+        (onDateSelectedEmitter)="onCalendarDateClick($event)"
+        (previousNextEmitter)="onPrevNextCalendarClick($event)"
+      />
     </div>
   </div>
 </div>

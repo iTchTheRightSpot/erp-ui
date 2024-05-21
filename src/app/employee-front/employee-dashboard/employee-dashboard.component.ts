@@ -1,62 +1,86 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CalendarComponent } from '@/app/global-components/calendar/calendar.component';
 import { TableComponent } from '@/app/global-components/table/table.component';
+import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboard/employee-dashboard.service';
+import { AsyncPipe } from '@angular/common';
+import { map } from 'rxjs';
 
-export interface Helper {
-  name: string;
-  colour: string;
-  category: string;
-  price: string;
-  action: string;
+export interface AppointmentDeconstruct {
+  id: number;
+  status: string;
+  service: string;
+  client: string;
+  timeslot: string;
 }
 
 @Component({
   selector: 'app-employee-dashboard',
   standalone: true,
-  imports: [CalendarComponent, TableComponent],
+  imports: [CalendarComponent, TableComponent, AsyncPipe],
   templateUrl: './employee-dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeDashboardComponent {
-  protected readonly date = new Date();
+  private readonly service = inject(EmployeeDashboardService);
 
+  constructor() {
+    this.service.onUpdateSubject(this.selected);
+  }
+
+  protected selected = new Date();
   protected toggleMobileCalendar = false;
 
-  readonly thead: Array<keyof Helper> = [
-    'name',
-    'colour',
-    'category',
-    'price',
-    'action',
+  readonly thead: Array<keyof AppointmentDeconstruct> = [
+    'id',
+    'status',
+    'service',
+    'client',
+    'timeslot',
   ];
+
+  /**
+   * Returns an observable that emits a list of {@link Date}s. These dates correspond
+   * to the `scheduled_for` property of {@link AppointmentResponse}.
+   *
+   * @param selected - The date representing the month and year for which to retrieve
+   * appointments. This date is used to filter appointments that fall within the start
+   * and end of the specified month and year.
+   * @returns An observable that emits a list of {@link Date}s to highlight within the
+   * specified month.
+   */
+  protected readonly daysToHighlight = this.service.subject$.pipe(
+    map((objs) => objs.map((obj) => obj.scheduled_for)),
+  );
+
+  /***/
+  protected readonly appointments$ = this.service.subjectClick$.pipe(
+    map((objs) =>
+      objs.map(
+        (obj) =>
+          ({
+            id: obj.appointment_id,
+            status: obj.status,
+            service: obj.services[0],
+            client: obj.customer_name,
+            timeslot: `${obj.scheduled_for.toTimeString()} to ${obj.expire_at.toTimeString()}`,
+          }) as AppointmentDeconstruct,
+      ),
+    ),
+  );
+
+  /**
+   * Updates UI based on the
+   * */
+  protected readonly onCalendarDateClick = (selected: Date) =>
+    this.service.onCalendarDateClickSubjectClick((this.selected = selected));
+
+  protected readonly onPrevNextCalendarClick = (date: Date) => {
+    this.service.updateParentOnChangeMonthYear(date);
+  };
 
   protected readonly rowClick = (event: Helper) =>
     console.log('row click event ', event);
 
   protected readonly actionClick = (event: Helper) =>
     console.log('action click event ', event);
-
-  protected readonly tBody: Helper[] = [
-    {
-      name: 'Magic Mouse 2',
-      colour: 'black',
-      category: 'accessories',
-      price: 'price',
-      action: 'edit',
-    },
-    {
-      name: 'Magic Mouse 2',
-      colour: 'black',
-      category: 'accessories',
-      price: 'price',
-      action: 'edit',
-    },
-    {
-      name: 'Magic Mouse 2',
-      colour: 'black',
-      category: 'accessories',
-      price: 'price',
-      action: 'edit',
-    },
-  ];
 }
