@@ -1,120 +1,22 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
-import { CalendarDay } from '@/app/global-components/calendar/calendar.util';
-import { CalendarService } from '@/app/global-components/calendar/calendar.service';
+import { BehaviorSubject } from 'rxjs';
+
+interface CalendarDay {
+  date: Date;
+  isCurrentMonth: boolean;
+  disable: boolean;
+  placeholder: boolean;
+}
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
   imports: [DatePipe, NgClass, AsyncPipe],
-  template: `
-    <!-- max-w-md mx-auto md:max-w-md   -->
-    <div class="p-2 md:p-4 rounded shadow-2xl">
-      <div class="flex items-center justify-between mb-5">
-        <div class="grid grid-cols-2">
-          <p>{{ currentMonth() | date: 'MMMM yyyy' }}</p>
-          <button (click)="yearBtn()" type="button" class="hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div>
-          <!-- left -->
-          <button
-            (click)="prevMonth()"
-            type="button"
-            [disabled]="disablePrevMonthBtn()"
-            [ngClass]="{ 'opacity-25': disablePrevMonthBtn() }"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
-          <!-- right -->
-          <button (click)="nextMonth()" type="button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-7 gap-1">
-        @for (day of weekDays; track day) {
-          <div class="text-center font-bold">{{ day }}</div>
-        }
-
-        @for (day of calendarDays$ | async; track day) {
-          <div class="p-3 flex justify-center items-center">
-            @if (!day.placeholder) {
-              <button
-                type="button"
-                (click)="onDateSelected(day)"
-                class="text-center p-2 md:px-3 md:py-2 lg:px-4 lg:py-3 xl:px-5 xl:py-4 hover:bg-[var(--app-theme)] hover:rounded-full"
-                [disabled]="day.disable"
-                [ngClass]="{
-                  'bg-gray-200':
-                    day.date.toDateString() === today.toDateString(),
-                  'rounded-full':
-                    day.date.toDateString() === today.toDateString() ||
-                    day.date.toDateString() === selected.toDateString(),
-                  'opacity-25': day.disable,
-                  'hover:bg-transparent': day.disable,
-                  'hover:rounded-none': day.disable,
-                  'bg-[var(--app-theme)]':
-                    day.date.toDateString() === selected.toDateString()
-                }"
-              >
-                {{ day.date | date: 'd' }}
-              </button>
-            } @else {
-              <div class="text-center p-2 md:p-4"></div>
-            }
-          </div>
-        }
-      </div>
-    </div>
-  `,
+  templateUrl: 'calendar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
-  private readonly service = inject(CalendarService);
 
   minDate = input<Date>();
   toHighlight = input<Date[]>();
@@ -126,12 +28,17 @@ export class CalendarComponent {
 
   protected selected = this.today;
 
-  protected currentMonth = this.service.currentMonth;
-  protected readonly calendarDays$ = this.service.calendarDays$;
-  protected readonly weekDays = this.service.weekDays;
+  private readonly currentMonthSignal = signal<Date>(this.today);
+  private readonly toHighlightSignal = signal<Date[] | undefined>(undefined);
+  private readonly subject = new BehaviorSubject<CalendarDay[]>([]);
+
+  protected currentMonth = this.currentMonthSignal;
+  protected readonly calendarDays$ = this.subject.asObservable();
+  protected readonly weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   constructor() {
-    effect(() => this.service.appendToDatesToHighlight(this.toHighlight()), {
+    this.subject.next(this.generateCalendarDays());
+    effect(() => this.appendToDatesToHighlight(this.toHighlight()), {
       allowSignalWrites: true,
     });
   }
@@ -147,9 +54,118 @@ export class CalendarComponent {
     this.minDate()?.getMonth() === this.currentMonth().getMonth() &&
     this.minDate()?.getFullYear() === this.currentMonth().getFullYear();
 
-  protected readonly prevMonth = () =>
-    this.previousNextEmitter.emit(this.service.prevMonth());
+  protected readonly onPrevMonth = () =>
+    this.previousNextEmitter.emit(this.prevMonth());
 
-  protected readonly nextMonth = () =>
-    this.previousNextEmitter.emit(this.service.nextMonth());
+  protected readonly onNextMonth = () =>
+    this.previousNextEmitter.emit(this.nextMonth());
+
+  private readonly prevMonth = () => {
+    const month = this.currentMonthSignal();
+
+    this.currentMonthSignal.set(
+      new Date(month.getFullYear(), month.getMonth() - 1, 1),
+    );
+
+    this.subject.next(this.generateCalendarDays());
+    return this.currentMonthSignal();
+  };
+
+  private readonly nextMonth = () => {
+    const month = this.currentMonthSignal();
+
+    this.currentMonthSignal.set(
+      new Date(month.getFullYear(), month.getMonth() + 1, 1),
+    );
+
+    this.subject.next(this.generateCalendarDays());
+    return this.currentMonthSignal();
+  };
+
+  private readonly notInToHighlightSignal = (date: Date) => {
+    const arr = this.toHighlightSignal();
+
+    if (!arr) {
+      return false;
+    } else if (arr.length < 1) {
+      return true;
+    }
+
+    return !arr.some((d) => this.format(d) === this.format(date));
+  };
+
+  private readonly format = (date: Date) =>
+    date.toLocaleDateString([], {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+
+  private readonly appendToDatesToHighlight = (dates?: Date[]) => {
+    if (dates) {
+      this.toHighlightSignal.set(dates);
+      this.subject.next(this.generateCalendarDays());
+    }
+  };
+
+  private readonly generateCalendarDays = () => {
+    const currentMonth = this.currentMonthSignal();
+    const startOfMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      1,
+    );
+    const endOfMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1,
+      0,
+    );
+
+    const startDayOfWeek = startOfMonth.getDay();
+    const endDayOfWeek = endOfMonth.getDay();
+
+    const daysInMonth = endOfMonth.getDate();
+
+    const calendarDays: CalendarDay[] = [];
+
+    // previous month's days
+    for (let i = startDayOfWeek; i > 0; i--) {
+      const date = new Date(startOfMonth);
+      date.setDate(startOfMonth.getDate() - i);
+      calendarDays.push({
+        date,
+        isCurrentMonth: false,
+        placeholder: true,
+        disable: this.notInToHighlightSignal(date),
+      });
+    }
+
+    // current month's days
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        i,
+      );
+      calendarDays.push({
+        date,
+        isCurrentMonth: true,
+        placeholder: false,
+        disable: this.notInToHighlightSignal(date),
+      });
+    }
+
+    // next month's days
+    for (let i = 1; i < 7 - endDayOfWeek; i++) {
+      const date = new Date(endOfMonth);
+      date.setDate(endOfMonth.getDate() + i);
+      calendarDays.push({
+        date,
+        isCurrentMonth: false,
+        placeholder: true,
+        disable: this.notInToHighlightSignal(date),
+      });
+    }
+    return calendarDays;
+  };
 }

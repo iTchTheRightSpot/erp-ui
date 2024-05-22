@@ -57,7 +57,7 @@
 
   <!-- right -->
   <div class="flex flex-col gap-2 2xl:max-w-[75%]">
-    <div class="">
+    <div class="hidden lg:block">
       <app-calendar
         [toHighlight]="(daysToHighlight | async) || []"
         (onDateSelectedEmitter)="onCalendarDateClick($event)"
@@ -105,11 +105,11 @@
     </div>
 
     <div class="bg-white 2xl:max-w-[75%] mx-auto">
-<!--      <app-calendar-->
-<!--        [toHighlight]="(daysToHighlight | async) || []"-->
-<!--        (onDateSelectedEmitter)="onCalendarDateClick($event)"-->
-<!--        (previousNextEmitter)="onPrevNextCalendarClick($event)"-->
-<!--      />-->
+      <app-calendar
+        [toHighlight]="(daysToHighlight | async) || []"
+        (onDateSelectedEmitter)="onCalendarDateClick($event)"
+        (previousNextEmitter)="onPrevNextCalendarClick($event)"
+      />
     </div>
   </div>
 </div>
