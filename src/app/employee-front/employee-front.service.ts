@@ -15,6 +15,7 @@ export class EmployeeFrontService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
   private readonly domain = environment.domain;
+  private readonly production = environment.production;
 
   private readonly appointmentResponseCache = new Map<
     string,
@@ -45,9 +46,11 @@ export class EmployeeFrontService {
     params = params.append('month', 1 + selected.getMonth());
     params = params.append('year', selected.getFullYear());
 
-    return this.request(params).pipe(
-      tap((arr) => this.appointmentResponseCache.set(key, arr)),
-    );
+    return this.production
+      ? this.request(params).pipe(
+          tap((arr) => this.appointmentResponseCache.set(key, arr)),
+        )
+      : of();
   };
 
   /**

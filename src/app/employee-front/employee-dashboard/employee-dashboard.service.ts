@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { EmployeeFrontService } from '@/app/employee-front/employee-front.service';
-import { BehaviorSubject, map, mergeMap, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, map, mergeMap, Observable, of } from 'rxjs';
 import { AppointmentResponse } from '@/app/employee-front/employee-front.util';
 
 @Injectable({
@@ -17,10 +17,7 @@ export class EmployeeDashboardService {
     Observable<AppointmentResponse[]>
   >(of([]));
 
-  readonly subject$ = this.subject.asObservable().pipe(
-    mergeMap((obs) => obs),
-    tap((obs) => this.subjectClick.next(obs)),
-  );
+  readonly subject$ = this.subject.asObservable().pipe(mergeMap((obs) => obs));
 
   readonly subjectClick$ = this.subject
     .asObservable()

@@ -25,6 +25,7 @@ export class EmployeeDashboardComponent {
 
   constructor() {
     this.service.onUpdateSubject(this.selected);
+    this.service.onCalendarDateClickSubjectClick(this.selected);
   }
 
   protected selected = new Date();
@@ -60,7 +61,7 @@ export class EmployeeDashboardComponent {
           ({
             id: obj.appointment_id,
             status: obj.status,
-            service: obj.services[0],
+            service: obj.services[0].name,
             client: obj.customer_name,
             timeslot: `${obj.scheduled_for.toTimeString()} to ${obj.expire_at.toTimeString()}`,
           }) as AppointmentDeconstruct,
@@ -78,9 +79,9 @@ export class EmployeeDashboardComponent {
     this.service.updateParentOnChangeMonthYear(date);
   };
 
-  protected readonly rowClick = (event: Helper) =>
+  protected readonly rowClick = (event: AppointmentDeconstruct) =>
     console.log('row click event ', event);
 
-  protected readonly actionClick = (event: Helper) =>
+  protected readonly actionClick = (event: AppointmentDeconstruct) =>
     console.log('action click event ', event);
 }
