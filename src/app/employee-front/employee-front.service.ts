@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   AppointmentResponse,
   AppointmentResponseMapper,
+  dummyAppointments,
 } from '@/app/employee-front/employee-front.util';
 import { environment } from '@/environments/environment';
 import { catchError, map, of, tap } from 'rxjs';
@@ -50,7 +51,7 @@ export class EmployeeFrontService {
       ? this.request(params).pipe(
           tap((arr) => this.appointmentResponseCache.set(key, arr)),
         )
-      : of();
+      : of<AppointmentResponse[]>(dummyAppointments(20));
   };
 
   /**

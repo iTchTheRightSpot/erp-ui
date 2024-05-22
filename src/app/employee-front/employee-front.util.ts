@@ -45,3 +45,43 @@ export const AppointmentResponseMapper = (obj: AppointmentResponse) => {
     services: obj.services,
   } as AppointmentResponse;
 };
+
+export const dummyAppointments = (num: number) => {
+  const array = [] as AppointmentResponse[];
+  const today = new Date();
+  const lorem =
+    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab deserunt ea esse iste maxime nihil, pariatur provident recusandae! Commodi dignissimos dolorem exercitationem hic minima odio officiis repudiandae! Accusantium amet assumenda at commodi cum cumque deserunt doloribus eligendi in iusto neque, non officia, officiis quaerat quis repudiandae totam? Accusamus, alias aliquid amet blanditiis consectetur deleniti dolore facere labore minus officiis optio perferendis porro possimus quam quis quisquam reprehenderit rerum sequi sint tempora. Ad consectetur distinctio doloribus fugiat inventore non numquam porro voluptates. Beatae cupiditate dolores doloribus, explicabo hic illo laudantium numquam quaerat quos tenetur? Est excepturi id laboriosam quidem saepe totam.';
+  const address =
+    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aperiam architecto debitis eligendi eveniet id qui quia quos reprehenderit vero.';
+
+  for (let i = 0; i < num; i++) {
+    array.push({
+      appointment_id: i + 1,
+      customer_name: `customer-name-${i + 1}`,
+      customer_email: `customer-email-${i + 1}`,
+      detail: lorem,
+      address: address,
+      phone: '0000000000',
+      image: '',
+      status:
+        i % 2 === 0 ? ConfirmationStatus.CONFIRMED : ConfirmationStatus.PENDING,
+      created_at: today,
+      scheduled_for: new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + i,
+      ),
+      expire_at: new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + i,
+      ),
+      services: [
+        { name: 'landscape' },
+        { name: 'mowing' },
+        { name: 'grass cutting' },
+      ] as ServiceName[],
+    });
+  }
+  return array;
+};

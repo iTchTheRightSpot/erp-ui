@@ -63,17 +63,22 @@ export class EmployeeDashboardComponent {
             status: obj.status,
             service: obj.services[0].name,
             client: obj.customer_name,
-            timeslot: `${obj.scheduled_for.toTimeString()} to ${obj.expire_at.toTimeString()}`,
+            timeslot: `${this.toHrMins(obj.scheduled_for)} to ${this.toHrMins(obj.expire_at)}`,
           }) as AppointmentDeconstruct,
       ),
     ),
   );
 
+  private readonly toHrMins = (time: Date) =>
+    new Date(time).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
   /**
    * Updates UI based on the
    * */
-  protected readonly onCalendarDateClick = (selected: Date) =>
-    this.service.onCalendarDateClickSubjectClick((this.selected = selected));
+  protected readonly onCalendarDateClick = (selected: Date) => this.service.onCalendarDateClickSubjectClick(this.selected = selected);
 
   protected readonly onPrevNextCalendarClick = (date: Date) => {
     this.service.updateParentOnChangeMonthYear(date);
