@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
@@ -17,7 +24,6 @@ interface CalendarDay {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
-
   minDate = input<Date>();
   toHighlight = input<Date[]>();
 
@@ -34,7 +40,15 @@ export class CalendarComponent {
 
   protected currentMonth = this.currentMonthSignal;
   protected readonly calendarDays$ = this.subject.asObservable();
-  protected readonly weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  protected readonly weekDays = [
+    'Sun',
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+  ];
 
   constructor() {
     this.subject.next(this.generateCalendarDays());

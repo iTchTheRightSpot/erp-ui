@@ -34,8 +34,8 @@ export class EmployeeDashboardComponent {
   readonly thead: Array<keyof AppointmentDeconstruct> = [
     'id',
     'status',
-    'service',
     'client',
+    'service',
     'timeslot',
   ];
 
@@ -78,7 +78,8 @@ export class EmployeeDashboardComponent {
   /**
    * Updates UI based on the
    * */
-  protected readonly onCalendarDateClick = (selected: Date) => this.service.onCalendarDateClickSubjectClick(this.selected = selected);
+  protected readonly onCalendarDateClick = (selected: Date) =>
+    this.service.onCalendarDateClickSubjectClick((this.selected = selected));
 
   protected readonly onPrevNextCalendarClick = (date: Date) => {
     this.service.updateParentOnChangeMonthYear(date);

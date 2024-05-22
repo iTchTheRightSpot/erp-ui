@@ -72,17 +72,16 @@
             class="text-center p-2 md:px-3 md:py-2 lg:px-4 lg:py-3 xl:px-5 xl:py-4 hover:bg-[var(--app-theme)] hover:rounded-full"
             [disabled]="day.disable"
             [ngClass]="{
-                  'bg-gray-200':
-                    day.date.toDateString() === today.toDateString(),
-                  'rounded-full':
-                    day.date.toDateString() === today.toDateString() ||
-                    day.date.toDateString() === selected.toDateString(),
-                  'opacity-25': day.disable,
-                  'hover:bg-transparent': day.disable,
-                  'hover:rounded-none': day.disable,
-                  'bg-[var(--app-theme)]':
-                    day.date.toDateString() === selected.toDateString()
-                }"
+              'bg-gray-200': day.date.toDateString() === today.toDateString(),
+              'rounded-full':
+                day.date.toDateString() === today.toDateString() ||
+                day.date.toDateString() === selected.toDateString(),
+              'opacity-25': day.disable,
+              'hover:bg-transparent': day.disable,
+              'hover:rounded-none': day.disable,
+              'bg-[var(--app-theme)]':
+                day.date.toDateString() === selected.toDateString()
+            }"
           >
             {{ day.date | date: 'd' }}
           </button>
