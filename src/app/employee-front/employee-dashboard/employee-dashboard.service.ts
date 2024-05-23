@@ -19,6 +19,8 @@ export class EmployeeDashboardService {
 
   readonly subject$ = this.subject.asObservable().pipe(mergeMap((obs) => obs));
 
+  // readonly subjectToSignal =
+
   readonly subjectClick$ = this.subjectClick
     .asObservable()
     .pipe(mergeMap((obs) => obs));

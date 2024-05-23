@@ -3,8 +3,13 @@ import { CalendarComponent } from '@/app/global-components/calendar/calendar.com
 import { TableComponent } from '@/app/global-components/table/table.component';
 import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboard/employee-dashboard.service';
 import { AsyncPipe } from '@angular/common';
-import { map, tap } from 'rxjs';
+import { map, of } from 'rxjs';
 import { toHrMins } from '@/app/app.util';
+import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
+import {
+  AppointmentDetail,
+  dummyDetailBuilder,
+} from '@/app/employee-front/shared/about-appointment.util';
 
 interface AppointmentDeconstruct {
   id: number;
@@ -17,7 +22,12 @@ interface AppointmentDeconstruct {
 @Component({
   selector: 'app-employee-dashboard',
   standalone: true,
-  imports: [CalendarComponent, TableComponent, AsyncPipe],
+  imports: [
+    CalendarComponent,
+    TableComponent,
+    AsyncPipe,
+    AboutAppointmentComponent,
+  ],
   templateUrl: './employee-dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -29,7 +39,6 @@ export class EmployeeDashboardComponent {
     this.service.onCalendarDateClickSubjectClick(this.selected);
   }
 
-  protected numberOfAppointmentsForTheMonth = 0;
   protected selected = new Date();
   protected toggleMobileCalendar = false;
 
@@ -92,9 +101,33 @@ export class EmployeeDashboardComponent {
     this.service.updateParentOnChangeMonthYear(date);
   };
 
-  protected readonly rowClick = (event: AppointmentDeconstruct) =>
-    console.log('row click event ', event);
+  protected toggleAboutAppointment = false;
 
-  protected readonly actionClick = (event: AppointmentDeconstruct) =>
-    console.log('action click event ', event);
+  protected appointmentDetails = of(dummyDetailBuilder());
+  protected readonly onAppointmentNameClick = (
+    event: AppointmentDeconstruct,
+  ) => {
+    const obs = this.service.subject$.pipe(
+      map((objs) => objs.find((obj) => obj.appointment_id === event.id)),
+      map((obj) =>
+        obj
+          ? ({
+              name: obj.customer_name,
+              email: obj.customer_email,
+              phone: obj.phone,
+              image: obj.image,
+              status: obj.status,
+              services: obj.services.map((names) => names.name),
+              detail: obj.detail,
+              address: obj.address,
+              created: obj.created_at,
+              scheduledFor: obj.scheduled_for,
+              expire: obj.expire_at,
+            } as AppointmentDetail)
+          : dummyDetailBuilder(),
+      ),
+    );
+    this.toggleAboutAppointment = true;
+    this.appointmentDetails = obs;
+  };
 }

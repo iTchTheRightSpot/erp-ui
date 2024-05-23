@@ -52,8 +52,7 @@
         <app-table
           [tHead]="thead"
           [tBody]="(appointments$ | async) || []"
-          (actionClickEmitter)="actionClick($event)"
-          (rowClickEmitter)="rowClick($event)"
+          (rowClickEmitter)="onAppointmentNameClick($event)"
         />
       </div>
     </div>
@@ -118,6 +117,41 @@
         (onDateSelectedEmitter)="onCalendarDateClick($event)"
         (previousNextEmitter)="onPrevNextCalendarClick($event)"
       />
+    </div>
+  </div>
+</div>
+
+<div
+  [style]="{ display: toggleAboutAppointment ? 'block' : 'none' }"
+  class="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[var(--half-black)]"
+>
+  <div class="lg-scr p-2 flex flex-col">
+    <div class="ml-auto mt-1 w-fit">
+      <button
+        (click)="toggleAboutAppointment = !toggleAboutAppointment"
+        type="button"
+        class="p-1 rounded-lg bg-gray-300"
+        aria-controls="close-calendar-button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-8 h-8 text-white"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div class="w-full h-fit flex-1 bg-white mx-auto">
+      <app-about-appointment [detail]="appointmentDetails" />
     </div>
   </div>
 </div>
