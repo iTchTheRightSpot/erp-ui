@@ -8,6 +8,7 @@ import {
 } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { CalendarComponent } from '@/app/global-components/calendar/calendar.component';
+import { toHrMins } from '@/app/app.util';
 
 @Component({
   selector: 'app-book-appointment-dates',
@@ -32,11 +33,7 @@ export class BookAppointmentDatesComponent {
     await this.router.navigate([`${BOOK_ROUTE}/${BOOK_CHECKOUT_ROUTE}`]);
   };
 
-  protected readonly toHrMins = (time: Date) =>
-    new Date(time).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  protected readonly toHrMins = (time: Date) => toHrMins(time);
 
   protected readonly format = (date: Date) => this.service.format(date);
 

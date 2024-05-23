@@ -3,9 +3,10 @@ import { CalendarComponent } from '@/app/global-components/calendar/calendar.com
 import { TableComponent } from '@/app/global-components/table/table.component';
 import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboard/employee-dashboard.service';
 import { AsyncPipe } from '@angular/common';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
+import { toHrMins } from '@/app/app.util';
 
-export interface AppointmentDeconstruct {
+interface AppointmentDeconstruct {
   id: number;
   status: string;
   service: string;
@@ -28,10 +29,11 @@ export class EmployeeDashboardComponent {
     this.service.onCalendarDateClickSubjectClick(this.selected);
   }
 
+  protected numberOfAppointmentsForTheMonth = 0;
   protected selected = new Date();
   protected toggleMobileCalendar = false;
 
-  readonly thead: Array<keyof AppointmentDeconstruct> = [
+  protected readonly thead: Array<keyof AppointmentDeconstruct> = [
     'id',
     'status',
     'client',
@@ -49,8 +51,19 @@ export class EmployeeDashboardComponent {
    * @returns An observable that emits a list of {@link Date}s to highlight within the
    * specified month.
    */
-  protected readonly daysToHighlight = this.service.subject$.pipe(
+  protected readonly daysToHighlight$ = this.service.subject$.pipe(
     map((objs) => objs.map((obj) => obj.scheduled_for)),
+  );
+
+  protected readonly numberOfAppointmentsForMonth$ = this.daysToHighlight$.pipe(
+    map((dates) =>
+      dates.filter(
+        (date) =>
+          date.getMonth() === this.selected.getMonth() &&
+          date.getFullYear() === this.selected.getFullYear(),
+      ),
+    ),
+    map((dates: Date[] | undefined) => dates?.length),
   );
 
   /***/
@@ -63,17 +76,11 @@ export class EmployeeDashboardComponent {
             status: obj.status,
             service: obj.services[0].name,
             client: obj.customer_name,
-            timeslot: `${this.toHrMins(obj.scheduled_for)} to ${this.toHrMins(obj.expire_at)}`,
+            timeslot: `${toHrMins(obj.scheduled_for)} to ${toHrMins(obj.expire_at)}`,
           }) as AppointmentDeconstruct,
       ),
     ),
   );
-
-  private readonly toHrMins = (time: Date) =>
-    new Date(time).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
 
   /**
    * Updates UI based on the

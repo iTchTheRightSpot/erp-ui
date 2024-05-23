@@ -8,12 +8,12 @@
         class="block max-w-sm p-6 bg-gray-100 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
       >
         <h1 class="font-normal text-gray-700 dark:text-gray-400">
-          No. up coming appointments
+          No. of appointments days for the month
         </h1>
         <p
           class="mb-2 w-full text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
         >
-          10
+          {{ numberOfAppointmentsForMonth$ | async }}
         </p>
       </div>
 
@@ -63,7 +63,7 @@
   <div class="flex flex-col gap-2 2xl:max-w-[75%]">
     <div class="hidden lg:block">
       <app-calendar
-        [toHighlight]="(daysToHighlight | async) || []"
+        [toHighlight]="(daysToHighlight$ | async) || []"
         (onDateSelectedEmitter)="onCalendarDateClick($event)"
         (previousNextEmitter)="onPrevNextCalendarClick($event)"
       />
@@ -114,7 +114,7 @@
 
     <div class="bg-white 2xl:max-w-[75%] mx-auto">
       <app-calendar
-        [toHighlight]="(daysToHighlight | async) || []"
+        [toHighlight]="(daysToHighlight$ | async) || []"
         (onDateSelectedEmitter)="onCalendarDateClick($event)"
         (previousNextEmitter)="onPrevNextCalendarClick($event)"
       />
