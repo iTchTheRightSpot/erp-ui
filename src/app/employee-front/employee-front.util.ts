@@ -29,6 +29,15 @@ export interface AppointmentResponse {
   services: ServiceName[];
 }
 
+export interface AppointmentDeconstruct {
+  id: number;
+  status: string;
+  service: string;
+  client: string;
+  timeslot: string;
+  action: string;
+}
+
 export const AppointmentResponseMapper = (obj: AppointmentResponse) => {
   return {
     appointment_id: obj.appointment_id,

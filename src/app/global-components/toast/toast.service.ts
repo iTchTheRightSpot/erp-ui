@@ -35,6 +35,11 @@ export class ToastService {
     return of(e.status);
   };
 
+  readonly messageErrorNothing = (e: HttpErrorResponse) => {
+    this.subject.next(e.error ? e.error.message : e.message);
+    return of();
+  };
+
   readonly messageErrorBool = (e: HttpErrorResponse) => {
     this.subject.next(e.error ? e.error.message : e.message);
     return of(false);

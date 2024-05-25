@@ -1,4 +1,4 @@
-# Landscape UI Powered By Angular 17
+# Appointment scheduling app powered by Angular 17
 
 ## 3rd party technologies
 
