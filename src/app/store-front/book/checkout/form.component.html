@@ -7,19 +7,19 @@
   <form [formGroup]="form" class="space-y-8">
     <div>
       <label for="name" class="block mb-2 text-sm font-medium"
-        >Full name <span class="text-red-500">*</span></label
+        >Fullname <span class="text-red-500">*</span></label
       >
       <input
         type="text"
         id="name"
         formControlName="name"
         class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300"
-        placeholder="full name"
+        placeholder="name or fullname"
         required
       />
       @if (form.controls['name'].invalid && form.controls['name'].touched) {
         <div>
-          <small class="text-red-500">Name required.</small>
+          <small class="text-red-500">Fullname is required</small>
         </div>
       }
     </div>
@@ -38,7 +38,7 @@
       />
       @if (form.controls['email'].invalid && form.controls['email'].touched) {
         <div>
-          <small class="text-red-500">Email required.</small>
+          <small class="text-red-500">Email is required</small>
         </div>
       }
     </div>
@@ -105,7 +105,7 @@
         form.controls['address'].invalid && form.controls['address'].touched
       ) {
         <div>
-          <small class="text-red-500">Address required</small>
+          <small class="text-red-500">Address is required</small>
         </div>
       }
     </div>
@@ -124,7 +124,7 @@
       />
       @if (form.controls['city'].invalid && form.controls['city'].touched) {
         <div>
-          <small class="text-red-500">City required</small>
+          <small class="text-red-500">City is required</small>
         </div>
       }
     </div>
@@ -145,7 +145,7 @@
         form.controls['postcode'].invalid && form.controls['postcode'].touched
       ) {
         <div>
-          <small class="text-red-500">Postcode required</small>
+          <small class="text-red-500">Postcode is required</small>
         </div>
       }
     </div>
@@ -199,7 +199,7 @@
         form.controls['province'].invalid && form.controls['province'].touched
       ) {
         <div>
-          <small class="text-red-500">Province required</small>
+          <small class="text-red-500">Province is required</small>
         </div>
       }
     </div>
