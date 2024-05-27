@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import {
   EMPLOYEE_FRONT_APPOINTMENT,
   EMPLOYEE_FRONT_DASHBOARD,
+  EMPLOYEE_FRONT_PROFILE,
   EMPLOYEE_FRONT_SCHEDULE,
   EMPLOYEE_FRONT_SERVICE,
 } from '@/app/employee-front/employee-front.util';
@@ -33,6 +34,17 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./employee-service/employee-service.component').then(
         (m) => m.EmployeeServiceComponent,
+      ),
+    loadChildren: () =>
+      import('./employee-service/employee-service.routes').then(
+        (m) => m.routes,
+      ),
+  },
+  {
+    path: EMPLOYEE_FRONT_PROFILE,
+    loadComponent: () =>
+      import('./employee-profile/employee-profile.component').then(
+        (m) => m.EmployeeProfileComponent,
       ),
   },
   {

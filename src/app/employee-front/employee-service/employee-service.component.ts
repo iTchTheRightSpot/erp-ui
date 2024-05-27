@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-employee-service',
   standalone: true,
-  imports: [],
-  templateUrl: './employee-service.component.html',
+  imports: [RouterOutlet],
+  template: `<router-outlet></router-outlet>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeServiceComponent {}
