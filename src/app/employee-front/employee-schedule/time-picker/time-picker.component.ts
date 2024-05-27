@@ -19,18 +19,39 @@ export class TimePickerComponent {
   form = input.required<FormGroup>();
   selected = input.required<Date>();
 
-  readonly submitEmitter = output<{ start: Date; duration: number }>();
-
-  protected readonly hrs: number[] = Array.from({ length: 24 }, (_, i) => i);
+  readonly submitEmitter = output<{ start: Date; end: Date }>();
 
   private readonly buildForm = () => {
+    const date = this.selected();
     const start = this.form().controls['start'].value;
-    const duration = this.form().controls['duration'].value;
+    const end = this.form().controls['end'].value;
+
+    const [startHrs, startMins] = (start ? start : '00:00')
+      .split(':')
+      .map(Number);
+    const [endHrs, endMins] = (end ? end : '00:00').split(':').map(Number);
 
     return {
-      start: start ? start : new Date(),
-      duration: duration ? duration : 0,
+      start: new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        startHrs,
+        startMins,
+      ),
+      end: new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        endHrs,
+        endMins,
+      ),
     };
+  };
+
+  protected readonly onEndTimeNotAfterStart = () => {
+    const build = this.buildForm();
+    return build.start >= build.end;
   };
 
   protected readonly submit = () => this.submitEmitter.emit(this.buildForm());
