@@ -12,21 +12,7 @@ import { NgClass } from '@angular/common';
   selector: 'app-service-offered-form',
   standalone: true,
   imports: [ReactiveFormsModule, NgClass],
-  styles: [
-    `
-      /* Chrome, Safari, Edge, Opera */
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      /* Firefox */
-      input[type='number'] {
-        -moz-appearance: textfield;
-      }
-    `,
-  ],
+  styleUrl: '../../../global-components/number-input.component.css',
   templateUrl: './service-offered-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
