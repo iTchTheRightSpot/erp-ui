@@ -5,7 +5,7 @@ import {
   output,
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ServiceOfferForm } from '@/app/employee-front/employee-service/shared/service-offer-form.util';
+import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-offered-form/service-offer-form.util';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -35,9 +35,11 @@ export class ServiceOfferedFormComponent {
   profile = input<boolean>(false);
   buttonLoading = input.required<boolean>();
 
-  readonly formEmitter = output<ServiceOfferForm>();
+  readonly submitEmitter = output<ServiceOfferForm>();
+  readonly cancelEmitter = output<boolean>();
 
   private readonly buildForm = () => {
+    const id = this.form().controls['serviceId'].value;
     const name = this.form().controls['name'].value;
     const price = this.form().controls['price'].value;
     const visible = this.form().controls['visible'].value;
@@ -45,6 +47,7 @@ export class ServiceOfferedFormComponent {
     const cleanUp = this.form().controls['cleanUp'].value;
 
     return {
+      serviceId: id ? id : -1,
       name: name ? name : '',
       price: price ? price : 0,
       visible: !!visible,
@@ -53,5 +56,6 @@ export class ServiceOfferedFormComponent {
     } as ServiceOfferForm;
   };
 
-  protected readonly submit = () => this.formEmitter.emit(this.buildForm());
+  protected readonly cancel = () => this.cancelEmitter.emit(true);
+  protected readonly submit = () => this.submitEmitter.emit(this.buildForm());
 }

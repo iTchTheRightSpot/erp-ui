@@ -5,6 +5,9 @@ import { map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EMPLOYEE_NEW_SERVICE_OFFERED_ROUTE } from '@/app/employee-front/employee-service/employee-service.util';
+import { ServiceOfferedFormComponent } from '@/app/employee-front/employee-service/service-offered-form/service-offered-form.component';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-offered-form/service-offer-form.util';
 
 export interface ServicesOffered {
   id: number;
@@ -18,7 +21,7 @@ export interface ServicesOffered {
 @Component({
   selector: 'app-all-service-offered',
   standalone: true,
-  imports: [TableComponent, AsyncPipe, RouterLink],
+  imports: [TableComponent, AsyncPipe, RouterLink, ServiceOfferedFormComponent],
   template: `
     <div class="w-full p-2">
       <div class="w-full mb-4 flex gap-x-1">
@@ -53,13 +56,55 @@ export interface ServicesOffered {
         />
       </div>
     </div>
+    <div
+      [style]="{ display: toggleForm ? 'block' : 'none' }"
+      class="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[var(--half-black)]"
+    >
+      <div class="lg-scr p-2 flex flex-col">
+        <div class="ml-auto mt-1 w-fit">
+          <button
+            (click)="toggleForm = !toggleForm"
+            type="button"
+            class="p-1 rounded-lg bg-gray-300 hover:bg-gray-600"
+            aria-controls="close-calendar-button"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-8 h-8 text-white"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="w-full h-fit flex-1 bg-white mx-auto">
+          <app-service-offered-form
+            [form]="form"
+            [profile]="true"
+            [buttonLoading]="(btnLoading$ | async) || false"
+            (submitEmitter)="update($event)"
+            (cancelEmitter)="toggleForm = !toggleForm"
+          />
+        </div>
+      </div>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllServiceOfferedComponent {
   private readonly service = inject(ServiceOfferedService);
+  private readonly fb = inject(FormBuilder);
 
   protected readonly NEW_SERVICE_OFFERED = EMPLOYEE_NEW_SERVICE_OFFERED_ROUTE;
+  protected toggleForm = false;
 
   protected readonly tHead: Array<keyof ServicesOffered> = [
     'id',
@@ -86,6 +131,34 @@ export class AllServiceOfferedComponent {
     ),
   );
 
-  protected readonly onServiceOfferedNameClick = (event: ServicesOffered) =>
-    console.log('ServiceOffered name clicked ', event);
+  protected readonly btnLoading$ = this.service.onCreateUpdateBtnLoading$;
+
+  protected readonly form = this.fb.group({
+    serviceId: new FormControl(-1, [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.max(50)]),
+    price: new FormControl(0, [Validators.required]),
+    visible: new FormControl(true, [Validators.required]),
+    duration: new FormControl(0, [Validators.required]),
+    cleanUp: new FormControl(0, [Validators.required]),
+  });
+
+  protected readonly onServiceOfferedNameClick = (event: ServicesOffered) => {
+    this.toggleForm = true;
+    this.form.controls['serviceId'].setValue(event.id);
+    this.form.controls['name'].setValue(event.name);
+    this.form.controls['price'].setValue(event.price);
+    this.form.controls['visible'].setValue(event.visibility);
+    this.form.controls['duration'].setValue(event.duration);
+    this.form.controls['cleanUp'].setValue(event.clean_up_time);
+  };
+
+  protected readonly update = (obj: ServiceOfferForm) =>
+    this.service.update({
+      service_id: obj.serviceId,
+      name: obj.name,
+      price: obj.price,
+      is_visible: obj.visible,
+      duration: obj.duration,
+      clean_up_time: obj.cleanUp,
+    });
 }

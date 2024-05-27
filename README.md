@@ -1,6 +1,6 @@
 # Appointment scheduling app powered by Angular 17
 
-## 3rd party technologies
+## Dependencies
 
 1. TailwindCSS.
 2. [Flag Icon](https://github.com/lipis/flag-icons).
