@@ -7,13 +7,17 @@ import {
   withFetch,
   withInterceptors,
 } from '@angular/common/http';
-import { csrfInterceptor } from './global-service/csrf/csrf.interceptor';
+import { csrfInterceptor } from './global-service/csrf.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { authenticationRedirectInterceptor } from '@/app/global-service/authentication-redirect.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withFetch(), withInterceptors([csrfInterceptor])),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([authenticationRedirectInterceptor, csrfInterceptor]),
+    ),
     provideAnimations(),
   ],
 };

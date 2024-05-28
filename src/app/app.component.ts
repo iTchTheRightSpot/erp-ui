@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { CsrfService } from '@/app/global-service/csrf/csrf.service';
+import { CsrfService } from '@/app/global-service/csrf.service';
 import { catchError, map, of, startWith } from 'rxjs';
 import { ToastComponent } from '@/app/global-components/toast/toast.component';
 import { ToastService } from '@/app/global-components/toast/toast.service';

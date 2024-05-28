@@ -21,6 +21,10 @@ export const routes: Routes = [
       import('./employee-schedule/employee-schedule.component').then(
         (m) => m.EmployeeScheduleComponent,
       ),
+    loadChildren: () =>
+      import('./employee-schedule/employee-schedule.routes').then(
+        (m) => m.routes,
+      ),
   },
   {
     path: EMPLOYEE_FRONT_APPOINTMENT,
