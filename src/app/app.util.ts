@@ -9,3 +9,15 @@ export const toHrMins = (time: Date) =>
     hour: '2-digit',
     minute: '2-digit',
   });
+
+export enum Role {
+  EMPLOYEE = 'EMPLOYEE',
+  OWNER = 'OWNER',
+  DEVELOPER = 'DEVELOPER',
+  USER = 'USER',
+}
+
+export interface ActiveUser {
+  principal: string;
+  role: Role;
+}

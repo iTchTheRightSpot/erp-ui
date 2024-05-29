@@ -11,6 +11,7 @@ import {
   SERVICE_ROUTE,
 } from '@/app/store-front/store-front.util';
 import { RouterLink } from '@angular/router';
+import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'app-navigation',
@@ -56,15 +57,35 @@ import { RouterLink } from '@angular/router';
         [style]="{ display: toggle ? 'block' : 'none' }"
         class="fixed top-0 right-0 bottom-0 left-0"
       >
-        <app-mobile-nav [(toggle)]="toggle" />
+        <app-mobile-nav [(toggle)]="toggle" [login]="login" />
       </div>
 
-      <a
-        [routerLink]="BOOK_ROUTE"
-        class="p-1 uppercase rounded  items-center flex text-xs text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
-      >
-        book now
-      </a>
+      <div class="flex gap-1.5 justify-center">
+        <a
+          [routerLink]="BOOK_ROUTE"
+          class="p-1 uppercase rounded  items-center flex text-xs text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
+        >
+          book now
+        </a>
+
+        <a class="p-1 my-auto" [href]="login">
+          <span class="sr-only">login icon</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-5 h-5 text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+            />
+          </svg>
+        </a>
+      </div>
     </nav>
     <!--  end of Mobile  -->
 
@@ -142,9 +163,10 @@ import { RouterLink } from '@angular/router';
             </a>
           </li>
 
-          <!--    Person icon    -->
+          <!--    person icon    -->
           <li class="hidden md:block" tabindex="0">
-            <a class="p-2 uppercase flex">
+            <a class="p-2 uppercase flex" [href]="login">
+              <span class="sr-only">login icon</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -169,6 +191,7 @@ import { RouterLink } from '@angular/router';
 })
 export class NavigationComponent {
   protected navBg: any;
+  protected readonly login = `${environment.domain}authentication/authenticate`;
   protected readonly logo = './assets/images/logo.jpeg';
   protected readonly BOOK_ROUTE = BOOK_ROUTE;
   protected readonly SERVICE_ROUTE = SERVICE_ROUTE;

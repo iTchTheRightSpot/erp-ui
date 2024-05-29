@@ -6,9 +6,9 @@ import {
   BOOK_STAFF_ROUTE,
 } from '@/app/store-front/book/book.util';
 import {
-  BookCheckoutGuard,
-  BookAppointmentDateGuard,
-  BookStaffGuard,
+  bookCheckoutGuard,
+  bookAppointmentDateGuard,
+  bookStaffGuard,
 } from '@/app/store-front/book/book.guard';
 
 export const route: Routes = [
@@ -21,7 +21,7 @@ export const route: Routes = [
   },
   {
     path: BOOK_STAFF_ROUTE,
-    canActivate: [BookStaffGuard],
+    canActivate: [bookStaffGuard],
     loadComponent: () =>
       import('./book-staff/book-staff.component').then(
         (m) => m.BookStaffComponent,
@@ -29,7 +29,7 @@ export const route: Routes = [
   },
   {
     path: BOOK_APPOINTMENT_DATES_ROUTE,
-    canActivate: [BookAppointmentDateGuard],
+    canActivate: [bookAppointmentDateGuard],
     loadComponent: () =>
       import('./book-appointment-dates/book-appointment-dates.component').then(
         (m) => m.BookAppointmentDatesComponent,
@@ -37,7 +37,7 @@ export const route: Routes = [
   },
   {
     path: BOOK_CHECKOUT_ROUTE,
-    canActivate: [BookCheckoutGuard],
+    canActivate: [bookCheckoutGuard],
     loadComponent: () =>
       import('./checkout/checkout.component').then((m) => m.CheckoutComponent),
   },

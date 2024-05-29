@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { EMPLOYEE_FRONT_HOME, STORE_FRONT_HOME } from '@/app/app.util';
+import { employeeFrontGuard } from '@/app/app.guard';
 
 export const routes: Routes = [
   {
@@ -13,6 +14,8 @@ export const routes: Routes = [
   },
   {
     path: EMPLOYEE_FRONT_HOME,
+    canActivate: [employeeFrontGuard],
+    canActivateChild: [employeeFrontGuard],
     loadComponent: () =>
       import('./employee-front/employee-front.component').then(
         (m) => m.EmployeeFrontComponent,

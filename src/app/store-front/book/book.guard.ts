@@ -8,7 +8,7 @@ import {
   BOOK_STAFF_ROUTE,
 } from '@/app/store-front/book/book.util';
 
-export const BookStaffGuard = async () => {
+export const bookStaffGuard = async () => {
   const service = inject(BookService);
   const servicesOffered = service.bookingInfo().servicesOffered;
 
@@ -20,7 +20,7 @@ export const BookStaffGuard = async () => {
   return true;
 };
 
-export const BookAppointmentDateGuard = async () => {
+export const bookAppointmentDateGuard = async () => {
   const service = inject(BookService);
   const info = service.bookingInfo();
   const bool = !info.servicesOffered || !info.staff;
@@ -33,7 +33,7 @@ export const BookAppointmentDateGuard = async () => {
   return !bool;
 };
 
-export const BookCheckoutGuard = async () => {
+export const bookCheckoutGuard = async () => {
   const service = inject(BookService);
   const info = service.bookingInfo();
   const bool = !info.servicesOffered || !info.staff || !info.time;
