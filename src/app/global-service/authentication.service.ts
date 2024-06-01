@@ -22,5 +22,5 @@ export class AuthenticationService {
 
   readonly activeStaff$ = this.activeStaffSubject
     .asObservable()
-    .pipe(mergeMap(obs => obs))
+    .pipe(mergeMap((obs) => obs));
 }

@@ -1,6 +1,7 @@
 # Appointment scheduling application for Landscaping powered by Angular 17
 
 ## Dependencies
+
 1. TailwindCSS.
 2. [Flag Icon](https://github.com/lipis/flag-icons).
 3. Material UI.
