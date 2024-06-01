@@ -18,7 +18,7 @@ export const employeeFrontGuard = () => {
             obj.role === Role.OWNER ||
             obj.role === Role.DEVELOPER,
         ),
-        tap((bool) => {
+        tap((bool: boolean) => {
           if (!bool) {
             router.navigate([STORE_FRONT_HOME]);
           }

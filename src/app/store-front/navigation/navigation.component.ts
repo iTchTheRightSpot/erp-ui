@@ -57,7 +57,7 @@ import { environment } from '@/environments/environment';
         [style]="{ display: toggle ? 'block' : 'none' }"
         class="fixed top-0 right-0 bottom-0 left-0"
       >
-        <app-mobile-nav [(toggle)]="toggle" [login]="login" />
+        <app-mobile-nav [(toggle)]="toggle" (redirectEmitter)="redirect()" />
       </div>
 
       <div class="flex gap-1.5 justify-center">
@@ -68,7 +68,7 @@ import { environment } from '@/environments/environment';
           book now
         </a>
 
-        <a class="p-1 my-auto" [href]="login">
+        <button type="button" (click)="redirect()" class="p-1 my-auto">
           <span class="sr-only">login icon</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +84,7 @@ import { environment } from '@/environments/environment';
               d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
             />
           </svg>
-        </a>
+        </button>
       </div>
     </nav>
     <!--  end of Mobile  -->
@@ -144,7 +144,7 @@ import { environment } from '@/environments/environment';
       <div class="my-0 mx-auto cursor-pointer">
         <a routerLink="">
           <img
-            src="{{ logo }}"
+            [src]="logo"
             alt="logo"
             class="h-[2.5rem] w-[4.375rem] object-contain"
           />
@@ -165,7 +165,11 @@ import { environment } from '@/environments/environment';
 
           <!--    person icon    -->
           <li class="hidden md:block" tabindex="0">
-            <a class="p-2 uppercase flex" [href]="login">
+            <button
+              type="button"
+              (click)="redirect()"
+              class="p-2 uppercase flex"
+            >
               <span class="sr-only">login icon</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +185,7 @@ import { environment } from '@/environments/environment';
                   d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
                 />
               </svg>
-            </a>
+            </button>
           </li>
         </ul>
       </div>
@@ -191,7 +195,6 @@ import { environment } from '@/environments/environment';
 })
 export class NavigationComponent {
   protected navBg: any;
-  protected readonly login = `${environment.domain}authentication/authenticate`;
   protected readonly logo = './assets/images/logo.jpeg';
   protected readonly BOOK_ROUTE = BOOK_ROUTE;
   protected readonly SERVICE_ROUTE = SERVICE_ROUTE;
@@ -210,4 +213,7 @@ export class NavigationComponent {
 
     this.navBg = bool ? css : {};
   }
+
+  protected readonly redirect = () =>
+    (window.location.href = `${environment.domain}authentication/authenticate`);
 }

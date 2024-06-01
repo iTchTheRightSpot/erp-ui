@@ -36,7 +36,7 @@ export function authenticationRedirectInterceptor(
       if (err instanceof HttpErrorResponse) {
         const error = err.error ? err.error : undefined;
 
-        if (error && error.status === 401) {
+        if (err.status === 401 && error) {
           window.location.href = err.error.redirect_url;
         }
 
