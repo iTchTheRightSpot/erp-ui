@@ -1,17 +1,16 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '@/environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
   HttpResponse,
 } from '@angular/common/http';
-import { ToastService } from '@/app/global-components/toast/toast.service';
+import { ToastService } from '@/app/shared-components/toast/toast.service';
 import {
   dummyServices,
   ServiceOfferedDto,
 } from '@/app/employee-front/employee-service/employee-service.util';
 import {
-  BehaviorSubject,
   catchError,
   delay,
   map,
@@ -22,6 +21,7 @@ import {
   Subject,
   tap,
 } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -32,24 +32,34 @@ export class ServiceOfferedService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
 
-  private readonly serviceInitialized: boolean | undefined = undefined;
+  private readonly servicesOfferedSignal = signal<
+    ServiceOfferedDto[] | undefined
+  >(undefined);
 
-  private readonly servicesOfferedSubject = new BehaviorSubject<
-    Observable<ServiceOfferedDto[]>
-  >(of([]));
+  private readonly allServicesRequest = toSignal(
+    this.production
+      ? this.http
+          .get<
+            ServiceOfferedDto[]
+          >(`${this.domain}employee/service-offered`, { withCredentials: true })
+          .pipe(
+            tap((arr) => this.servicesOfferedSignal.set(arr)),
+            catchError((e: HttpErrorResponse) =>
+              this.toastService.messageHandleIterateError<ServiceOfferedDto>(e),
+            ),
+          )
+      : of(dummyServices(15)),
+    {
+      initialValue: [] as ServiceOfferedDto[],
+    },
+  );
 
-  constructor() {
-    if (this.serviceInitialized === undefined) {
-      this.servicesOfferedSubject.next(this.allServicesRequest());
-    }
-    this.serviceInitialized = true;
-  }
+  readonly servicesOffered = () => {
+    const arr = this.servicesOfferedSignal();
+    return arr ? arr : this.allServicesRequest();
+  };
 
   private readonly createUpdateSubject = new Subject<Observable<boolean>>();
-
-  readonly servicesOffered$ = this.servicesOfferedSubject
-    .asObservable()
-    .pipe(mergeMap((obs) => obs));
 
   readonly onCreateUpdateBtnLoading$ = this.createUpdateSubject
     .asObservable()
@@ -64,19 +74,6 @@ export class ServiceOfferedService {
     this.createUpdateSubject.next(
       this.updateRequest(dto).pipe(startWith(true)),
     );
-
-  private readonly allServicesRequest = () =>
-    this.production
-      ? this.http
-          .get<
-            ServiceOfferedDto[]
-          >(`${this.domain}employee/service-offered`, { withCredentials: true })
-          .pipe(
-            catchError((e: HttpErrorResponse) =>
-              this.toastService.messageHandleIterateError<ServiceOfferedDto>(e),
-            ),
-          )
-      : of(dummyServices(15));
 
   private readonly addServiceToEmployee = (serviceName: string) =>
     this.production
@@ -98,8 +95,8 @@ export class ServiceOfferedService {
             HttpResponse<boolean>
           >(`${this.domain}owner/service-offered`, dto, { withCredentials: true })
           .pipe(
-            tap((dto) =>
-              this.servicesOfferedSubject.next(this.allServicesRequest()),
+            tap(() =>
+              this.servicesOfferedSignal.set(this.allServicesRequest()),
             ),
             map(() => false),
             catchError((e: HttpErrorResponse) =>
@@ -115,8 +112,8 @@ export class ServiceOfferedService {
             HttpResponse<boolean>
           >(`${this.domain}owner/service-offered`, dto, { withCredentials: true })
           .pipe(
-            tap((dto) =>
-              this.servicesOfferedSubject.next(this.allServicesRequest()),
+            tap(() =>
+              this.servicesOfferedSignal.set(this.allServicesRequest()),
             ),
             map(() => false),
             catchError((e: HttpErrorResponse) =>

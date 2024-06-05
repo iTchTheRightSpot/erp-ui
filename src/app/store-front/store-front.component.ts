@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavigationComponent } from '@/app/store-front/navigation/navigation.component';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Component({
   selector: 'app-store-front',
@@ -11,7 +12,7 @@ import { NavigationComponent } from '@/app/store-front/navigation/navigation.com
       <div
         class="lg-scr h-fit rounded-b z-10 border-b border-transparent fixed left-0 top-0 right-0"
       >
-        <app-navigation />
+        <app-navigation [activeStaff]="!!staff()" />
       </div>
 
       <router-outlet></router-outlet>
@@ -19,4 +20,7 @@ import { NavigationComponent } from '@/app/store-front/navigation/navigation.com
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StoreFrontComponent {}
+export class StoreFrontComponent {
+  private readonly authenticationService = inject(AuthenticationService);
+  protected readonly staff = this.authenticationService.staff;
+}

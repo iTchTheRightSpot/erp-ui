@@ -7,7 +7,7 @@ import {
   BOOK_STAFF_ROUTE,
 } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
-import { CalendarComponent } from '@/app/global-components/calendar/calendar.component';
+import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { toHrMins } from '@/app/app.util';
 
 @Component({

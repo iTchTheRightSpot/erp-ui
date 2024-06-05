@@ -1,4 +1,4 @@
-# Appointment scheduling application for Landscaping powered by Angular 17
+# Landscaping appointment scheduling application powered by Angular 17
 
 ## Dependencies
 

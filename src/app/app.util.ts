@@ -1,5 +1,6 @@
 export const STORE_FRONT_HOME = '';
 export const EMPLOYEE_FRONT_HOME = 'employee';
+export const UNAUTHORIZED = 'unauthorized';
 
 /**
  * Converts date time to hrs and mins

@@ -1,6 +1,10 @@
 import { Routes } from '@angular/router';
-import { EMPLOYEE_FRONT_HOME, STORE_FRONT_HOME } from '@/app/app.util';
-import { employeeFrontGuard } from '@/app/app.guard';
+import {
+  EMPLOYEE_FRONT_HOME,
+  STORE_FRONT_HOME,
+  UNAUTHORIZED,
+} from '@/app/app.util';
+import { employeeRouteGuard } from '@/app/app.guard';
 
 export const routes: Routes = [
   {
@@ -14,8 +18,8 @@ export const routes: Routes = [
   },
   {
     path: EMPLOYEE_FRONT_HOME,
-    canActivate: [employeeFrontGuard],
-    canActivateChild: [employeeFrontGuard],
+    canActivate: [employeeRouteGuard],
+    canActivateChild: [employeeRouteGuard],
     loadComponent: () =>
       import('./employee-front/employee-front.component').then(
         (m) => m.EmployeeFrontComponent,
@@ -24,10 +28,17 @@ export const routes: Routes = [
       import('./employee-front/employee-front.routes').then((m) => m.routes),
   },
   {
+    path: UNAUTHORIZED,
+    loadComponent: () =>
+      import('./shared-components/unauthorized/unauthorized.component').then(
+        (m) => m.UnauthorizedComponent,
+      ),
+  },
+  {
     path: '404',
     loadComponent: () =>
       import(
-        './global-components/page-not-found/page-not-found.component'
+        './shared-components/page-not-found/page-not-found.component'
       ).then((m) => m.PageNotFoundComponent),
   },
   { path: '**', redirectTo: '/404' },

@@ -1,22 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ServiceOfferedService } from '@/app/employee-front/employee-service/service-offered.service';
-import { TableComponent } from '@/app/global-components/table/table.component';
-import { map } from 'rxjs';
+import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EMPLOYEE_NEW_SERVICE_OFFERED_ROUTE } from '@/app/employee-front/employee-service/employee-service.util';
 import { ServiceOfferedFormComponent } from '@/app/employee-front/employee-service/service-offered-form/service-offered-form.component';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-offered-form/service-offer-form.util';
-
-export interface ServicesOffered {
-  id: number;
-  name: string;
-  price: number;
-  visibility: boolean;
-  duration: number;
-  clean_up_time: number;
-}
+import { AllServicesOffered } from '@/app/employee-front/employee-service/all-service-offered/all-service-offered.util';
 
 @Component({
   selector: 'app-all-service-offered',
@@ -51,7 +42,7 @@ export interface ServicesOffered {
       <div class="w-full">
         <app-table
           [tHead]="tHead"
-          [tBody]="(tBody | async) || []"
+          [tBody]="tBody"
           (rowClickEmitter)="onServiceOfferedNameClick($event)"
         />
       </div>
@@ -106,7 +97,7 @@ export class AllServiceOfferedComponent {
   protected readonly NEW_SERVICE_OFFERED = EMPLOYEE_NEW_SERVICE_OFFERED_ROUTE;
   protected toggleForm = false;
 
-  protected readonly tHead: Array<keyof ServicesOffered> = [
+  protected readonly tHead: Array<keyof AllServicesOffered> = [
     'id',
     'visibility',
     'name',
@@ -115,20 +106,16 @@ export class AllServiceOfferedComponent {
     'clean_up_time',
   ];
 
-  protected readonly tBody = this.service.servicesOffered$.pipe(
-    map((dtos) =>
-      dtos.map(
-        (dto) =>
-          ({
-            id: dto.service_id,
-            name: dto.name,
-            price: dto.price,
-            visibility: dto.is_visible,
-            duration: dto.duration,
-            clean_up_time: dto.clean_up_time,
-          }) as ServicesOffered,
-      ),
-    ),
+  protected readonly tBody = this.service.servicesOffered().map(
+    (dto) =>
+      ({
+        id: dto.service_id,
+        name: dto.name,
+        price: dto.price,
+        visibility: dto.is_visible,
+        duration: dto.duration,
+        clean_up_time: dto.clean_up_time,
+      }) as AllServicesOffered,
   );
 
   protected readonly btnLoading$ = this.service.onCreateUpdateBtnLoading$;
@@ -142,7 +129,9 @@ export class AllServiceOfferedComponent {
     cleanUp: new FormControl(0, [Validators.required]),
   });
 
-  protected readonly onServiceOfferedNameClick = (event: ServicesOffered) => {
+  protected readonly onServiceOfferedNameClick = (
+    event: AllServicesOffered,
+  ) => {
     this.toggleForm = true;
     this.form.controls['serviceId'].setValue(event.id);
     this.form.controls['name'].setValue(event.name);

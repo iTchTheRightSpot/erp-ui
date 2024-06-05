@@ -2,8 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
+  input,
 } from '@angular/core';
-import { NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { MobileNavComponent } from '@/app/store-front/navigation/mobile-nav.component';
 import {
   ABOUT_ROUTE,
@@ -12,11 +13,12 @@ import {
 } from '@/app/store-front/store-front.util';
 import { RouterLink } from '@angular/router';
 import { environment } from '@/environments/environment';
+import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports: [NgStyle, MobileNavComponent, RouterLink],
+  imports: [NgStyle, MobileNavComponent, RouterLink, NgClass],
   template: `
     <nav class="md:hidden flex p-1" [ngStyle]="navBg">
       <!-- burger -->
@@ -57,7 +59,11 @@ import { environment } from '@/environments/environment';
         [style]="{ display: toggle ? 'block' : 'none' }"
         class="fixed top-0 right-0 bottom-0 left-0"
       >
-        <app-mobile-nav [(toggle)]="toggle" (redirectEmitter)="redirect()" />
+        <app-mobile-nav
+          [activeStaff]="activeStaff()"
+          [(toggle)]="toggle"
+          (redirectEmitter)="redirect()"
+        />
       </div>
 
       <div class="flex gap-1.5 justify-center">
@@ -137,6 +143,28 @@ import { environment } from '@/environments/environment';
               />
             </svg>
           </a>
+
+          <a
+            [routerLink]="EMPLOYEE_FRONT_HOME"
+            [ngClass]="{ flex: activeStaff() }"
+            class="h-full relative hidden gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
+          >
+            employee
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+              />
+            </svg>
+          </a>
         </li>
       </div>
 
@@ -194,11 +222,14 @@ import { environment } from '@/environments/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavigationComponent {
+  activeStaff = input.required<boolean>();
+
   protected navBg: any;
   protected readonly logo = './assets/images/logo.jpeg';
   protected readonly BOOK_ROUTE = BOOK_ROUTE;
   protected readonly SERVICE_ROUTE = SERVICE_ROUTE;
   protected readonly ABOUT_ROUTE = ABOUT_ROUTE;
+  protected readonly EMPLOYEE_FRONT_HOME = EMPLOYEE_FRONT_HOME;
   toggle = false;
 
   @HostListener('document:scroll') scroll(): void {

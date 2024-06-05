@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { TableComponent } from '@/app/global-components/table/table.component';
+import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
-import { CalendarComponent } from '@/app/global-components/calendar/calendar.component';
+import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
 import { map, of } from 'rxjs';
 import {

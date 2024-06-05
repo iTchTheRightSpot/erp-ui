@@ -7,7 +7,7 @@ import {
 } from '@/app/employee-front/employee-front.util';
 import { environment } from '@/environments/environment';
 import { catchError, map, of, tap } from 'rxjs';
-import { ToastService } from '@/app/global-components/toast/toast.service';
+import { ToastService } from '@/app/shared-components/toast/toast.service';
 
 @Injectable({
   providedIn: 'root',

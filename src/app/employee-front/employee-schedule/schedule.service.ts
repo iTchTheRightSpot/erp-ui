@@ -10,7 +10,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { catchError, delay, map, of } from 'rxjs';
-import { ToastService } from '@/app/global-components/toast/toast.service';
+import { ToastService } from '@/app/shared-components/toast/toast.service';
 
 @Injectable({
   providedIn: 'root',

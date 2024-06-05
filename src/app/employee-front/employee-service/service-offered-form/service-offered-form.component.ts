@@ -12,7 +12,7 @@ import { NgClass } from '@angular/common';
   selector: 'app-service-offered-form',
   standalone: true,
   imports: [ReactiveFormsModule, NgClass],
-  styleUrl: '../../../global-components/number-input.component.css',
+  styleUrl: '../../../shared-components/number-input.component.css',
   templateUrl: './service-offered-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

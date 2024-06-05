@@ -16,7 +16,7 @@ import {
   tap,
 } from 'rxjs';
 import { BookService } from '@/app/store-front/book/book.service';
-import { ToastService } from '@/app/global-components/toast/toast.service';
+import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 
 @Injectable({

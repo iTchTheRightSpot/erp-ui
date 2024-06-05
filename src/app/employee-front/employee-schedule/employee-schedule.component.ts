@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CalendarComponent } from '@/app/global-components/calendar/calendar.component';
+import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { RouterOutlet } from '@angular/router';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 

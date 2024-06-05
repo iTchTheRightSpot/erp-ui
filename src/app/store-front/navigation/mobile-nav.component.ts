@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  input,
   model,
   output,
 } from '@angular/core';
@@ -92,9 +93,12 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MobileNavComponent {
+  activeStaff = input<boolean>();
   readonly toggle = model<boolean>(false);
   readonly redirectEmitter = output<void>();
-  protected readonly links = ['about', 'service'];
+  protected readonly links = this.activeStaff()
+    ? ['about', 'service', 'employee']
+    : ['about', 'service'];
   protected readonly logo = './assets/images/logo.jpeg';
   protected readonly BOOK_ROUTE = BOOK_ROUTE;
 

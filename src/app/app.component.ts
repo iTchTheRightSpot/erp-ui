@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { CsrfService } from '@/app/global-service/csrf.service';
 import { catchError, map, of, startWith } from 'rxjs';
-import { ToastComponent } from '@/app/global-components/toast/toast.component';
-import { ToastService } from '@/app/global-components/toast/toast.service';
+import { ToastComponent } from '@/app/shared-components/toast/toast.component';
+import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -38,13 +38,13 @@ import { ToastService } from '@/app/global-components/toast/toast.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  private readonly service = inject(CsrfService);
+  private readonly authenticationService = inject(AuthenticationService);
   private readonly toastService = inject(ToastService);
 
-  protected readonly csrf$ = this.service.csrf().pipe(
+  protected readonly message$ = this.toastService.message$;
+  protected readonly csrf$ = this.authenticationService.csrf().pipe(
     map(() => ({ state: 'LOADED' })),
     startWith({ state: 'LOADING' }),
     catchError(() => of({ state: 'ERROR' })),
   );
-  protected readonly message$ = this.toastService.message$;
 }

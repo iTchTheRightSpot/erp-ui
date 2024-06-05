@@ -11,7 +11,7 @@ import { DatePipe, NgClass } from '@angular/common';
   selector: 'app-time-picker',
   standalone: true,
   imports: [ReactiveFormsModule, NgClass, DatePipe],
-  styleUrl: '../../../global-components/number-input.component.css',
+  styleUrl: '../../../shared-components/number-input.component.css',
   templateUrl: './time-picker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
