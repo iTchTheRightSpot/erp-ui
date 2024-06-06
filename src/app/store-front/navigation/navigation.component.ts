@@ -192,7 +192,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
 
           <a
             [routerLink]="EMPLOYEE_FRONT_HOME"
-            [ngStyle]="{ 'display': isStaff() ? 'flex' : 'none' }"
+            [ngStyle]="{ display: isStaff() ? 'flex' : 'none' }"
             class="h-full relative hidden gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
           >
             employee
@@ -315,7 +315,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
 })
 export class NavigationComponent {
   isStaff = input.required<boolean>();
-  isSignedIn = input.required<boolean>()
+  isSignedIn = input.required<boolean>();
   logout = input.required<boolean>();
 
   protected navBg: any;

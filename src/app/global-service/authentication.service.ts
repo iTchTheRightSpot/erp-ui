@@ -25,9 +25,7 @@ export class AuthenticationService {
         }>(`${this.domain}csrf`, { withCredentials: true })
       : of({ token: 'token', parameterName: 'name', headerName: 'header' });
 
-  private readonly activeUserSignal = signal<ActiveUser | undefined>(
-    undefined,
-  );
+  private readonly activeUserSignal = signal<ActiveUser | undefined>(undefined);
 
   private readonly activeUser$ = () =>
     this.http
@@ -65,11 +63,12 @@ export class AuthenticationService {
   readonly logout = () =>
     this.production
       ? this.http
-        .post<
-          { redirect_url: string, status: string }
-        >(`${this.domain}logout`, {}, { withCredentials: true })
+          .post<{
+            redirect_url: string;
+            status: string;
+          }>(`${this.domain}logout`, {}, { withCredentials: true })
           .pipe(
-            tap((res) => window.location.href = res.redirect_url),
+            tap((res) => (window.location.href = res.redirect_url)),
             map(() => false),
             startWith(true),
             catchError((e) => this.toastService.messageErrorBool(e)),

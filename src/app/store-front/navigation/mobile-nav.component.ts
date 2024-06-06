@@ -119,9 +119,10 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
           <a
             [routerLink]="EMPLOYEE_ROUTE"
             (click)="toggle.set(false)"
-            [ngStyle]="{ 'display': isStaff() ? 'block' : 'none' }"
+            [ngStyle]="{ display: isStaff() ? 'block' : 'none' }"
             class="uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
-          >employee</a>
+            >employee</a
+          >
         </li>
       </ul>
     </div>
@@ -136,7 +137,7 @@ export class MobileNavComponent {
   readonly toggle = model<boolean>(false);
   readonly redirectEmitter = output<void>();
 
-  protected readonly links = ['about', 'service']
+  protected readonly links = ['about', 'service'];
 
   protected readonly logo = './assets/images/logo.jpeg';
   protected readonly BOOK_ROUTE = BOOK_ROUTE;
