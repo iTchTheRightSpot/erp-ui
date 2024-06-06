@@ -1,5 +1,4 @@
 import {
-  HttpErrorResponse,
   HttpEvent,
   HttpHandlerFn,
   HttpInterceptorFn,
@@ -8,6 +7,8 @@ import {
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { STORE_FRONT_HOME, UNAUTHORIZED } from '@/app/app.util';
 
 export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenExtractor = inject(HttpXsrfTokenExtractor);
@@ -21,38 +22,29 @@ export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req);
 };
 
-interface ExceptionResponse {
-  message: string;
-  redirect_url: string;
-  status: number;
-}
-
 export function authenticationRedirectInterceptor(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> {
+  const router = inject(Router);
   return next(req).pipe(
     catchError((err) => {
-      if (err instanceof HttpErrorResponse) {
-        const error = err.error ? err.error : undefined;
+      const message = err.error ? err.error.message : err.message;
+      const redirect = err.error ? err.error.redirect_url : '';
+      const obj = {
+        message: message,
+        redirect_url: redirect,
+        status: err.status,
+      };
 
-        if (err.status === 401 && error) {
-          window.location.href = err.error.redirect_url;
-        }
-
-        if (error) {
-          return throwError(
-            () =>
-              ({
-                message: err.error.message,
-                redirect_url: err.error.redirect_url,
-                status: err.error.status,
-              }) as ExceptionResponse,
-          );
-        }
+      if (obj.status === 401) {
+        window.location.href = obj.redirect_url;
+        router.navigate([`${STORE_FRONT_HOME}`]);
+      } else if (obj.status === 403) {
+        router.navigate([`${UNAUTHORIZED}`]);
       }
 
-      return throwError(() => err);
+      return throwError(() => obj);
     }),
   );
 }

@@ -31,24 +31,24 @@ export class ToastService {
   readonly message = (message: string) => this.subject.next(message);
 
   readonly messageErrorStatus = (e: HttpErrorResponse) => {
-    this.subject.next(e.error ? e.error.message : e.message);
+    this.subject.next(e.message);
     return of(e.status);
   };
 
   readonly messageErrorNothing = (e: HttpErrorResponse) => {
-    this.subject.next(e.error ? e.error.message : e.message);
+    this.subject.next(e.message);
     return of();
   };
 
   readonly messageErrorBool = (e: HttpErrorResponse) => {
-    this.subject.next(e.error ? e.error.message : e.message);
+    this.subject.next(e.message);
     return of(false);
   };
 
   readonly messageHandleIterateError = <T>(
     e: HttpErrorResponse,
   ): Observable<T[]> => {
-    this.subject.next(e.error ? e.error.message : e.message);
+    this.subject.next(e.message);
     return of([] as T[]);
   };
 }

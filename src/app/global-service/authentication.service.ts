@@ -2,8 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { catchError, delay, map, merge, of, startWith, tap } from 'rxjs';
-import { ActiveUser, Role, STORE_FRONT_HOME } from '@/app/app.util';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ActiveUser, Role } from '@/app/app.util';
 import { Router } from '@angular/router';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 
@@ -26,24 +25,22 @@ export class AuthenticationService {
         }>(`${this.domain}csrf`, { withCredentials: true })
       : of({ token: 'token', parameterName: 'name', headerName: 'header' });
 
-  private readonly activeStaffSignal = signal<ActiveUser | undefined>(
+  private readonly activeUserSignal = signal<ActiveUser | undefined>(
     undefined,
   );
 
-  readonly staff = this.activeStaffSignal;
-
-  private readonly activeStaff = () =>
+  private readonly activeUser$ = () =>
     this.http
-      .get<ActiveUser>(`${this.domain}active/staff`, { withCredentials: true })
+      .get<ActiveUser>(`${this.domain}active`, { withCredentials: true })
       .pipe(
-        tap((staff) => this.activeStaffSignal.set(staff)),
+        tap((staff) => this.activeUserSignal.set(staff)),
         catchError((err) => this.toastService.messageErrorNothing(err)),
       );
 
   readonly isStaff = () => {
     if (!this.production) return of(true);
 
-    const staff = this.activeStaffSignal();
+    const staff = this.activeUserSignal();
 
     if (staff) {
       return of(
@@ -53,7 +50,7 @@ export class AuthenticationService {
       );
     }
 
-    return this.activeStaff().pipe(
+    return this.activeUser$().pipe(
       map(
         (s) =>
           s.role === Role.EMPLOYEE ||
@@ -63,14 +60,16 @@ export class AuthenticationService {
     );
   };
 
+  readonly activeUser = () => this.activeUserSignal;
+
   readonly logout = () =>
     this.production
       ? this.http
-          .get<
-            HttpResponse<any>
-          >(`${this.domain}logout`, { withCredentials: true })
+        .post<
+          { redirect_url: string, status: string }
+        >(`${this.domain}logout`, {}, { withCredentials: true })
           .pipe(
-            tap(() => this.router.navigate([STORE_FRONT_HOME])),
+            tap((res) => window.location.href = res.redirect_url),
             map(() => false),
             startWith(true),
             catchError((e) => this.toastService.messageErrorBool(e)),
