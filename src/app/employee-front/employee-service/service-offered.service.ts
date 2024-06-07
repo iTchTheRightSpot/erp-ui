@@ -67,7 +67,7 @@ export class ServiceOfferedService {
 
   private readonly deleteSubject = new Subject<Observable<boolean>>();
 
-  readonly onDelete$ = this.createUpdateSubject
+  readonly onDelete$ = this.deleteSubject
     .asObservable()
     .pipe(mergeMap((obs) => obs));
 
@@ -82,7 +82,9 @@ export class ServiceOfferedService {
     );
 
   readonly delete = (serviceId: string) =>
-    this.deleteSubject.next(this.deleteRequest(serviceId));
+    this.deleteSubject.next(
+      this.deleteRequest(serviceId).pipe(startWith(true)),
+    );
 
   private readonly addServiceToEmployeeRequest = (serviceName: string) =>
     this.production
@@ -137,8 +139,8 @@ export class ServiceOfferedService {
     this.production
       ? this.http
           .delete<
-            HttpResponse<boolean>
-          >(`${this.domain}owner/service-offered/${serviceId}`, { observe: 'response', withCredentials: true })
+            HttpResponse<any>
+          >(`${this.domain}owner/service-offered/${serviceId}`, { withCredentials: true })
           .pipe(
             switchMap(() =>
               this.allServicesRequest().pipe(

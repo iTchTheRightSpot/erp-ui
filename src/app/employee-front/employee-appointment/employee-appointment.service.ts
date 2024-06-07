@@ -56,10 +56,11 @@ export class EmployeeAppointmentService {
     .pipe(mergeMap((obs) => obs));
 
   /**
-   * Updates {@link subject$}.
+   * Method does a few things. On load of dashboard or appointment components,
+   * it makes a call to server to retrieve appointments for the month.
    * */
-  readonly onUpdateSubject = (selected: Date) =>
-    this.subject.next(this.parentService.appointmentFilter(selected));
+  readonly onUpdateCalendarMonth = (selected: Date) =>
+    this.subject.next(this.parentService.appointmentsOnSelectedMonth(selected));
 
   /**
    * Updates {@link subjectClick$}.
@@ -79,7 +80,7 @@ export class EmployeeAppointmentService {
    * Makes call to server if
    * */
   readonly updateParentOnChangeMonthYear = (selected: Date) =>
-    this.subject.next(this.parentService.appointmentFilter(selected));
+    this.subject.next(this.parentService.appointmentsOnSelectedMonth(selected));
 
   readonly updateAppointmentStatus = (dto: UpdateAppointmentStatusDto) =>
     this.updateAppointmentStatusSubject.next(this.updateRequest(dto));

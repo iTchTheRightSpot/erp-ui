@@ -6,22 +6,21 @@ import {
   dummyAppointments,
 } from '@/app/employee-front/employee-front.util';
 import { environment } from '@/environments/environment';
-import { catchError, map, of, tap } from 'rxjs';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { CacheService } from '@/app/global-service/cache.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeFrontService {
-  private readonly http = inject(HttpClient);
-  private readonly toastService = inject(ToastService);
   private readonly domain = environment.domain;
   private readonly production = environment.production;
 
-  private readonly appointmentResponseCache = new Map<
-    string,
-    AppointmentResponse[]
-  >();
+  private readonly http = inject(HttpClient);
+  private readonly toastService = inject(ToastService);
+  private readonly cachedService: CacheService<string, AppointmentResponse[]> =
+    inject(CacheService);
 
   private readonly cacheKeyBuilder = (selected: Date) =>
     `${1 + selected.getMonth()}_${selected.getFullYear()}`;
@@ -30,28 +29,30 @@ export class EmployeeFrontService {
    * Returns an observable that emits a paginated list of {@link AppointmentResponse}
    * based on the day selected. The backend returns all appointments that fall
    * in-between `selected` and the end of the month. To improve UX and efficiency,
-   * we cache response received from the backend to {@link appointmentResponseCache}.
+   * we cache response received from the backend to {@link cachedService}.
    *
    * @param selected the start date to return all {@link AppointmentResponse}.
    * @return an Observable that emits an array of {@link AppointmentResponse}.
    * */
-  readonly appointmentFilter = (selected: Date) => {
+  readonly appointmentsOnSelectedMonth = (selected: Date) => {
     const key = this.cacheKeyBuilder(selected);
-    if (this.appointmentResponseCache.has(key)) {
-      const value = this.appointmentResponseCache.get(key);
-      if (value) return of<AppointmentResponse[]>(value);
-    }
 
-    let params = new HttpParams();
-    params = params.append('day_of_month', selected.getDate());
-    params = params.append('month', 1 + selected.getMonth());
-    params = params.append('year', selected.getFullYear());
+    return this.cachedService.getItem(key).pipe(
+      switchMap((value) => {
+        if (value !== undefined) return of(value);
 
-    return this.production
-      ? this.request(params).pipe(
-          tap((arr) => this.appointmentResponseCache.set(key, arr)),
-        )
-      : of<AppointmentResponse[]>(dummyAppointments(20));
+        let params = new HttpParams();
+        params = params.append('day_of_month', selected.getDate());
+        params = params.append('month', 1 + selected.getMonth());
+        params = params.append('year', selected.getFullYear());
+
+        return this.production
+          ? this.request(params).pipe(
+              tap((arr) => this.cachedService.setItem(key, arr)),
+            )
+          : of<AppointmentResponse[]>(dummyAppointments(20));
+      }),
+    );
   };
 
   /**

@@ -56,5 +56,6 @@ export class ServiceOfferedFormComponent {
 
   protected readonly delete = () =>
     this.deleteEmitter.emit(this.form().controls['serviceId'].value);
+
   protected readonly submit = () => this.submitEmitter.emit(this.buildForm());
 }

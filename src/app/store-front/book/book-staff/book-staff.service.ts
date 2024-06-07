@@ -5,7 +5,7 @@ import {
   HttpErrorResponse,
   HttpParams,
 } from '@angular/common/http';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, of, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import {
   StaffDto,
@@ -13,6 +13,7 @@ import {
 } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { BookService } from '@/app/store-front/book/book.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
+import { CacheService } from '@/app/global-service/cache.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,16 +24,11 @@ export class BookStaffService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
   private readonly bookService = inject(BookService);
+  private readonly cacheService: CacheService<string, StaffDto[]> =
+    inject(CacheService);
 
-  private readonly cache = this.production
-    ? new Map<string, StaffDto[]>()
-    : staffs();
-
-  private readonly buildCacheKey = (services: BookServiceOfferedDto[]) => {
-    let key = '';
-    services.forEach((s) => key.concat(s.name, '_'));
-    return key;
-  };
+  private readonly buildCacheKey = (services: BookServiceOfferedDto[]) =>
+    services.map((s) => s.name).join('_');
 
   readonly employeesByServicesSelected = (services: BookServiceOfferedDto[]) =>
     this.bookService.setServicesOfferedSelected(services);
@@ -47,17 +43,20 @@ export class BookStaffService {
 
     const key = this.buildCacheKey(services);
 
-    if (this.cache.has(key)) {
-      const value = this.cache.get(key);
-      if (value) return of<StaffDto[]>(value);
-    }
+    return this.production
+      ? this.cacheService.getItem(key).pipe(
+          switchMap((value) => {
+            if (value) return of(value);
 
-    let params = new HttpParams();
-    services.forEach(
-      (service) =>
-        (params = params.append('service_name', service.name.trim())),
-    );
-    return this.request$(params, key);
+            let params = new HttpParams();
+            services.forEach(
+              (service) =>
+                (params = params.append('service_name', service.name.trim())),
+            );
+            return this.request$(params, key);
+          }),
+        )
+      : of(staffs().get(key));
   };
 
   private readonly request$ = (params: HttpParams, key: string) =>
@@ -72,7 +71,7 @@ export class BookStaffService {
             (obj) =>
               (obj.picture = obj.picture.length === 0 ? img : obj.picture),
           );
-          this.cache.set(key, staffs);
+          this.cacheService.setItem(key, staffs);
         }),
         catchError((e: HttpErrorResponse) =>
           this.toastService.messageHandleIterateError<StaffDto>(e),
