@@ -58,7 +58,7 @@ export class AuthenticationService {
     );
   };
 
-  readonly activeUser = () => this.activeUserSignal;
+  readonly activeUser = this.activeUserSignal;
 
   readonly logout = () =>
     this.production

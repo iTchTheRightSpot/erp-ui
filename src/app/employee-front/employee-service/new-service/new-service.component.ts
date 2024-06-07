@@ -21,7 +21,9 @@ import { AsyncPipe } from '@angular/common';
       <div class="w-full lg:max-w-lg">
         <app-service-offered-form
           [form]="form"
-          [buttonLoading]="(btnLoading$ | async) || false"
+          [clearField]="(clearForm$ | async) || false"
+          [submitLoading]="(btnLoading$ | async) || false"
+          [deleteLoading]="false"
           (submitEmitter)="submit($event)"
         />
       </div>
@@ -33,8 +35,10 @@ export class NewServiceComponent {
   private readonly service = inject(ServiceOfferedService);
   private readonly fb = inject(FormBuilder);
 
+  protected readonly clearForm$ = this.service.clearForm$;
+
   protected readonly form = this.fb.group({
-    serviceId: new FormControl(0),
+    serviceId: new FormControl('0'),
     name: new FormControl('', [Validators.required, Validators.max(50)]),
     price: new FormControl('', [Validators.required]),
     visible: new FormControl(true, [Validators.required]),
@@ -42,12 +46,12 @@ export class NewServiceComponent {
     cleanUp: new FormControl('', [Validators.required]),
   });
 
-  protected readonly btnLoading$ = this.service.onCreateUpdateBtnLoading$;
+  protected readonly btnLoading$ = this.service.onCreateUpdate$;
 
   protected readonly submit = (obj: ServiceOfferForm) =>
     this.service.create({
-      service_id: -1,
-      name: obj.name,
+      service_id: '-1',
+      service_name: obj.name,
       price: obj.price,
       is_visible: obj.visible,
       duration: obj.duration,

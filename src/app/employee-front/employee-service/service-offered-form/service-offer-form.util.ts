@@ -1,5 +1,5 @@
 export interface ServiceOfferForm {
-  serviceId: number;
+  serviceId: string;
   name: string;
   price: number;
   visible: boolean;

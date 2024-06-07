@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   input,
   output,
 } from '@angular/core';
@@ -19,10 +20,21 @@ import { NgClass } from '@angular/common';
 export class ServiceOfferedFormComponent {
   form = input.required<FormGroup>();
   profile = input<boolean>(false);
-  buttonLoading = input.required<boolean>();
+  submitLoading = input.required<boolean>();
+  deleteLoading = input.required<boolean>();
+  clearField = input.required<boolean>();
 
   readonly submitEmitter = output<ServiceOfferForm>();
-  readonly cancelEmitter = output<boolean>();
+  readonly deleteEmitter = output<string>();
+
+  constructor() {
+    effect(() => {
+      if (this.clearField()) {
+        this.form().reset();
+        this.form().controls['visible'].setValue(true);
+      }
+    });
+  }
 
   private readonly buildForm = () => {
     const id = this.form().controls['serviceId'].value;
@@ -36,12 +48,13 @@ export class ServiceOfferedFormComponent {
       serviceId: id ? id : -1,
       name: name ? name : '',
       price: price ? price : 0,
-      visible: !!visible,
+      visible: visible,
       duration: duration ? duration : 0,
       cleanUp: cleanUp ? cleanUp : 0,
     } as ServiceOfferForm;
   };
 
-  protected readonly cancel = () => this.cancelEmitter.emit(true);
+  protected readonly delete = () =>
+    this.deleteEmitter.emit(this.form().controls['serviceId'].value);
   protected readonly submit = () => this.submitEmitter.emit(this.buildForm());
 }

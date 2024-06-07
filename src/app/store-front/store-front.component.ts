@@ -37,7 +37,7 @@ import { Role } from '@/app/app.util';
 export class StoreFrontComponent {
   private readonly authenticationService = inject(AuthenticationService);
   protected readonly isStaff = this.authenticationService.isStaff();
-  protected readonly activeUser = this.authenticationService.activeUser();
+  protected readonly activeUser = this.authenticationService.activeUser;
   private readonly subject = new Subject<void>();
 
   protected readonly logout$ = this.subject

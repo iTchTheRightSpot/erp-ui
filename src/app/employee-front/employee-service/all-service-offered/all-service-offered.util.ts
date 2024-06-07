@@ -1,5 +1,5 @@
 export interface AllServicesOffered {
-  id: number;
+  id: string;
   name: string;
   price: number;
   visibility: boolean;

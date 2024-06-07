@@ -4,7 +4,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { DatePipe, NgStyle } from '@angular/common';
+import { AsyncPipe, DatePipe, NgStyle } from '@angular/common';
 import { TimePickerComponent } from '@/app/employee-front/employee-schedule/time-picker/time-picker.component';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { toHrMins } from '@/app/app.util';
@@ -13,7 +13,7 @@ import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule
 @Component({
   selector: 'app-create-schedule',
   standalone: true,
-  imports: [DatePipe, TimePickerComponent, NgStyle],
+  imports: [DatePipe, TimePickerComponent, NgStyle, AsyncPipe],
   templateUrl: './create-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -57,6 +57,7 @@ export class CreateScheduleComponent {
   protected readonly onDeleteSchedule = (key: string) =>
     this.mapSignal().delete(key);
 
+  protected readonly loading$ = this.service.onCreate$;
   protected readonly onSubmit = () =>
     this.service.createSchedule(Array.from(this.mapSignal().values()));
 }

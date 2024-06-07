@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '@/environments/environment';
 import {
   HttpClient,
@@ -11,6 +11,7 @@ import {
   ServiceOfferedDto,
 } from '@/app/employee-front/employee-service/employee-service.util';
 import {
+  BehaviorSubject,
   catchError,
   delay,
   map,
@@ -19,9 +20,9 @@ import {
   of,
   startWith,
   Subject,
+  switchMap,
   tap,
 } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -32,36 +33,41 @@ export class ServiceOfferedService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
 
-  private readonly servicesOfferedSignal = signal<
+  private readonly serviceOfferedSubject = new BehaviorSubject<
     ServiceOfferedDto[] | undefined
   >(undefined);
 
-  private readonly allServicesRequest = toSignal(
+  private readonly clearFormSignal = new Subject<boolean>();
+  readonly clearForm$ = this.clearFormSignal
+    .asObservable()
+    .pipe(switchMap((bool) => of(bool, false).pipe(delay(600))));
+
+  private readonly allServicesRequest = () =>
     this.production
       ? this.http
           .get<
             ServiceOfferedDto[]
           >(`${this.domain}employee/service-offered`, { withCredentials: true })
           .pipe(
-            tap((arr) => this.servicesOfferedSignal.set(arr)),
             catchError((e: HttpErrorResponse) =>
               this.toastService.messageHandleIterateError<ServiceOfferedDto>(e),
             ),
           )
-      : of(dummyServices(15)),
-    {
-      initialValue: [] as ServiceOfferedDto[],
-    },
-  );
+      : of(dummyServices(15));
 
-  readonly servicesOffered = () => {
-    const arr = this.servicesOfferedSignal();
-    return arr ? arr : this.allServicesRequest();
-  };
+  readonly servicesOffered$ = this.serviceOfferedSubject
+    .asObservable()
+    .pipe(switchMap((arr) => (arr ? of(arr) : this.allServicesRequest())));
 
   private readonly createUpdateSubject = new Subject<Observable<boolean>>();
 
-  readonly onCreateUpdateBtnLoading$ = this.createUpdateSubject
+  readonly onCreateUpdate$ = this.createUpdateSubject
+    .asObservable()
+    .pipe(mergeMap((obs) => obs));
+
+  private readonly deleteSubject = new Subject<Observable<boolean>>();
+
+  readonly onDelete$ = this.createUpdateSubject
     .asObservable()
     .pipe(mergeMap((obs) => obs));
 
@@ -75,17 +81,16 @@ export class ServiceOfferedService {
       this.updateRequest(dto).pipe(startWith(true)),
     );
 
-  private readonly addServiceToEmployee = (serviceName: string) =>
+  readonly delete = (serviceId: string) =>
+    this.deleteSubject.next(this.deleteRequest(serviceId));
+
+  private readonly addServiceToEmployeeRequest = (serviceName: string) =>
     this.production
       ? this.http
           .post<
             HttpResponse<boolean>
           >(`${this.domain}employee/service-offered?name=${serviceName}`, {}, { withCredentials: true })
-          .pipe(
-            catchError((e: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(e),
-            ),
-          )
+          .pipe(catchError((e) => this.toastService.messageErrorBool(e)))
       : of(false).pipe(delay(5000));
 
   private readonly createRequest = (dto: ServiceOfferedDto) =>
@@ -95,13 +100,16 @@ export class ServiceOfferedService {
             HttpResponse<boolean>
           >(`${this.domain}owner/service-offered`, dto, { withCredentials: true })
           .pipe(
-            tap(() =>
-              this.servicesOfferedSignal.set(this.allServicesRequest()),
+            switchMap(() =>
+              this.allServicesRequest().pipe(
+                tap((arr) => {
+                  this.serviceOfferedSubject.next(arr);
+                  this.clearFormSignal.next(true);
+                }),
+                map(() => false),
+              ),
             ),
-            map(() => false),
-            catchError((e: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(e),
-            ),
+            catchError((e) => this.toastService.messageErrorBool(e)),
           )
       : of(false).pipe(delay(5000));
 
@@ -112,13 +120,36 @@ export class ServiceOfferedService {
             HttpResponse<boolean>
           >(`${this.domain}owner/service-offered`, dto, { withCredentials: true })
           .pipe(
-            tap(() =>
-              this.servicesOfferedSignal.set(this.allServicesRequest()),
+            switchMap(() =>
+              this.allServicesRequest().pipe(
+                tap((arr) => {
+                  this.serviceOfferedSubject.next(arr);
+                  this.clearFormSignal.next(true);
+                }),
+                map(() => false),
+              ),
             ),
-            map(() => false),
-            catchError((e: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(e),
+            catchError((e) => this.toastService.messageErrorBool(e)),
+          )
+      : of(false).pipe(delay(5000));
+
+  private readonly deleteRequest = (serviceId: string) =>
+    this.production
+      ? this.http
+          .delete<
+            HttpResponse<boolean>
+          >(`${this.domain}owner/service-offered/${serviceId}`, { observe: 'response', withCredentials: true })
+          .pipe(
+            switchMap(() =>
+              this.allServicesRequest().pipe(
+                tap((arr) => {
+                  this.serviceOfferedSubject.next(arr);
+                  this.clearFormSignal.next(true);
+                }),
+                map(() => false),
+              ),
             ),
+            catchError((e) => this.toastService.messageErrorBool(e)),
           )
       : of(false).pipe(delay(5000));
 }

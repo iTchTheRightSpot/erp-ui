@@ -25,7 +25,7 @@ import { AuthenticationService } from '@/app/global-service/authentication.servi
         }
         @case ('LOADED') {
           <div
-            class="lg-scr h-fit flex justify-end rounded-b z-15 border-b border-transparent fixed left-0 top-0 right-0"
+            class="lg-scr h-fit flex justify-end rounded-b z-50 border-b border-transparent fixed left-0 top-0 right-0"
           >
             <app-toast [message]="(message$ | async) || ''" />
           </div>
