@@ -111,11 +111,7 @@ export class EmployeeMobileNavigationComponent {
   logout = input.required<boolean>();
   routes = input.required<{ link: string; html: SafeHtml }[]>();
 
-  protected readonly SERVICE_ROUTE = EMPLOYEE_FRONT_SERVICE;
-  protected readonly APPOINTMENT_ROUTE = EMPLOYEE_FRONT_APPOINTMENT;
   protected readonly DASHBOARD_ROUTE = EMPLOYEE_FRONT_DASHBOARD;
-  protected readonly SCHEDULE_ROUTE = EMPLOYEE_FRONT_SCHEDULE;
-  protected readonly PROFILE_ROUTE = EMPLOYEE_FRONT_PROFILE;
 
   protected readonly logoutEmitter = output<void>();
   protected readonly logoutClick = () => this.logoutEmitter.emit();

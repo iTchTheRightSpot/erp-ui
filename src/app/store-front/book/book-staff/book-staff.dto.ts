@@ -1,8 +1,13 @@
+import { Role } from '@/app/app.util';
+import { Observable, of } from 'rxjs';
+
 export interface StaffDto {
   name: string;
+  display_name: string;
   email: string;
   picture: string;
   bio: string;
+  role: Role;
 }
 
 export const staffs = () => {
@@ -17,24 +22,32 @@ export const staffs = () => {
       email: 'boom@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
     {
       name: 'Tony',
       email: 'tony-benjamin@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
     {
       name: 'benjamin',
       email: 'benjamin@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
     {
       name: 'phil',
       email: 'phil-benjamin@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
   ]);
   map.set('overgrown lawns', [
@@ -43,6 +56,8 @@ export const staffs = () => {
       email: 'ashley@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
   ]);
   map.set('utility cuts', [
@@ -51,12 +66,16 @@ export const staffs = () => {
       email: 'fred@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
     {
       name: 'letitia',
       email: 'letitia@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
   ]);
   map.set('weekly trim and mow', [
@@ -65,14 +84,61 @@ export const staffs = () => {
       email: 'franklyn@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
     {
       name: 'cousins',
       email: 'cousins@email.com',
       picture: engin,
       bio: lorem,
+      display_name: '',
+      role: Role.OWNER,
     },
   ]);
 
   return map;
 };
+
+export const staffs$: Observable<StaffDto[]> = of([
+  {
+    name: 'Jese Leos',
+    email: 'Jese Leos',
+    picture: '/assets/images/staffs/engin-akyurt.jpg',
+    bio: '',
+    display_name: '',
+    role: Role.OWNER,
+  },
+  {
+    name: 'Frank Leos',
+    picture: 'assets/images/staffs/engin-akyurt.jpg',
+    email: 'Frank Leos',
+    display_name: '',
+    bio: '',
+    role: Role.OWNER,
+  },
+  {
+    name: 'Sam Leos',
+    picture: '/assets/images/staffs/engin-akyurt.jpg',
+    email: 'Sam Leos',
+    display_name: '',
+    bio: '',
+    role: Role.OWNER,
+  },
+  {
+    name: 'Ben Leos',
+    picture: '/assets/images/staffs/engin-akyurt.jpg',
+    email: 'Ben Leos',
+    display_name: '',
+    bio: '',
+    role: Role.OWNER,
+  },
+  {
+    name: 'Cheese Leos',
+    picture: '/assets/images/staffs/engin-akyurt.jpg',
+    email: 'Cheese Leos',
+    display_name: '',
+    bio: '',
+    role: Role.OWNER,
+  },
+]);

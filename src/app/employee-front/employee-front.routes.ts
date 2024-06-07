@@ -7,6 +7,7 @@ import {
   EMPLOYEE_FRONT_SERVICE,
   EMPLOYEE_FRONT_USER,
 } from '@/app/employee-front/employee-front.util';
+import { ownerRoleGuard } from '@/app/employee-front/owner-role.guard';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,7 @@ export const routes: Routes = [
   },
   {
     path: EMPLOYEE_FRONT_USER,
+    canActivate: [ownerRoleGuard],
     loadComponent: () =>
       import('./user/user.component').then((m) => m.UserComponent),
     loadChildren: () => import('./user/user.routes').then((m) => m.routes),

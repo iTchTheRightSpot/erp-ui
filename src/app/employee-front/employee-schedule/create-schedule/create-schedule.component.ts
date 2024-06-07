@@ -25,6 +25,8 @@ export class CreateScheduleComponent {
   protected selected = this.service.selected;
   protected toggle = false;
 
+  protected readonly staffs$ = this.service.staffs$;
+
   /**
    * Converts a Date object to a string representing hours and minutes.
    * @param selected - The selected date.
@@ -85,6 +87,10 @@ export class CreateScheduleComponent {
 
   private readonly submitSubject = new Subject<void>();
 
+  private staffEmail = '';
+  protected readonly onSelectedStaff = ($event: Event) =>
+    (this.staffEmail = ($event.target as HTMLSelectElement).value);
+
   /**
    * Observable that handles the submission of the form.
    * Emits false initially to hide the loading indicator.
@@ -92,7 +98,7 @@ export class CreateScheduleComponent {
   protected readonly onSubmit$ = this.submitSubject.asObservable().pipe(
     switchMap(() =>
       this.cacheService.values$.pipe(
-        switchMap((objs) => this.service.createSchedule(objs)),
+        switchMap((objs) => this.service.createSchedule(this.staffEmail, objs)),
         startWith(false),
       ),
     ),
