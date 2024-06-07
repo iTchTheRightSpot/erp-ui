@@ -39,7 +39,7 @@ export class EmployeeFrontService {
 
     return this.cachedService.getItem(key).pipe(
       switchMap((value) => {
-        if (value !== undefined) return of(value);
+        if (value) return of(value);
 
         let params = new HttpParams();
         params = params.append('day_of_month', selected.getDate());

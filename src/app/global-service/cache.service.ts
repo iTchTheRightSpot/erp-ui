@@ -7,6 +7,13 @@ import { BehaviorSubject, map } from 'rxjs';
 export class CacheService<K, V> {
   private readonly mapSubject = new BehaviorSubject(new Map<K, V>());
 
+  readonly keys$ = this.mapSubject
+    .asObservable()
+    .pipe(map((cache) => Array.from(cache.keys())));
+  readonly values$ = this.mapSubject
+    .asObservable()
+    .pipe(map((cache) => Array.from(cache.values())));
+
   readonly getItem = (key: K) =>
     this.mapSubject.asObservable().pipe(map((cache) => cache.get(key)));
 

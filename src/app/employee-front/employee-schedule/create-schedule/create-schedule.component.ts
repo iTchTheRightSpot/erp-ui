@@ -1,14 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AsyncPipe, DatePipe, NgStyle } from '@angular/common';
 import { TimePickerComponent } from '@/app/employee-front/employee-schedule/time-picker/time-picker.component';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { toHrMins } from '@/app/app.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
+import { CacheService } from '@/app/global-service/cache.service';
+import { map, startWith, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-create-schedule',
@@ -20,33 +17,57 @@ import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule
 export class CreateScheduleComponent {
   private readonly service = inject(ScheduleService);
   private readonly fb = inject(FormBuilder);
+  private readonly cacheService: CacheService<
+    string,
+    { start: Date; end: Date; duration: number }
+  > = inject(CacheService);
 
   protected selected = this.service.selected;
   protected toggle = false;
 
+  /**
+   * Converts a Date object to a string representing hours and minutes.
+   * @param selected - The selected date.
+   * @returns The string representation of the selected time in hours and minutes.
+   */
   protected readonly toHrMins = (selected: Date) => toHrMins(selected);
 
-  private readonly mapSignal = signal<
-    Map<string, { start: Date; end: Date; duration: number }>
-  >(new Map<string, { start: Date; end: Date; duration: number }>());
+  /**
+   * Observable of the keys in the cache service.
+   */
+  protected readonly keys$ = this.cacheService.keys$;
 
-  protected readonly keys = this.mapSignal;
+  /**
+   * Retrieves the value from the cache service by key.
+   * @param key - The key to retrieve the value for.
+   * @returns An observable of the cached object or a default object if not found.
+   */
+  protected readonly value = (key: string) =>
+    this.cacheService
+      .getItem(key)
+      .pipe(
+        map((obj) =>
+          obj ? obj : { start: new Date(), end: new Date(), duration: -1 },
+        ),
+      );
 
-  protected readonly value = (key: string) => {
-    const val = this.mapSignal().get(key);
-    const temp = new Date();
-    return val ? val : { start: temp, end: temp, duration: -1 };
-  };
-
+  /**
+   * Form used by staff with {@link Role#OWNER} to create a schedule for
+   * staff with {@link Role#EMPLOYEE}.
+   */
   protected readonly form = this.fb.group({
     start: new FormControl('', [Validators.required]),
     end: new FormControl('', [Validators.required]),
   });
 
+  /**
+   * Handles the date-time picker changes.
+   * @param obj - The object containing start and end dates.
+   */
   protected readonly onDateTimePicker = (obj: { start: Date; end: Date }) => {
     const milliseconds = obj.end.getTime() - obj.start.getTime();
     const seconds = milliseconds / 1000;
-    this.mapSignal().set(obj.start.toString(), {
+    this.cacheService.setItem(obj.start.toString(), {
       start: obj.start,
       end: obj.end,
       duration: seconds,
@@ -54,10 +75,31 @@ export class CreateScheduleComponent {
     this.toggle = !this.toggle;
   };
 
+  /**
+   * Deletes a schedule from the cache by key.
+   * TODO integrate calling the server to delete schedule.
+   * @param key - The key of the schedule to delete.
+   */
   protected readonly onDeleteSchedule = (key: string) =>
-    this.mapSignal().delete(key);
+    this.cacheService.deleteItem(key);
 
-  protected readonly loading$ = this.service.onCreate$;
-  protected readonly onSubmit = () =>
-    this.service.createSchedule(Array.from(this.mapSignal().values()));
+  private readonly submitSubject = new Subject<void>();
+
+  /**
+   * Observable that handles the submission of the form.
+   * Emits false initially to hide the loading indicator.
+   */
+  protected readonly onSubmit$ = this.submitSubject.asObservable().pipe(
+    switchMap(() =>
+      this.cacheService.values$.pipe(
+        switchMap((objs) => this.service.createSchedule(objs)),
+        startWith(false),
+      ),
+    ),
+  );
+
+  /**
+   * Triggers the form submission.
+   */
+  protected readonly onSubmit = () => this.submitSubject.next();
 }

@@ -9,16 +9,7 @@ import {
   HttpErrorResponse,
   HttpResponse,
 } from '@angular/common/http';
-import {
-  catchError,
-  delay,
-  map,
-  mergeMap,
-  Observable,
-  of,
-  startWith,
-  Subject,
-} from 'rxjs';
+import { catchError, delay, map, of, startWith } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 
 @Injectable({
@@ -27,11 +18,9 @@ import { ToastService } from '@/app/shared-components/toast/toast.service';
 export class ScheduleService {
   private readonly domain = environment.domain;
   private readonly production = environment.production;
+
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
-
-  private readonly subject = new Subject<Observable<boolean>>();
-  readonly onCreate$ = this.subject.asObservable().pipe(mergeMap((obs) => obs));
 
   private readonly selectedDateSignal = signal<Date>(new Date());
 
@@ -40,10 +29,8 @@ export class ScheduleService {
     this.selectedDateSignal.set(selected);
 
   readonly createSchedule = (objs: DesiredTimeDto[]) =>
-    this.subject.next(
-      this.createRequest({ employee_email: '', times: objs }).pipe(
-        startWith(true),
-      ),
+    this.createRequest({ employee_email: '', times: objs }).pipe(
+      startWith(true),
     );
 
   private readonly createRequest = (obj: ShiftDto) =>
