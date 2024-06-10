@@ -10,6 +10,7 @@ export class CacheService<K, V> {
   readonly keys$ = this.mapSubject
     .asObservable()
     .pipe(map((cache) => Array.from(cache.keys())));
+
   readonly values$ = this.mapSubject
     .asObservable()
     .pipe(map((cache) => Array.from(cache.values())));

@@ -56,7 +56,7 @@
                   class="px-6 py-4 uppercase"
                   [ngClass]="{
                     'text-green-600': body[head] === true,
-                    'text-red-600': body[head] === false
+                    'text-red-600': body[head] === false,
                   }"
                 >
                   {{ body[head] }}
@@ -84,7 +84,7 @@
                       'text-green-600': body[head] === 'CONFIRMED',
                       'text-red-600': body[head] === 'CANCELLED',
                       'text-yellow-400': body[head] === 'PENDING',
-                      'text-neutral-600': body[head] === 'EXPIRED'
+                      'text-neutral-600': body[head] === 'EXPIRED',
                     }"
                   >
                     {{ body[head] }}

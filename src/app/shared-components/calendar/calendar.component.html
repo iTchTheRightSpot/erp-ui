@@ -80,7 +80,7 @@
               'hover:bg-transparent': day.disable,
               'hover:rounded-none': day.disable,
               'bg-[var(--app-theme)]':
-                day.date.toDateString() === selected.toDateString()
+                day.date.toDateString() === selected.toDateString(),
             }"
           >
             {{ day.date | date: 'd' }}

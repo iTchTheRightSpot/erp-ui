@@ -28,6 +28,10 @@ export class BookAppointmentDatesService {
   private readonly http = inject(HttpClient);
   private readonly bookService = inject(BookService);
   private readonly toastService = inject(ToastService);
+
+  /**
+   * Cache to store fetched valid times.
+   */
   private readonly cacheService: CacheService<string, ValidTime[]> =
     inject(CacheService);
 
@@ -37,11 +41,6 @@ export class BookAppointmentDatesService {
    * BehaviorSubject used to emit selected dates.
    */
   private readonly subject = new BehaviorSubject<Date>(new Date());
-
-  /**
-   * Cache to store fetched valid times.
-   */
-  private readonly cache = new Map<string, ValidTime[]>();
 
   /**
    * Cache to store fetched valid dates from {@link ValidTime}s.
@@ -204,7 +203,7 @@ export class BookAppointmentDatesService {
           this.datesToHighlightCache.set(key, value);
           this.datesToHighlight.set(value);
 
-          this.cache.set(key, validTimes);
+          this.cacheService.setItem(key, validTimes);
         }),
         map((objs: ValidTime[]) => {
           const found = objs.find(
