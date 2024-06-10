@@ -36,7 +36,7 @@ import { Role } from '@/app/app.util';
             display:
               staff()?.role === Role.OWNER || staff()?.role === Role.DEVELOPER
                 ? 'block'
-                : 'none',
+                : 'none'
           }"
           class="bg-transparent"
         >

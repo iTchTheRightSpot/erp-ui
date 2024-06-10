@@ -52,7 +52,7 @@ import { AppointmentDetail } from '@/app/employee-front/shared/about-appointment
                   'text-yellow-400':
                     detail.status === ConfirmationStatus.PENDING,
                   'text-neutral-600':
-                    detail.status === ConfirmationStatus.EXPIRED,
+                    detail.status === ConfirmationStatus.EXPIRED
                 }"
                 >{{ detail.status }}</span
               >
