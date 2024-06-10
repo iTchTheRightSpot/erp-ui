@@ -1,10 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@/environments/environment';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpResponse,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import {
   dummyServices,
