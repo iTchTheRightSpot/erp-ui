@@ -13,6 +13,8 @@ import {
 import {
   BehaviorSubject,
   catchError,
+  concat,
+  concatMap,
   delay,
   map,
   mergeMap,
@@ -22,6 +24,7 @@ import {
   Subject,
   switchMap,
   tap,
+  timer,
 } from 'rxjs';
 
 /**
@@ -46,9 +49,13 @@ export class ServiceOfferedService {
   /**
    * Observable that emits a signal to clear a form and resets to false after a delay.
    */
-  readonly clearForm$ = this.clearFormSignal
-    .asObservable()
-    .pipe(switchMap((bool) => of(bool, false).pipe(delay(600))));
+  readonly clearForm$ = this.clearFormSignal.asObservable().pipe(
+    concatMap((bool) => {
+      const initial$ = of(bool);
+      const delayed$ = timer(600).pipe(concatMap(() => of(false)));
+      return concat(initial$, delayed$);
+    }),
+  );
 
   /**
    * Makes an HTTP request to retrieve all {@link ServiceOfferedDto} objs.
@@ -147,12 +154,13 @@ export class ServiceOfferedService {
             HttpResponse<boolean>
           >(`${this.domain}owner/service-offered`, dto, { withCredentials: true })
           .pipe(
+            tap(() => {
+              console.log('setting clear signal to true ');
+              this.clearFormSignal.next(true);
+            }),
             switchMap(() =>
               this.allServicesRequest().pipe(
-                tap((arr) => {
-                  this.serviceOfferedSubject.next(arr);
-                  this.clearFormSignal.next(true);
-                }),
+                tap((arr) => this.serviceOfferedSubject.next(arr)),
                 map(() => false),
               ),
             ),
@@ -174,10 +182,7 @@ export class ServiceOfferedService {
           .pipe(
             switchMap(() =>
               this.allServicesRequest().pipe(
-                tap((arr) => {
-                  this.serviceOfferedSubject.next(arr);
-                  this.clearFormSignal.next(true);
-                }),
+                tap((arr) => this.serviceOfferedSubject.next(arr)),
                 map(() => false),
               ),
             ),
@@ -199,10 +204,7 @@ export class ServiceOfferedService {
           .pipe(
             switchMap(() =>
               this.allServicesRequest().pipe(
-                tap((arr) => {
-                  this.serviceOfferedSubject.next(arr);
-                  this.clearFormSignal.next(true);
-                }),
+                tap((arr) => this.serviceOfferedSubject.next(arr)),
                 map(() => false),
               ),
             ),

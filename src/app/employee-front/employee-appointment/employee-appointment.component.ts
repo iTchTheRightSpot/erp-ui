@@ -117,7 +117,7 @@ export class EmployeeAppointmentComponent {
    * Updates UI based on the
    * */
   protected readonly onCalendarDateClick = (selected: Date) =>
-    this.calendarDateSubject.next(selected);
+    this.calendarDateSubject.next((this.selected = selected));
 
   protected readonly onPrevNextCalendarClick = (date: Date) =>
     this.appointmentService.updateParentOnChangeMonthYear(

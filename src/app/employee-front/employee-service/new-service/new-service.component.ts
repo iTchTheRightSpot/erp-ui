@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ServiceOfferedFormComponent } from '@/app/employee-front/employee-service/service-offered-form/service-offered-form.component';
 import { ServiceOfferedService } from '@/app/employee-front/employee-service/service-offered.service';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-offered-form/service-offer-form.util';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-new-service',
