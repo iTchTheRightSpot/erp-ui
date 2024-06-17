@@ -5,9 +5,8 @@ import { AsyncPipe } from '@angular/common';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
 import { EmployeeAppointmentComponent } from '@/app/employee-front/employee-appointment/employee-appointment.component';
 import { map } from 'rxjs';
-import { toHrMins } from '@/app/app.util';
 import { AppointmentDeconstruct } from '@/app/employee-front/employee-front.util';
-import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
+import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboard/employee-dashboard.service';
 
 @Component({
   selector: 'app-employee-dashboard',
@@ -22,10 +21,8 @@ import { EmployeeAppointmentService } from '@/app/employee-front/employee-appoin
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
-  constructor(
-    private readonly employeeDashboardService: EmployeeAppointmentService,
-  ) {
-    super(employeeDashboardService);
+  constructor(private readonly dashboardService: EmployeeDashboardService) {
+    super(dashboardService);
   }
 
   protected override thead: Array<keyof AppointmentDeconstruct> = [
@@ -36,19 +33,18 @@ export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
     'timeslot',
   ];
 
-  protected override appointments$ =
-    this.employeeDashboardService.subjectClick$.pipe(
-      map((objs) =>
-        objs.map(
-          (obj) =>
-            ({
-              id: obj.appointment_id,
-              status: obj.status,
-              service: obj.services[0].name,
-              client: obj.customer_name,
-              timeslot: `${toHrMins(obj.scheduled_for)} to ${toHrMins(obj.expire_at)}`,
-            }) as AppointmentDeconstruct,
-        ),
+  protected readonly apps$ = super.appointments$.pipe(
+    map((objs) =>
+      objs.map(
+        (obj) =>
+          ({
+            id: obj.id,
+            status: obj.status,
+            service: obj.service,
+            client: obj.client,
+            timeslot: obj.timeslot,
+          }) as AppointmentDeconstruct,
       ),
-    );
+    ),
+  );
 }

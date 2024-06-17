@@ -37,19 +37,11 @@ export class EmployeeAppointmentService {
     Observable<AppointmentResponse[]>
   >(of([]));
 
-  private readonly subjectClick = new BehaviorSubject<
-    Observable<AppointmentResponse[]>
-  >(of([]));
-
   private readonly updateAppointmentStatusSubject = new Subject<
     Observable<boolean>
   >();
 
   readonly subject$ = this.subject.asObservable().pipe(mergeMap((obs) => obs));
-
-  readonly subjectClick$ = this.subjectClick
-    .asObservable()
-    .pipe(mergeMap((obs) => obs));
 
   readonly updateAppointment$ = this.updateAppointmentStatusSubject
     .asObservable()
@@ -61,20 +53,6 @@ export class EmployeeAppointmentService {
    * */
   readonly onUpdateCalendarMonth = (selected: Date) =>
     this.subject.next(this.parentService.appointmentsOnSelectedMonth(selected));
-
-  /**
-   * Updates {@link subjectClick$}.
-   * */
-  readonly onCalendarDateClickSubjectClick = (selected: Date) => {
-    const obs$ = this.subject$.pipe(
-      map((objs) =>
-        objs.filter(
-          (obj) => obj.scheduled_for.toDateString() === selected.toDateString(),
-        ),
-      ),
-    );
-    this.subjectClick.next(obs$);
-  };
 
   /**
    * Makes call to server if
