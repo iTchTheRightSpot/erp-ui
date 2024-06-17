@@ -5,12 +5,13 @@ import {
   output,
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, NgClass, NgStyle } from '@angular/common';
+import { User } from '@/app/employee-front/user/user.util';
 
 @Component({
   selector: 'app-time-picker',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, DatePipe],
+  imports: [ReactiveFormsModule, NgClass, DatePipe, NgStyle],
   styleUrl: '../../../shared-components/number-input.component.css',
   templateUrl: './time-picker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +19,6 @@ import { DatePipe, NgClass } from '@angular/common';
 export class TimePickerComponent {
   form = input.required<FormGroup>();
   selected = input.required<Date>();
-
   readonly submitEmitter = output<{ start: Date; end: Date }>();
 
   private readonly buildForm = () => {

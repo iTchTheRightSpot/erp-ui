@@ -5,7 +5,9 @@ import {
   EMPLOYEE_FRONT_PROFILE,
   EMPLOYEE_FRONT_SCHEDULE,
   EMPLOYEE_FRONT_SERVICE,
+  EMPLOYEE_FRONT_USER,
 } from '@/app/employee-front/employee-front.util';
+import { ownerRoleGuard } from '@/app/employee-front/owner-role.guard';
 
 export const routes: Routes = [
   {
@@ -50,6 +52,13 @@ export const routes: Routes = [
       import('./employee-profile/employee-profile.component').then(
         (m) => m.EmployeeProfileComponent,
       ),
+  },
+  {
+    path: EMPLOYEE_FRONT_USER,
+    canActivate: [ownerRoleGuard],
+    loadComponent: () =>
+      import('./user/user.component').then((m) => m.UserComponent),
+    loadChildren: () => import('./user/user.routes').then((m) => m.routes),
   },
   {
     path: '',

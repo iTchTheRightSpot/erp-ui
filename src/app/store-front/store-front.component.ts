@@ -4,18 +4,13 @@ import { NavigationComponent } from '@/app/store-front/navigation/navigation.com
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 import { Subject, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { EmployeeNavigationComponent } from '@/app/employee-front/employee-navigation/employee-navigation.component';
 import { Role } from '@/app/app.util';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-store-front',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    NavigationComponent,
-    AsyncPipe,
-    EmployeeNavigationComponent,
-  ],
+  imports: [RouterOutlet, NavigationComponent, AsyncPipe],
   template: `
     <div class="w-full h-full">
       <div
@@ -36,6 +31,7 @@ import { Role } from '@/app/app.util';
 })
 export class StoreFrontComponent {
   private readonly authenticationService = inject(AuthenticationService);
+
   protected readonly isStaff = this.authenticationService.isStaff();
   protected readonly activeUser = this.authenticationService.activeUser;
   private readonly subject = new Subject<void>();

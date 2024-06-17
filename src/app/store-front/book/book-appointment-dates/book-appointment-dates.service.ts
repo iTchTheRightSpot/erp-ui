@@ -18,6 +18,7 @@ import {
 import { BookService } from '@/app/store-front/book/book.service';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
+import { CacheService } from '@/app/global-service/cache.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,17 +29,18 @@ export class BookAppointmentDatesService {
   private readonly bookService = inject(BookService);
   private readonly toastService = inject(ToastService);
 
+  /**
+   * Cache to store fetched valid times.
+   */
+  private readonly cacheService: CacheService<string, ValidTime[]> =
+    inject(CacheService);
+
   readonly bookingInfoSignal = this.bookService.bookingInfo;
 
   /**
    * BehaviorSubject used to emit selected dates.
    */
   private readonly subject = new BehaviorSubject<Date>(new Date());
-
-  /**
-   * Cache to store fetched valid times.
-   */
-  private readonly cache = new Map<string, ValidTime[]>();
 
   /**
    * Cache to store fetched valid dates from {@link ValidTime}s.
@@ -105,7 +107,7 @@ export class BookAppointmentDatesService {
    */
   readonly deleteFromCache = (name: string, date: Date) => {
     const info = this.bookingInfoSignal();
-    this.cache.delete(
+    this.cacheService.deleteItem(
       this.buildCacheKey(name, date, info.staff ? info.staff.email : ''),
     );
   };
@@ -133,39 +135,38 @@ export class BookAppointmentDatesService {
           throw new Error();
         }
 
-        let name = '';
-        services.forEach((obj) => name.concat(obj.name, '_'));
-
+        const name = services.map((s) => s.name).join('_');
         const key = this.buildCacheKey(name, selected, staffEmail);
 
-        if (this.cache.has(key)) {
-          const objs = this.cache.get(key) || [];
-          const found = objs.find(
-            (obj) => this.format(selected) === this.format(new Date(obj.date)),
-          );
+        return this.cacheService.getItem(key).pipe(
+          switchMap((objs) => {
+            if (objs) {
+              const found = objs.find(
+                (obj) =>
+                  this.format(selected) === this.format(new Date(obj.date)),
+              );
 
-          const highlight = this.datesToHighlightCache.get(key);
+              const highlight = this.datesToHighlightCache.get(key);
 
-          if (highlight) this.datesToHighlight.set(highlight);
+              if (highlight) this.datesToHighlight.set(highlight);
 
-          return found ? of<Date[]>(found.times) : of<Date[]>([]);
-        }
+              return found ? of<Date[]>(found.times) : of<Date[]>([]);
+            }
 
-        let params = new HttpParams();
-        services.forEach(
-          (service) =>
-            (params = params.append('service_name', service.name.trim())),
+            let params = new HttpParams();
+            services.forEach(
+              (service) =>
+                (params = params.append('service_name', service.name.trim())),
+            );
+            params = params.append('employee_email', staffEmail);
+            params = params.append('day', selected.getDate());
+            params = params.append('month', 1 + selected.getMonth());
+            params = params.append('year', selected.getFullYear());
+
+            return this.req$(params, key, selected);
+          }),
         );
-        params = params.append('employee_email', staffEmail);
-        params = params.append('day', selected.getDate());
-        params = params.append('month', 1 + selected.getMonth());
-        params = params.append('year', selected.getFullYear());
-
-        return this.req$(params, key, selected);
       }),
-      catchError((e: HttpErrorResponse) =>
-        this.toastService.messageHandleIterateError<Date>(e),
-      ),
     );
 
   /**
@@ -202,7 +203,7 @@ export class BookAppointmentDatesService {
           this.datesToHighlightCache.set(key, value);
           this.datesToHighlight.set(value);
 
-          this.cache.set(key, validTimes);
+          this.cacheService.setItem(key, validTimes);
         }),
         map((objs: ValidTime[]) => {
           const found = objs.find(
@@ -210,6 +211,9 @@ export class BookAppointmentDatesService {
           );
           return found ? found.times : [];
         }),
+        catchError((e: HttpErrorResponse) =>
+          this.toastService.messageHandleIterateError<Date>(e),
+        ),
       );
   };
 }

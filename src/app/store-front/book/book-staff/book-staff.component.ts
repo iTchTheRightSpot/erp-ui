@@ -67,6 +67,7 @@ export class BookStaffComponent {
   private readonly router = inject(Router);
   private readonly bookService = inject(BookService);
   private readonly service = inject(BookStaffService);
+
   protected readonly staffs$ = this.service.staffs$();
 
   protected readonly selectedStaff = (staff: StaffDto) => {

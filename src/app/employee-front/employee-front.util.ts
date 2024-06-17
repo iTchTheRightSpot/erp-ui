@@ -3,6 +3,7 @@ export const EMPLOYEE_FRONT_SCHEDULE = 'schedule';
 export const EMPLOYEE_FRONT_APPOINTMENT = 'appointment';
 export const EMPLOYEE_FRONT_SERVICE = 'service-offered';
 export const EMPLOYEE_FRONT_PROFILE = 'profile';
+export const EMPLOYEE_FRONT_USER = 'user';
 
 export enum ConfirmationStatus {
   PENDING = 'PENDING',

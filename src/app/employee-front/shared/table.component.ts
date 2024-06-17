@@ -4,9 +4,8 @@ import {
   input,
   output,
 } from '@angular/core';
-import { ConfirmationStatus } from '@/app/employee-front/employee-front.util';
 import { AsyncPipe, NgClass } from '@angular/common';
-import { Observable } from 'rxjs';
+import { ConfirmationStatus } from '@/app/employee-front/employee-front.util';
 
 @Component({
   selector: 'app-table',

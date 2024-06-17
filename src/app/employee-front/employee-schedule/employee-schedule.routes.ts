@@ -7,10 +7,12 @@ import {
   EMPLOYEE_SCHEDULE_ALL_ROUTE,
   EMPLOYEE_SCHEDULE_CREATE_ROUTE,
 } from '@/app/employee-front/employee-schedule/employee-schedule.util';
+import { ownerRoleGuard } from '@/app/employee-front/owner-role.guard';
 
 export const routes: Routes = [
   {
     path: EMPLOYEE_SCHEDULE_CREATE_ROUTE,
+    canActivate: [ownerRoleGuard],
     loadComponent: () =>
       import('./create-schedule/create-schedule.component').then(
         (m) => m.CreateScheduleComponent,

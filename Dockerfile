@@ -1,4 +1,4 @@
-# using light weight node 20 alpine
+# Stage 1: using light weight node 20 alpine
 FROM node:20-alpine3.18 as builder
 
 # create directory
@@ -16,7 +16,7 @@ RUN npm install
 # compile source code in production mode
 RUN npm run build --configuration=production
 
-# using the stable nginx alpine
+# Stage 2: using the stable nginx alpine
 FROM nginx:stable-alpine
 
 # copy nginx config into nginx

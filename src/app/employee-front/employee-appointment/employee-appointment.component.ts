@@ -4,13 +4,24 @@ import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
-import { map, of } from 'rxjs';
+import {
+  BehaviorSubject,
+  map,
+  mergeMap,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import {
   AppointmentDetail,
   dummyDetailBuilder,
 } from '@/app/employee-front/shared/about-appointment.util';
 import { toHrMins } from '@/app/app.util';
-import { AppointmentDeconstruct } from '@/app/employee-front/employee-front.util';
+import {
+  AppointmentDeconstruct,
+  AppointmentResponse,
+} from '@/app/employee-front/employee-front.util';
 import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
 
 @Component({
@@ -29,13 +40,8 @@ export class EmployeeAppointmentComponent {
   protected selected = new Date();
   protected toggleMobileCalendar = false;
 
-  constructor(
-    private readonly employeeAppointmentService: EmployeeAppointmentService,
-  ) {
-    this.employeeAppointmentService.onUpdateCalendarMonth(this.selected);
-    this.employeeAppointmentService.onCalendarDateClickSubjectClick(
-      this.selected,
-    );
+  constructor(private readonly appointmentService: EmployeeAppointmentService) {
+    this.appointmentService.onUpdateCalendarMonth(this.selected);
   }
 
   protected readonly thead: Array<keyof AppointmentDeconstruct> = [
@@ -57,57 +63,89 @@ export class EmployeeAppointmentComponent {
    * @returns An observable that emits a list of {@link Date}s to highlight within the
    * specified month.
    */
-  protected readonly daysToHighlight$ =
-    this.employeeAppointmentService.subject$.pipe(
-      map((objs) => objs.map((obj) => obj.scheduled_for)),
-    );
+  private readonly daysToHighlightSubject = new BehaviorSubject<
+    AppointmentResponse[]
+  >([]);
 
-  protected readonly numberOfAppointmentsForMonth$ = this.daysToHighlight$.pipe(
-    map((dates) =>
-      dates.filter(
-        (date) =>
-          date.getMonth() === this.selected.getMonth() &&
-          date.getFullYear() === this.selected.getFullYear(),
-      ),
-    ),
-    map((dates: Date[] | undefined) => dates?.length),
+  protected readonly daysToHighlight$ = this.appointmentService.subject$.pipe(
+    tap((appointments) => this.daysToHighlightSubject.next(appointments)),
+    map((objs) => objs.map((obj) => obj.scheduled_for)),
   );
 
-  protected readonly appointments$ =
-    this.employeeAppointmentService.subjectClick$.pipe(
-      map((objs) =>
-        objs.map(
-          (obj) =>
-            ({
-              id: obj.appointment_id,
-              status: obj.status,
-              service: obj.services[0].name,
-              client: obj.customer_name,
-              timeslot: `${toHrMins(obj.scheduled_for)} to ${toHrMins(obj.expire_at)}`,
-              action: 'edit',
-            }) as AppointmentDeconstruct,
+  protected readonly numberOfAppointmentsForMonth$ = this.daysToHighlightSubject
+    .asObservable()
+    .pipe(
+      map((appointments) =>
+        appointments.map((appointment) => appointment.scheduled_for),
+      ),
+      map((dates) =>
+        dates.filter(
+          (date) =>
+            date.getMonth() === this.selected.getMonth() &&
+            date.getFullYear() === this.selected.getFullYear(),
         ),
       ),
+      map((dates: Date[] | undefined) => dates?.length),
     );
+
+  private readonly calendarDateSubject = new BehaviorSubject<Date>(
+    this.selected,
+  );
+
+  protected get appointments$() {
+    return this.calendarDateSubject.asObservable().pipe(
+      switchMap((date) =>
+        this.daysToHighlightSubject.pipe(
+          map((objs) =>
+            objs.filter(
+              (obj) => date.toDateString() === obj.scheduled_for.toDateString(),
+            ),
+          ),
+        ),
+      ),
+      map((appointments) =>
+        !appointments
+          ? []
+          : appointments.map(
+              (appointment) =>
+                ({
+                  id: appointment.appointment_id,
+                  status: appointment.status,
+                  service: appointment.services[0].name,
+                  client: appointment.customer_name,
+                  timeslot: `${toHrMins(appointment.scheduled_for)} <---> ${toHrMins(appointment.expire_at)}`,
+                  action: 'edit',
+                }) as AppointmentDeconstruct,
+            ),
+      ),
+    );
+  }
 
   /**
    * Updates UI based on the
    * */
   protected readonly onCalendarDateClick = (selected: Date) =>
-    this.employeeAppointmentService.onCalendarDateClickSubjectClick(
-      (this.selected = selected),
-    );
+    this.calendarDateSubject.next((this.selected = selected));
 
   protected readonly onPrevNextCalendarClick = (date: Date) =>
-    this.employeeAppointmentService.updateParentOnChangeMonthYear(date);
+    this.appointmentService.updateParentOnChangeMonthYear(
+      (this.selected = date),
+    );
 
   protected toggleAboutAppointment = false;
 
-  protected appointmentDetails = of(dummyDetailBuilder());
+  private readonly appointmentDetailsSubject = new BehaviorSubject<
+    Observable<AppointmentDetail>
+  >(of());
+
+  protected readonly appointmentDetails$ = this.appointmentDetailsSubject
+    .asObservable()
+    .pipe(mergeMap((obs) => obs));
+
   protected readonly onAppointmentNameClick = (
     event: AppointmentDeconstruct,
   ) => {
-    const obs = this.employeeAppointmentService.subject$.pipe(
+    const obs = this.appointmentService.subject$.pipe(
       map((objs) => objs.find((obj) => obj.appointment_id === event.id)),
       map((obj) =>
         obj
@@ -128,14 +166,14 @@ export class EmployeeAppointmentComponent {
       ),
     );
     this.toggleAboutAppointment = true;
-    this.appointmentDetails = obs;
+    this.appointmentDetailsSubject.next(obs);
   };
 
   protected readonly updateAppointment$ =
-    this.employeeAppointmentService.updateAppointment$;
+    this.appointmentService.updateAppointment$;
 
   protected readonly updateAppointmentStatus = (obj: AppointmentDeconstruct) =>
-    this.employeeAppointmentService.updateAppointmentStatus({
+    this.appointmentService.updateAppointmentStatus({
       appointment_id: obj.id,
       status: obj.status,
       employee_email: '',
