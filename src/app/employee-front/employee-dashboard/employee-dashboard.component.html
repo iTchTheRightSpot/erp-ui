@@ -120,7 +120,7 @@
   </div>
 }
 
-@if (toggleAboutAppointment) {
+@if (toggleAboutAppointment && (appointmentDetails$ | async); as details) {
   <div class="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[var(--half-black)]">
     <div class="lg-scr p-2 flex flex-col">
       <div class="ml-auto mt-1 w-fit">
@@ -148,7 +148,7 @@
       </div>
 
       <div class="w-full h-fit flex-1 bg-white mx-auto">
-        <app-about-appointment [detail]="appointmentDetails" />
+        <app-about-appointment [detail]="details" />
       </div>
     </div>
   </div>

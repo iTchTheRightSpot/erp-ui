@@ -63,7 +63,7 @@
       <div class="text-center font-bold">{{ day }}</div>
     }
 
-    @for (day of calendarDays$ | async; track day) {
+    @for (day of calendarDays$ | async; track day.date) {
       <div class="p-3 flex justify-center items-center">
         @if (!day.placeholder) {
           <button

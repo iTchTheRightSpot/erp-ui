@@ -62,7 +62,7 @@ export class CalendarComponent {
     this.onDateSelectedEmitter.emit(day.date);
   };
 
-  protected readonly yearBtn = () => console.log('year btn clicked');
+  protected readonly yearBtn = () => {};
 
   protected readonly disablePrevMonthBtn = () =>
     this.minDate()?.getMonth() === this.currentMonth().getMonth() &&

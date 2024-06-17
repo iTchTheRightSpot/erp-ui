@@ -29,7 +29,6 @@ export class ServiceOfferedFormComponent {
 
   constructor() {
     effect(() => {
-      console.log('clear field ', this.clearField());
       if (this.clearField()) {
         this.form().reset();
         this.form().controls['visible'].setValue(true);

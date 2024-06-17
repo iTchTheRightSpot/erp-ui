@@ -4,7 +4,15 @@ import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
-import { BehaviorSubject, map, of, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  map,
+  mergeMap,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import {
   AppointmentDetail,
   dummyDetailBuilder,
@@ -126,7 +134,14 @@ export class EmployeeAppointmentComponent {
 
   protected toggleAboutAppointment = false;
 
-  protected appointmentDetails = of(dummyDetailBuilder());
+  private readonly appointmentDetailsSubject = new BehaviorSubject<
+    Observable<AppointmentDetail>
+  >(of());
+
+  protected readonly appointmentDetails$ = this.appointmentDetailsSubject
+    .asObservable()
+    .pipe(mergeMap((obs) => obs));
+
   protected readonly onAppointmentNameClick = (
     event: AppointmentDeconstruct,
   ) => {
@@ -151,7 +166,7 @@ export class EmployeeAppointmentComponent {
       ),
     );
     this.toggleAboutAppointment = true;
-    this.appointmentDetails = obs;
+    this.appointmentDetailsSubject.next(obs);
   };
 
   protected readonly updateAppointment$ =

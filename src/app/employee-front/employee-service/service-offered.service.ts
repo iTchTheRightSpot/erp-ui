@@ -154,10 +154,7 @@ export class ServiceOfferedService {
             HttpResponse<boolean>
           >(`${this.domain}owner/service-offered`, dto, { withCredentials: true })
           .pipe(
-            tap(() => {
-              console.log('setting clear signal to true ');
-              this.clearFormSignal.next(true);
-            }),
+            tap(() => this.clearFormSignal.next(true)),
             switchMap(() =>
               this.allServicesRequest().pipe(
                 tap((arr) => this.serviceOfferedSubject.next(arr)),
