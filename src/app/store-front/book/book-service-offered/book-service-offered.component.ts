@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { BOOK_STAFF_ROUTE } from '@/app/store-front/book/book.util';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 import { map } from 'rxjs';
+import { formatSeconds } from '@/app/app.util';
 
 @Component({
   selector: 'app-service-offered',
@@ -38,7 +39,7 @@ import { map } from 'rxjs';
                 <h3
                   class="capitalize underline underline-offset-4 font-normal pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
                 >
-                  {{ service.obj.name }}
+                  {{ service.obj.service_name }}
                 </h3>
                 @if (service.toggle) {
                   <span class="w-3.5 h-3.5 rounded-full bg-green-500"></span>
@@ -51,7 +52,7 @@ import { map } from 'rxjs';
               <p class="text-xs sm:text-sm whitespace-nowrap">
                 Price varies but starts at: {{ '$' + service.obj.price }}
                 <strong>|</strong>
-                Duration: {{ service.obj.duration }} seconds
+                Duration: {{ formatSeconds(service.obj.duration) }}
               </p>
             </li>
           } @empty {
@@ -88,6 +89,9 @@ export class BookServiceOfferedComponent {
   protected readonly services$ = this.service
     .servicesOffered$()
     .pipe(map((objs) => objs.map((obj) => ({ toggle: false, obj: obj }))));
+
+  protected readonly formatSeconds = (seconds: number) =>
+    formatSeconds(seconds);
 
   /**
    * Retrieves all employees from the server of cache that offered the

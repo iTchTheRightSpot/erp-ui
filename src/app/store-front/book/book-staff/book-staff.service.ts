@@ -28,7 +28,7 @@ export class BookStaffService {
     inject(CacheService);
 
   private readonly buildCacheKey = (services: BookServiceOfferedDto[]) =>
-    services.map((s) => s.name).join('_');
+    services.map((s) => s.service_name).join('_');
 
   readonly employeesByServicesSelected = (services: BookServiceOfferedDto[]) =>
     this.bookService.setServicesOfferedSelected(services);
@@ -51,7 +51,10 @@ export class BookStaffService {
             let params = new HttpParams();
             services.forEach(
               (service) =>
-                (params = params.append('service_name', service.name.trim())),
+                (params = params.append(
+                  'service_name',
+                  service.service_name.trim(),
+                )),
             );
             return this.request$(params, key);
           }),

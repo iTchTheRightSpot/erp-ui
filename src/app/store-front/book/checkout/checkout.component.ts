@@ -21,7 +21,7 @@ export class CheckoutComponent {
   protected readonly toHrMins = (time: Date) => toHrMins(time);
 
   protected readonly transform = (objs: BookServiceOfferedDto[]) =>
-    objs.map((obj) => ({ service_name: obj.name }));
+    objs.map((obj) => ({ service_name: obj.service_name }));
 
   protected readonly onSubmit = ($event: FormData) =>
     this.service.prebook($event);

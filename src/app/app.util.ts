@@ -22,3 +22,45 @@ export interface ActiveUser {
   principal: string;
   role: Role;
 }
+
+/**
+ * Converts seconds to string format.
+ * */
+export const formatSeconds = (seconds: number) => {
+  const hr = Math.floor(seconds / 3600);
+
+  // calculated from the remainder after extracting hours, divided by 60 (number of seconds in a minute).
+  const min = Math.floor((seconds % 3600) / 60);
+
+  // remainder after extracting both hours and minutes.
+  const secs = seconds % 60;
+
+  return `${hrImpl(hr)} ${minImpl(min)} ${secImpl(secs)}`;
+};
+
+const hrImpl = (utcHours: number) => {
+  if (utcHours < 1) {
+    return '';
+  } else if (utcHours === 1) {
+    return '1 hr ';
+  }
+  return `${utcHours} hrs `;
+};
+
+const minImpl = (utcMins: number) => {
+  if (utcMins < 1) {
+    return '';
+  } else if (utcMins === 1) {
+    return '1 min ';
+  }
+  return `${utcMins} mins `;
+};
+
+const secImpl = (seconds: number) => {
+  if (seconds < 1) {
+    return '';
+  } else if (seconds === 1) {
+    return '1 sec';
+  }
+  return `${seconds} secs`;
+};

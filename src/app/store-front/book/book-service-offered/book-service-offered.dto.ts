@@ -1,33 +1,33 @@
 export interface BookServiceOfferedDto {
-  name: string;
+  service_name: string;
   price: number;
   duration: number;
 }
 
 export const development: BookServiceOfferedDto[] = [
   {
-    name: 'power grooming',
+    service_name: 'power grooming',
     price: 35,
     duration: 100,
   },
   {
-    name: 'overgrown lawns',
+    service_name: 'overgrown lawns',
     price: 30,
     duration: 50,
   },
   {
-    name: 'utility cuts',
+    service_name: 'utility cuts',
     price: 840,
-    duration: 50,
+    duration: 7200,
   },
   {
-    name: 'weekly trim and mow',
+    service_name: 'weekly trim and mow',
     price: 100,
-    duration: 90,
+    duration: 86400,
   },
   {
-    name: 'pre-call service',
+    service_name: 'pre-call service',
     price: 30,
-    duration: 10,
+    duration: 3600,
   },
 ];
