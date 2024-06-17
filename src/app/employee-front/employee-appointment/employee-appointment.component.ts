@@ -92,7 +92,7 @@ export class EmployeeAppointmentComponent {
     this.selected,
   );
 
-  protected get appointments$() {
+  protected get appointments$(): Observable<AppointmentDeconstruct[]> {
     return this.calendarDateSubject.asObservable().pipe(
       switchMap((date) =>
         this.daysToHighlightSubject.pipe(
