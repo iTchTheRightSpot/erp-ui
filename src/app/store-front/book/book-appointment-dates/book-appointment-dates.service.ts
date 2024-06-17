@@ -135,7 +135,7 @@ export class BookAppointmentDatesService {
           throw new Error();
         }
 
-        const name = services.map((s) => s.name).join('_');
+        const name = services.map((s) => s.service_name).join('_');
         const key = this.buildCacheKey(name, selected, staffEmail);
 
         return this.cacheService.getItem(key).pipe(
@@ -156,7 +156,7 @@ export class BookAppointmentDatesService {
             let params = new HttpParams();
             services.forEach(
               (service) =>
-                (params = params.append('service_name', service.name.trim())),
+                (params = params.append('service_name', service.service_name.trim())),
             );
             params = params.append('employee_email', staffEmail);
             params = params.append('day', selected.getDate());
