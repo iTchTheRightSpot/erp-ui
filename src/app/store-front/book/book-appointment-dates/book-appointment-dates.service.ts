@@ -45,7 +45,8 @@ export class BookAppointmentDatesService {
   /**
    * Cache to store fetched valid dates from {@link ValidTime}s.
    * */
-  private readonly datesToHighlightCache = new Map<string, Date[]>();
+  private readonly datesToHighlightCache: CacheService<string, Date[]> =
+    inject(CacheService);
 
   /**
    * Signal for dates to be highlighted on the calendar.
@@ -117,18 +118,17 @@ export class BookAppointmentDatesService {
    * If the data is available in the cache, it returns the cached dates;
    * otherwise, it makes a request to the server.
    *
-   * @returns An observable that emits an array of available booking dates for the
-   *          specified day. The dates are contained in the {@link ValidTime}
-   *          property.
+   * @returns An observable that emits an array of available booking {@link Date}
+   * for the specified day. The dates are contained in the {@link ValidTime} property.
    */
   readonly dates$ = () =>
     this.subject.asObservable().pipe(
       switchMap((selected) => {
         const info = this.bookingInfoSignal();
         const services = info.servicesOffered;
-        const staffEmail = info.staff?.email;
+        const email = info.staff?.email;
 
-        if (!services || !staffEmail) {
+        if (!services || !email) {
           this.toastService.message(
             'please select a service or staff pre-book',
           );
@@ -136,7 +136,7 @@ export class BookAppointmentDatesService {
         }
 
         const name = services.map((s) => s.service_name).join('_');
-        const key = this.buildCacheKey(name, selected, staffEmail);
+        const key = this.buildCacheKey(name, selected, email);
 
         return this.cacheService.getItem(key).pipe(
           switchMap((objs) => {
@@ -146,19 +146,25 @@ export class BookAppointmentDatesService {
                   this.format(selected) === this.format(new Date(obj.date)),
               );
 
-              const highlight = this.datesToHighlightCache.get(key);
-
-              if (highlight) this.datesToHighlight.set(highlight);
-
-              return found ? of<Date[]>(found.times) : of<Date[]>([]);
+              return found
+                ? this.datesToHighlightCache.getItem(key).pipe(
+                    tap((dates) => {
+                      if (dates) this.datesToHighlightSignal.set(dates);
+                    }),
+                    map(() => found.times),
+                  )
+                : of<Date[]>([]);
             }
 
             let params = new HttpParams();
             services.forEach(
               (service) =>
-                (params = params.append('service_name', service.service_name.trim())),
+                (params = params.append(
+                  'service_name',
+                  service.service_name.trim(),
+                )),
             );
-            params = params.append('employee_email', staffEmail);
+            params = params.append('employee_email', email);
             params = params.append('day', selected.getDate());
             params = params.append('month', 1 + selected.getMonth());
             params = params.append('year', selected.getFullYear());
@@ -200,8 +206,8 @@ export class BookAppointmentDatesService {
         tap((validTimes) => {
           const value = validTimes.map((obj) => new Date(obj.date));
 
-          this.datesToHighlightCache.set(key, value);
-          this.datesToHighlight.set(value);
+          this.datesToHighlightCache.setItem(key, value);
+          this.datesToHighlightSignal.set(value);
 
           this.cacheService.setItem(key, validTimes);
         }),

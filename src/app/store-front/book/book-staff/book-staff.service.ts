@@ -51,7 +51,10 @@ export class BookStaffService {
             let params = new HttpParams();
             services.forEach(
               (service) =>
-                (params = params.append('service_name', service.service_name.trim())),
+                (params = params.append(
+                  'service_name',
+                  service.service_name.trim(),
+                )),
             );
             return this.request$(params, key);
           }),

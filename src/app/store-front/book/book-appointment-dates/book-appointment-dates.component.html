@@ -76,7 +76,7 @@
                 class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400"
               >
                 <span> Price varies but starts at: {{ service.price }} </span>
-                <span> Duration: {{ service.duration }} seconds </span>
+                <span> Duration: {{ formatSeconds(service.duration) }} </span>
               </p>
               <button
                 (click)="route()"

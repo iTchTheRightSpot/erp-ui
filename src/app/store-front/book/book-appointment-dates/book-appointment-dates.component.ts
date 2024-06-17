@@ -8,7 +8,7 @@ import {
 } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
-import { toHrMins } from '@/app/app.util';
+import { toHrMins, formatSeconds } from '@/app/app.util';
 
 @Component({
   selector: 'app-book-appointment-dates',
@@ -27,6 +27,9 @@ export class BookAppointmentDatesComponent {
   protected readonly details = this.service.bookingInfoSignal();
   protected readonly dates$ = this.service.dates$();
   protected readonly toHighlight = this.service.datesToHighlight;
+
+  protected readonly formatSeconds = (seconds: number) =>
+    formatSeconds(seconds);
 
   protected readonly selectedAppointmentTime = async (time: Date) => {
     this.service.selectedAppointmentTime(new Date(time));

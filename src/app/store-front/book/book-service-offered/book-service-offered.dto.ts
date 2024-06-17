@@ -18,16 +18,16 @@ export const development: BookServiceOfferedDto[] = [
   {
     service_name: 'utility cuts',
     price: 840,
-    duration: 50,
+    duration: 7200,
   },
   {
     service_name: 'weekly trim and mow',
     price: 100,
-    duration: 90,
+    duration: 86400,
   },
   {
     service_name: 'pre-call service',
     price: 30,
-    duration: 10,
+    duration: 3600,
   },
 ];
