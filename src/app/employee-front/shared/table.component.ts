@@ -14,7 +14,7 @@ import { ConfirmationStatus } from '@/app/employee-front/employee-front.util';
   templateUrl: './table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent<T> {
+export class TableComponent<T extends { id: number | string }> {
   tHead = input.required<(keyof T)[]>();
   tBody = input.required<T[]>();
   loading = input<boolean>();
