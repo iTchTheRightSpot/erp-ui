@@ -24,6 +24,7 @@ import {
   StaffDto,
   staffs$,
 } from '@/app/store-front/book/book-staff/book-staff.dto';
+import {Page} from "@/app/app.util";
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +37,7 @@ export class ScheduleService {
   private readonly toastService = inject(ToastService);
 
   // Cache for storing all staff data
-  private readonly allStaffsCache = new BehaviorSubject<StaffDto[] | undefined>(
+  private readonly allStaffsCache = new BehaviorSubject<Page<StaffDto> | undefined>(
     undefined,
   );
   // Signal for tracking the selected date
@@ -75,16 +76,16 @@ export class ScheduleService {
           )
       : of(false).pipe(delay(5000));
 
-  // Private observable for fetching staff data from the server
+  // Observable for fetching staff data from the server
   private readonly staffRequest$ = this.production
     ? this.http
         .get<
-          StaffDto[]
-        >(`${this.domain}owner/staffs`, { withCredentials: true })
+          Page<StaffDto>
+        >(`${this.domain}staff`, { withCredentials: true })
         .pipe(
           tap((arr) => this.allStaffsCache.next(arr)),
           catchError((e: HttpErrorResponse) =>
-            this.toastService.messageHandleIterateError<StaffDto>(e),
+            this.toastService.messageErrorNothing(e),
           ),
         )
     : staffs$;

@@ -6,6 +6,7 @@ import { toHrMins } from '@/app/app.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { CacheService } from '@/app/global-service/cache.service';
 import { map, startWith, Subject, switchMap } from 'rxjs';
+import {DesiredTimeDto} from "@/app/employee-front/employee-schedule/employee-schedule.util";
 
 @Component({
   selector: 'app-create-schedule',
@@ -98,7 +99,7 @@ export class CreateScheduleComponent {
   protected readonly onSubmit$ = this.submitSubject.asObservable().pipe(
     switchMap(() =>
       this.cacheService.values$.pipe(
-        switchMap((objs) => this.service.createSchedule(this.staffEmail, objs)),
+        switchMap((objs) => this.service.createSchedule(this.staffEmail, objs.map(obj => ({ start: obj.start.toISOString(), duration: obj.duration } as DesiredTimeDto)))),
         startWith(false),
       ),
     ),

@@ -2,7 +2,7 @@ export const EMPLOYEE_SCHEDULE_ALL_ROUTE = '';
 export const EMPLOYEE_SCHEDULE_CREATE_ROUTE = 'new';
 
 export interface DesiredTimeDto {
-  start: Date;
+  start: string;
   duration: number;
 }
 
