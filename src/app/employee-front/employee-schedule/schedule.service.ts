@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, InjectionToken, signal } from '@angular/core';
 import { environment } from '@/environments/environment';
 import {
   DesiredTimeDto,
@@ -9,9 +9,15 @@ import {
   HttpErrorResponse,
   HttpResponse,
 } from '@angular/common/http';
-import { catchError, delay, map, of, startWith } from 'rxjs';
+import { catchError, delay, map, of, startWith, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { UserService } from '@/app/employee-front/user/user.service';
+import { Schedule } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
+import { CacheService } from '@/app/global-service/cache.service';
+
+export const SHIFTS_BY_MONTH_YEAR = new InjectionToken<
+  CacheService<string, Schedule[]>
+>('SHIFTS_BY_MONTH_YEAR');
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +28,8 @@ export class ScheduleService {
 
   private readonly http = inject(HttpClient);
   private readonly userService = inject(UserService);
+  private readonly shiftsCache: CacheService<string, Schedule[]> =
+    inject(SHIFTS_BY_MONTH_YEAR);
   private readonly toastService = inject(ToastService);
 
   // Signal for tracking the selected date
@@ -30,13 +38,26 @@ export class ScheduleService {
   // Exposing the selected date signal as a readonly property
   readonly selected = this.selectedDateSignal;
 
+  private readonly shiftsCacheKey = (month: number, year: number) =>
+    `${month}_${year}`;
+
+  readonly shiftsByMonth = (dayOfMonth: number, month: number, year: number) =>
+    this.shiftsCache
+      .getItem(this.shiftsCacheKey(month, year))
+      .pipe(
+        switchMap((value) =>
+          value
+            ? of(value)
+            : this.shiftsByMonthRequest(dayOfMonth, month, year),
+        ),
+      );
+
   // Method to update the selected date
   readonly updateSelectedDate = (selected: Date) =>
     this.selectedDateSignal.set(selected);
 
   // returns an observable of a Page of StaffDto
   readonly staffs$ = this.userService.users();
-  // readonly staffs$: Observable<Page<StaffDto>> = of();
 
   // Method to create a schedule for an employee
   readonly createSchedule = (email: string, objs: DesiredTimeDto[]) =>
@@ -58,4 +79,31 @@ export class ScheduleService {
             ),
           )
       : of(false).pipe(delay(5000));
+
+  private readonly shiftsByMonthRequest = (
+    dayOfMonth: number,
+    month: number,
+    year: number,
+  ) =>
+    this.http
+      .get<
+        { start: string; end: string }[]
+      >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month}&year=${year}`, { withCredentials: true })
+      .pipe(
+        map((res) =>
+          res.map(
+            (obj) =>
+              ({
+                start: new Date(obj.start),
+                end: new Date(obj.end),
+              }) as Schedule,
+          ),
+        ),
+        tap((res) =>
+          this.shiftsCache.setItem(this.shiftsCacheKey(month, year), res),
+        ),
+        catchError((e) =>
+          this.toastService.messageHandleIterateError<Schedule>(e),
+        ),
+      );
 }

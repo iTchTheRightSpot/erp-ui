@@ -13,6 +13,8 @@ import {
   authenticationRedirectInterceptor,
   csrfInterceptor,
 } from './global-service/global.interceptor';
+import { CacheService } from '@/app/global-service/cache.service';
+import { SHIFTS_BY_MONTH_YEAR } from '@/app/employee-front/employee-schedule/schedule.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,5 +24,9 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withInterceptors([csrfInterceptor, authenticationRedirectInterceptor]),
     ),
+    {
+      provide: SHIFTS_BY_MONTH_YEAR,
+      useClass: CacheService,
+    },
   ],
 };

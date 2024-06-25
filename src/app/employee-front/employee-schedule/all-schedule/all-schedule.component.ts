@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EMPLOYEE_SCHEDULE_CREATE_ROUTE } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
@@ -18,6 +23,19 @@ export class AllScheduleComponent {
     EMPLOYEE_SCHEDULE_CREATE_ROUTE;
   protected toggleCalendar = false;
 
-  protected readonly onDateSelected = (selected: Date) =>
+  private readonly selectedDate = signal<Date>(new Date());
+
+  protected readonly onDateSelected = (selected: Date) => {
+    this.selectedDate.set(selected);
     this.service.updateSelectedDate(selected);
+  };
+
+  protected readonly shifts$ = () => {
+    const date = this.selectedDate();
+    return this.service.shiftsByMonth(
+      date.getDate(),
+      date.getMonth() + 1,
+      date.getUTCFullYear(),
+    );
+  };
 }
