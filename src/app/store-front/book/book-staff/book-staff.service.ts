@@ -72,7 +72,8 @@ export class BookStaffService {
           const img = './assets/images/staffs/engin-akyurt.jpg';
           staffs.forEach(
             (obj) =>
-              (obj.picture = obj.picture.length === 0 ? img : obj.picture),
+              (obj.image_key =
+                obj.image_key.length === 0 ? img : obj.image_key),
           );
           this.cacheService.setItem(key, staffs);
         }),

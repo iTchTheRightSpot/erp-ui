@@ -5,26 +5,38 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { toHrMins } from '@/app/app.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { CacheService } from '@/app/global-service/cache.service';
-import { map, startWith, Subject, switchMap } from 'rxjs';
+import {
+  filter,
+  forkJoin,
+  map,
+  mergeMap,
+  Observable,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { DesiredTimeDto } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 
 @Component({
   selector: 'app-create-schedule',
   standalone: true,
   imports: [DatePipe, TimePickerComponent, NgStyle, AsyncPipe],
+  providers: [{ provide: CacheService, useClass: CacheService }],
   templateUrl: './create-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateScheduleComponent {
   private readonly service = inject(ScheduleService);
   private readonly fb = inject(FormBuilder);
-  private readonly cacheService: CacheService<
+  private readonly scheduleCache: CacheService<
     string,
     { start: Date; end: Date; duration: number }
   > = inject(CacheService);
 
   protected selected = this.service.selected;
   protected toggle = false;
+  protected dropdownToggle = false;
 
   protected readonly staffs$ = this.service.staffs$;
 
@@ -35,24 +47,19 @@ export class CreateScheduleComponent {
    */
   protected readonly toHrMins = (selected: Date) => toHrMins(selected);
 
-  /**
-   * Observable of the keys in the cache service.
-   */
-  protected readonly keys$ = this.cacheService.keys$;
-
-  /**
-   * Retrieves the value from the cache service by key.
-   * @param key - The key to retrieve the value for.
-   * @returns An observable of the cached object or a default object if not found.
-   */
-  protected readonly value = (key: string) =>
-    this.cacheService
-      .getItem(key)
-      .pipe(
-        map((obj) =>
-          obj ? obj : { start: new Date(), end: new Date(), duration: -1 },
-        ),
-      );
+  protected numberOfEntries = 0;
+  protected readonly entries$ = this.scheduleCache.entrySet$.pipe(
+    filter((entries) =>
+      entries.every(
+        ([key, value]) =>
+          value.start !== undefined &&
+          value.start !== null &&
+          value.end !== undefined &&
+          value.end !== null,
+      ),
+    ),
+    tap((entries) => (this.numberOfEntries = entries.length)),
+  );
 
   /**
    * Form used by staff with {@link Role#OWNER} to create a schedule for
@@ -70,7 +77,7 @@ export class CreateScheduleComponent {
   protected readonly onDateTimePicker = (obj: { start: Date; end: Date }) => {
     const milliseconds = obj.end.getTime() - obj.start.getTime();
     const seconds = milliseconds / 1000;
-    this.cacheService.setItem(obj.start.toString(), {
+    this.scheduleCache.setItem(obj.start.toString(), {
       start: obj.start,
       end: obj.end,
       duration: seconds,
@@ -80,17 +87,18 @@ export class CreateScheduleComponent {
 
   /**
    * Deletes a schedule from the cache by key.
-   * TODO integrate calling the server to delete schedule.
    * @param key - The key of the schedule to delete.
    */
   protected readonly onDeleteSchedule = (key: string) =>
-    this.cacheService.deleteItem(key);
+    this.scheduleCache.deleteItem(key);
 
   private readonly submitSubject = new Subject<void>();
 
-  private staffEmail = '';
-  protected readonly onSelectedStaff = ($event: Event) =>
-    (this.staffEmail = ($event.target as HTMLSelectElement).value);
+  protected staffEmail = '';
+  protected readonly onSelectedStaffEmail = (email: string) => {
+    this.staffEmail = email;
+    this.dropdownToggle = false;
+  };
 
   /**
    * Observable that handles the submission of the form.
@@ -98,7 +106,7 @@ export class CreateScheduleComponent {
    */
   protected readonly onSubmit$ = this.submitSubject.asObservable().pipe(
     switchMap(() =>
-      this.cacheService.values$.pipe(
+      this.scheduleCache.values$.pipe(
         switchMap((objs) =>
           this.service.createSchedule(
             this.staffEmail,

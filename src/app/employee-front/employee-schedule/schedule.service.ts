@@ -36,6 +36,7 @@ export class ScheduleService {
 
   // returns an observable of a Page of StaffDto
   readonly staffs$ = this.userService.users();
+  // readonly staffs$: Observable<Page<StaffDto>> = of();
 
   // Method to create a schedule for an employee
   readonly createSchedule = (email: string, objs: DesiredTimeDto[]) =>

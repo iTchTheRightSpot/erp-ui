@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, mergeMap, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,10 @@ export class CacheService<K, V> {
   readonly values$ = this.mapSubject
     .asObservable()
     .pipe(map((cache) => Array.from(cache.values())));
+
+  readonly entrySet$ = this.mapSubject
+    .asObservable()
+    .pipe(map((cache) => Array.from(cache.entries())));
 
   readonly getItem = (key: K) =>
     this.mapSubject.asObservable().pipe(map((cache) => cache.get(key)));

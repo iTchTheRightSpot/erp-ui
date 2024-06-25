@@ -35,7 +35,7 @@ import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
             >
               <div class="flex-shrink-0">
                 <img
-                  [src]="staff.picture"
+                  [src]="staff.image_key"
                   alt="staff profile picture"
                   class="w-20 h-20 rounded-full object-cover object-center"
                 />

@@ -6,7 +6,7 @@ export interface StaffDto {
   name: string;
   display_name: string;
   email: string;
-  picture: string;
+  image_key: string;
   bio: string;
   role: Role;
 }
@@ -22,7 +22,7 @@ export const staffs = () => {
       employee_id: '1',
       name: 'Ketut Subiyant',
       email: 'boom@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -31,7 +31,7 @@ export const staffs = () => {
       employee_id: '0',
       name: 'Tony',
       email: 'tony-benjamin@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -41,7 +41,7 @@ export const staffs = () => {
 
       name: 'benjamin',
       email: 'benjamin@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -51,7 +51,7 @@ export const staffs = () => {
 
       name: 'phil',
       email: 'phil-benjamin@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -63,7 +63,7 @@ export const staffs = () => {
 
       name: 'ashley',
       email: 'ashley@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -75,7 +75,7 @@ export const staffs = () => {
 
       name: 'fred',
       email: 'fred@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -85,7 +85,7 @@ export const staffs = () => {
 
       name: 'letitia',
       email: 'letitia@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -97,7 +97,7 @@ export const staffs = () => {
 
       name: 'Lebron James',
       email: 'franklyn@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -107,7 +107,7 @@ export const staffs = () => {
 
       name: 'cousins',
       email: 'cousins@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
       role: Role.OWNER,
@@ -130,14 +130,14 @@ export const staffs$: Observable<Page<StaffDto>> = of({
     {
       name: 'Jese Leos',
       email: 'Jese Leos',
-      picture: '/assets/images/staffs/engin-akyurt.jpg',
+      image_key: '/assets/images/staffs/engin-akyurt.jpg',
       bio: '',
       display_name: '',
       role: Role.OWNER,
     },
     {
       name: 'Frank Leos',
-      picture: 'assets/images/staffs/engin-akyurt.jpg',
+      image_key: 'assets/images/staffs/engin-akyurt.jpg',
       email: 'Frank Leos',
       display_name: '',
       bio: '',
@@ -145,7 +145,7 @@ export const staffs$: Observable<Page<StaffDto>> = of({
     },
     {
       name: 'Sam Leos',
-      picture: '/assets/images/staffs/engin-akyurt.jpg',
+      image_key: '/assets/images/staffs/engin-akyurt.jpg',
       email: 'Sam Leos',
       display_name: '',
       bio: '',
@@ -153,7 +153,7 @@ export const staffs$: Observable<Page<StaffDto>> = of({
     },
     {
       name: 'Ben Leos',
-      picture: '/assets/images/staffs/engin-akyurt.jpg',
+      image_key: '/assets/images/staffs/engin-akyurt.jpg',
       email: 'Ben Leos',
       display_name: '',
       bio: '',
@@ -161,7 +161,7 @@ export const staffs$: Observable<Page<StaffDto>> = of({
     },
     {
       name: 'Cheese Leos',
-      picture: '/assets/images/staffs/engin-akyurt.jpg',
+      image_key: '/assets/images/staffs/engin-akyurt.jpg',
       email: 'Cheese Leos',
       display_name: '',
       bio: '',
