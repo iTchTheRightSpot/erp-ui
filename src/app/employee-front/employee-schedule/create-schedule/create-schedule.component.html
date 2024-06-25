@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-2">
+<div class="p-2 flex flex-col gap-2">
   <div class="relative">
     <button
       (click)="toggle = !toggle"
@@ -25,33 +25,62 @@
       [ngStyle]="{ display: toggle ? 'block' : 'none' }"
       class="flex gap-1.5 px-1 rounded-md shadow-lg bg-white absolute top-7 left-0 right-0"
     >
-      <div class="w-full py-2">
-        <!-- dropdown menu -->
-        <button
-          (click)="dropdownToggle = !dropdownToggle"
-          id="dropdownUsersButton"
-          data-dropdown-toggle="dropdownUsers"
-          data-dropdown-placement="bottom"
-          class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex justify-between items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button"
-        >
-          {{ staffEmail.length === 0 ? 'Select a staff' : staffEmail }}
-          <svg
-            class="w-2.5 h-2.5 ms-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
+      <div class="w-full py-2 relative">
+        <div class="flex gap-2">
+          <!-- calendar toggle -->
+          <button type="button" (click)="toggleCalendar = !toggleCalendar">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 4 4 4-4"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+              />
+            </svg>
+          </button>
+          <!-- staff dropdown -->
+          <button
+            (click)="dropdownToggle = !dropdownToggle"
+            id="dropdownUsersButton"
+            data-dropdown-toggle="dropdownUsers"
+            data-dropdown-placement="bottom"
+            class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex justify-between items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button"
+          >
+            {{ staffEmail.length === 0 ? 'Select a staff' : staffEmail }}
+            <svg
+              class="w-2.5 h-2.5 ms-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+        </div>
+        @if (toggleCalendar) {
+          <div
+            class="w-full h-fit lg:max-w-[50%] xl:max-w-[35%] rounded-lg bg-white absolute top-10 bottom-0 left-0 z-40"
+          >
+            <app-calendar
+              [minDate]="minimumDateOnCalendar"
+              (onDateSelectedEmitter)="onCalendarDateSelected($event)"
             />
-          </svg>
-        </button>
+          </div>
+        }
         <div
           id="dropdownUsers"
           class="w-full mt-2 z-10 hidden bg-white rounded-lg shadow dark:bg-gray-700"

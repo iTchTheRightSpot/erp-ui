@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'app-all-users',
   standalone: true,
   imports: [],
-  template: ``,
+  template: `all users component works`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllUsersComponent {}

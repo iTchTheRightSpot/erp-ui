@@ -115,6 +115,9 @@ export class CalendarComponent {
       year: 'numeric',
     });
 
+  protected readonly isMinDateEnabled = (date: Date, min: Date | undefined) =>
+    min ? date.getUTCDate() < min.getUTCDate() : false;
+
   private readonly appendToDatesToHighlight = (dates?: Date[]) => {
     if (dates) {
       this.toHighlightSignal.set(dates);

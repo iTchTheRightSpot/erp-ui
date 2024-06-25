@@ -8,11 +8,18 @@ import { CacheService } from '@/app/global-service/cache.service';
 import { filter, startWith, Subject, switchMap, tap } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { DesiredTimeDto } from '@/app/employee-front/employee-schedule/employee-schedule.util';
+import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 
 @Component({
   selector: 'app-create-schedule',
   standalone: true,
-  imports: [DatePipe, TimePickerComponent, NgStyle, AsyncPipe],
+  imports: [
+    DatePipe,
+    TimePickerComponent,
+    NgStyle,
+    AsyncPipe,
+    CalendarComponent,
+  ],
   providers: [{ provide: CacheService, useClass: CacheService }],
   templateUrl: './create-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,8 +35,13 @@ export class CreateScheduleComponent {
   protected selected = this.service.selected;
   protected toggle = false;
   protected dropdownToggle = false;
+  protected toggleCalendar = false;
+  protected readonly minimumDateOnCalendar = new Date();
 
   protected readonly staffs$ = this.service.staffs$;
+
+  protected readonly onCalendarDateSelected = (selected: Date) =>
+    this.service.updateSelectedDate(selected);
 
   /**
    * Converts a Date object to a string representing hours and minutes.
