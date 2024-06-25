@@ -1,5 +1,5 @@
-import {Page, Role} from '@/app/app.util';
-import {Observable, of} from 'rxjs';
+import { Page, Role } from '@/app/app.util';
+import { Observable, of } from 'rxjs';
 
 export interface StaffDto {
   employee_id: string;
@@ -167,5 +167,5 @@ export const staffs$: Observable<Page<StaffDto>> = of({
       bio: '',
       role: Role.OWNER,
     },
-  ]
+  ],
 } as Page<StaffDto>);

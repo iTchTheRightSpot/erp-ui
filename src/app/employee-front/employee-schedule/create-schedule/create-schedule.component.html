@@ -33,14 +33,14 @@
           class="bg-gray-50 cursor-pointer border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
         >
           <option value="" disabled [selected]="true">Select staff</option>
-          @for (staff of (staffs$ | async)?.data; track staff.email) {
+          @for (staff of (staffs$ | async)?.data; track staff.employee_id) {
             <option [value]="staff.email">
               <span
                 class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               >
                 <img
                   [src]="staff.picture"
-                  alt="{{ staff.picture }} image"
+                  alt="staff image"
                   class="w-6 h-6 me-2 rounded-full"
                 />
                 {{ staff.name }}
