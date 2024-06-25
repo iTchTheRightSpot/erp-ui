@@ -5,17 +5,8 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { toHrMins } from '@/app/app.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { CacheService } from '@/app/global-service/cache.service';
-import {
-  filter,
-  forkJoin,
-  map,
-  mergeMap,
-  Observable,
-  startWith,
-  Subject,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { filter, startWith, Subject, switchMap, tap } from 'rxjs';
+import { withLatestFrom } from 'rxjs/operators';
 import { DesiredTimeDto } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 
 @Component({
@@ -102,13 +93,18 @@ export class CreateScheduleComponent {
 
   /**
    * Observable that handles the submission of the form.
-   * Emits false initially to hide the loading indicator.
+   * - When the {@link onSubmit} is clicked, it triggers the submission process.
+   * - Emits false initially to hide the loading indicator.
+   * - Combines the latest values from {@link scheduleCache.values$} when the submit button is clicked.
+   * - Calls the {@link createSchedule} method of the ${@link ScheduleService} with the mapped schedule data.
+   * - Manages the state of the submit button and clears the cache after submission.
    */
   protected readonly onSubmit$ = this.submitSubject.asObservable().pipe(
-    switchMap(() =>
-      this.scheduleCache.values$.pipe(
-        switchMap((objs) =>
-          this.service.createSchedule(
+    withLatestFrom(this.scheduleCache.values$),
+    switchMap(
+      ([_, objs]: [void, { start: Date; end: Date; duration: number }[]]) =>
+        this.service
+          .createSchedule(
             this.staffEmail,
             objs.map(
               (obj) =>
@@ -117,10 +113,8 @@ export class CreateScheduleComponent {
                   duration: obj.duration,
                 }) as DesiredTimeDto,
             ),
-          ),
-        ),
-        startWith(false),
-      ),
+          )
+          .pipe(startWith(false)),
     ),
   );
 
