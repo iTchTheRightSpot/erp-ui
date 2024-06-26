@@ -23,6 +23,7 @@ import {
   AppointmentResponse,
 } from '@/app/employee-front/employee-front.util';
 import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Component({
   selector: 'app-employee-appointment',
@@ -40,7 +41,10 @@ export class EmployeeAppointmentComponent {
   protected selected = new Date();
   protected toggleMobileCalendar = false;
 
-  constructor(private readonly appointmentService: EmployeeAppointmentService) {
+  constructor(
+    private readonly appointmentService: EmployeeAppointmentService,
+    private readonly authenticationService: AuthenticationService,
+  ) {
     this.appointmentService.onUpdateCalendarMonth(this.selected);
   }
 
@@ -172,10 +176,14 @@ export class EmployeeAppointmentComponent {
   protected readonly updateAppointment$ =
     this.appointmentService.updateAppointment$;
 
-  protected readonly updateAppointmentStatus = (obj: AppointmentDeconstruct) =>
+  protected readonly updateAppointmentStatus = (
+    obj: AppointmentDeconstruct,
+  ) => {
+    const user = this.authenticationService.activeUser();
     this.appointmentService.updateAppointmentStatus({
       appointment_id: obj.id,
       status: obj.status,
-      employee_email: '',
+      employee_email: user ? user.principal : '',
     } as UpdateAppointmentStatusDto);
+  };
 }

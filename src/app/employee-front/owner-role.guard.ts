@@ -10,7 +10,7 @@ export const ownerRoleGuard = async () => {
   const user = inject(AuthenticationService).activeUser();
   const bool = !user
     ? false
-    : user.role === Role.OWNER || user.role === Role.DEVELOPER;
+    : user.roles.includes(Role.OWNER) || user.roles.includes(Role.DEVELOPER);
   if (!bool)
     await router.navigate([
       `${EMPLOYEE_FRONT_HOME}/${EMPLOYEE_FRONT_SERVICE}/${EMPLOYEE_ALL_SERVICE_OFFERED_ROUTE}`,

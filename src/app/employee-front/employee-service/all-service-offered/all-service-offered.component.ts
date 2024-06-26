@@ -34,7 +34,8 @@ import { Role } from '@/app/app.util';
           [routerLink]="NEW_SERVICE_OFFERED"
           [ngStyle]="{
             display:
-              staff()?.role === Role.OWNER || staff()?.role === Role.DEVELOPER
+              staff()?.roles?.includes(Role.OWNER) ||
+              staff()?.roles?.includes(Role.DEVELOPER)
                 ? 'block'
                 : 'none'
           }"

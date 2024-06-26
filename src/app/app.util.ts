@@ -20,7 +20,7 @@ export enum Role {
 
 export interface ActiveUser {
   principal: string;
-  role: Role;
+  roles: Role[];
 }
 
 /**

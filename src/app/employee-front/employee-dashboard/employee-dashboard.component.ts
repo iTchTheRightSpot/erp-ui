@@ -7,6 +7,7 @@ import { EmployeeAppointmentComponent } from '@/app/employee-front/employee-appo
 import { map } from 'rxjs';
 import { AppointmentDeconstruct } from '@/app/employee-front/employee-front.util';
 import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboard/employee-dashboard.service';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Component({
   selector: 'app-employee-dashboard',
@@ -21,8 +22,11 @@ import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboar
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
-  constructor(private readonly dashboardService: EmployeeDashboardService) {
-    super(dashboardService);
+  constructor(
+    private readonly dashboardService: EmployeeDashboardService,
+    private readonly authenticationService: AuthenticationService,
+  ) {
+    super(dashboardService, authenticationService);
   }
 
   protected override thead: Array<keyof AppointmentDeconstruct> = [

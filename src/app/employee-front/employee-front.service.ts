@@ -9,6 +9,7 @@ import { environment } from '@/environments/environment';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,7 @@ export class EmployeeFrontService {
 
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
+  protected readonly authenticationService = inject(AuthenticationService);
 
   private readonly cacheKeyBuilder = (selected: Date) =>
     `${1 + selected.getMonth()}_${selected.getFullYear()}`;
@@ -48,6 +50,8 @@ export class EmployeeFrontService {
         params = params.append('day_of_month', selected.getDate());
         params = params.append('month', 1 + selected.getMonth());
         params = params.append('year', selected.getFullYear());
+        const user = this.authenticationService.activeUser();
+        params = params.append('employee_email', user ? user.principal : '');
 
         return this.production
           ? this.request(params).pipe(

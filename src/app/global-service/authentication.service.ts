@@ -42,18 +42,18 @@ export class AuthenticationService {
 
     if (staff) {
       return of(
-        staff.role === Role.EMPLOYEE ||
-          staff.role === Role.OWNER ||
-          staff.role === Role.DEVELOPER,
+        staff.roles.includes(Role.EMPLOYEE) ||
+          staff.roles.includes(Role.OWNER) ||
+          staff.roles.includes(Role.DEVELOPER),
       );
     }
 
     return this.activeUser$().pipe(
       map(
         (s) =>
-          s.role === Role.EMPLOYEE ||
-          s.role === Role.OWNER ||
-          s.role === Role.DEVELOPER,
+          s.roles.includes(Role.EMPLOYEE) ||
+          s.roles.includes(Role.OWNER) ||
+          s.roles.includes(Role.DEVELOPER),
       ),
     );
   };

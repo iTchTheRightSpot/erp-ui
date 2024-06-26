@@ -14,6 +14,7 @@ import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { UserService } from '@/app/employee-front/user/user.service';
 import { Schedule } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
 import { CacheService } from '@/app/global-service/cache.service';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,7 @@ export class ScheduleService {
   private readonly http = inject(HttpClient);
   private readonly userService = inject(UserService);
   private readonly toastService = inject(ToastService);
+  protected readonly authenticationService = inject(AuthenticationService);
 
   // Signal for tracking the selected date
   private readonly selectedDateSignal = signal<Date>(new Date());
@@ -69,7 +71,14 @@ export class ScheduleService {
             HttpResponse<boolean>
           >(`${this.domain}owner/shift`, obj, { withCredentials: true })
           .pipe(
-            map(() => false),
+            map(() => new Date(obj.times[0].start)),
+            switchMap((date: Date) =>
+              this.shiftsByMonthRequest(
+                date.getDate(),
+                date.getMonth(),
+                date.getFullYear(),
+              ).pipe(map(() => false)),
+            ),
             catchError((e: HttpErrorResponse) =>
               this.toastService.messageErrorBool(e),
             ),
@@ -84,7 +93,7 @@ export class ScheduleService {
     this.http
       .get<
         { shift_id: string; start: string; end: string }[]
-      >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month}&year=${year}`, { withCredentials: true })
+      >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month + 1}&year=${year}&employee_email=${this.authenticationService.activeUser()?.principal}`, { withCredentials: true })
       .pipe(
         map((res) =>
           res.map(

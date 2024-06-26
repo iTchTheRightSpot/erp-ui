@@ -1,18 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EMPLOYEE_SCHEDULE_CREATE_ROUTE } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { AsyncPipe } from '@angular/common';
-import { AllServicesOffered } from '@/app/employee-front/employee-service/all-service-offered/all-service-offered.util';
 import { ScheduleTable } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
-import { BehaviorSubject, debounceTime, map, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-all-schedule',
@@ -35,9 +29,8 @@ export class AllScheduleComponent {
     this.service.updateSelectedDate(selected);
   };
 
-  protected readonly onPrevNextCalendar = (selected: Date) => {
+  protected readonly onPrevNextCalendar = (selected: Date) =>
     this.selectedDateSubject.next(selected);
-  };
 
   protected readonly tHead: Array<keyof ScheduleTable> = [
     'id',
@@ -50,11 +43,7 @@ export class AllScheduleComponent {
     debounceTime(400),
     switchMap((date) =>
       this.service
-        .shiftsByMonth(
-          date.getDate(),
-          date.getMonth() + 1,
-          date.getUTCFullYear(),
-        )
+        .shiftsByMonth(date.getDate(), date.getMonth(), date.getFullYear())
         .pipe(
           map((shifts) =>
             shifts.map(
