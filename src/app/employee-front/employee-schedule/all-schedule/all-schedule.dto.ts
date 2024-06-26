@@ -1,11 +1,11 @@
 export interface Schedule {
-  shift_id: number;
+  shift_id: string;
   start: Date;
   end: Date;
 }
 
 export interface ScheduleTable {
-  id: number;
+  id: string;
   startDate: string;
   startTime: string;
   endTime: string;

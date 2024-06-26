@@ -83,7 +83,7 @@ export class ScheduleService {
   ) =>
     this.http
       .get<
-        { shift_id: number; start: string; end: string }[]
+        { shift_id: string; start: string; end: string }[]
       >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month}&year=${year}`, { withCredentials: true })
       .pipe(
         map((res) =>
