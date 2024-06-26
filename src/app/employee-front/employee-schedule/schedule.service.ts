@@ -1,4 +1,4 @@
-import { inject, Injectable, InjectionToken, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '@/environments/environment';
 import {
   DesiredTimeDto,
@@ -15,21 +15,17 @@ import { UserService } from '@/app/employee-front/user/user.service';
 import { Schedule } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
 import { CacheService } from '@/app/global-service/cache.service';
 
-export const SHIFTS_BY_MONTH_YEAR = new InjectionToken<
-  CacheService<string, Schedule[]>
->('SHIFTS_BY_MONTH_YEAR');
-
 @Injectable({
   providedIn: 'root',
 })
 export class ScheduleService {
+  private static readonly shiftsCache = new CacheService<string, Schedule[]>();
+
   private readonly domain = environment.domain;
   private readonly production = environment.production;
 
   private readonly http = inject(HttpClient);
   private readonly userService = inject(UserService);
-  private readonly shiftsCache: CacheService<string, Schedule[]> =
-    inject(SHIFTS_BY_MONTH_YEAR);
   private readonly toastService = inject(ToastService);
 
   // Signal for tracking the selected date
@@ -42,7 +38,7 @@ export class ScheduleService {
     `${month}_${year}`;
 
   readonly shiftsByMonth = (dayOfMonth: number, month: number, year: number) =>
-    this.shiftsCache
+    ScheduleService.shiftsCache
       .getItem(this.shiftsCacheKey(month, year))
       .pipe(
         switchMap((value) =>
@@ -87,20 +83,24 @@ export class ScheduleService {
   ) =>
     this.http
       .get<
-        { start: string; end: string }[]
+        { shift_id: number; start: string; end: string }[]
       >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month}&year=${year}`, { withCredentials: true })
       .pipe(
         map((res) =>
           res.map(
             (obj) =>
               ({
+                shift_id: obj.shift_id,
                 start: new Date(obj.start),
                 end: new Date(obj.end),
               }) as Schedule,
           ),
         ),
         tap((res) =>
-          this.shiftsCache.setItem(this.shiftsCacheKey(month, year), res),
+          ScheduleService.shiftsCache.setItem(
+            this.shiftsCacheKey(month, year),
+            res,
+          ),
         ),
         catchError((e) =>
           this.toastService.messageHandleIterateError<Schedule>(e),

@@ -41,8 +41,15 @@
       <div
         class="w-full h-fit lg:max-w-[50%] xl:max-w-[35%] rounded-lg bg-white absolute top-10 bottom-0 left-0 z-40"
       >
-        <app-calendar (onDateSelectedEmitter)="onDateSelected($event)" />
+        <app-calendar
+          (onDateSelectedEmitter)="onDateSelected($event)"
+          (previousNextEmitter)="onPrevNextCalendar($event)"
+        />
       </div>
     }
+  </div>
+
+  <div class="w-full">
+    <app-table [tHead]="tHead" [tBody]="(shifts$ | async) || []" />
   </div>
 </div>

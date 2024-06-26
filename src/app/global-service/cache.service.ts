@@ -1,9 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, mergeMap, switchMap } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
 export class CacheService<K, V> {
   private readonly mapSubject = new BehaviorSubject(new Map<K, V>());
 

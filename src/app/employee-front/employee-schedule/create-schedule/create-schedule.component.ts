@@ -20,17 +20,17 @@ import { CalendarComponent } from '@/app/shared-components/calendar/calendar.com
     AsyncPipe,
     CalendarComponent,
   ],
-  providers: [{ provide: CacheService, useClass: CacheService }],
   templateUrl: './create-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateScheduleComponent {
-  private readonly service = inject(ScheduleService);
-  private readonly fb = inject(FormBuilder);
-  private readonly scheduleCache: CacheService<
+  private static readonly scheduleCache = new CacheService<
     string,
     { start: Date; end: Date; duration: number }
-  > = inject(CacheService);
+  >();
+
+  private readonly service = inject(ScheduleService);
+  private readonly fb = inject(FormBuilder);
 
   protected selected = this.service.selected;
   protected toggle = false;
@@ -51,18 +51,19 @@ export class CreateScheduleComponent {
   protected readonly toHrMins = (selected: Date) => toHrMins(selected);
 
   protected numberOfEntries = 0;
-  protected readonly entries$ = this.scheduleCache.entrySet$.pipe(
-    filter((entries) =>
-      entries.every(
-        ([key, value]) =>
-          value.start !== undefined &&
-          value.start !== null &&
-          value.end !== undefined &&
-          value.end !== null,
+  protected readonly entries$ =
+    CreateScheduleComponent.scheduleCache.entrySet$.pipe(
+      filter((entries) =>
+        entries.every(
+          ([key, value]) =>
+            value.start !== undefined &&
+            value.start !== null &&
+            value.end !== undefined &&
+            value.end !== null,
+        ),
       ),
-    ),
-    tap((entries) => (this.numberOfEntries = entries.length)),
-  );
+      tap((entries) => (this.numberOfEntries = entries.length)),
+    );
 
   /**
    * Form used by staff with {@link Role#OWNER} to create a schedule for
@@ -80,7 +81,7 @@ export class CreateScheduleComponent {
   protected readonly onDateTimePicker = (obj: { start: Date; end: Date }) => {
     const milliseconds = obj.end.getTime() - obj.start.getTime();
     const seconds = milliseconds / 1000;
-    this.scheduleCache.setItem(obj.start.toString(), {
+    CreateScheduleComponent.scheduleCache.setItem(obj.start.toString(), {
       start: obj.start,
       end: obj.end,
       duration: seconds,
@@ -93,7 +94,7 @@ export class CreateScheduleComponent {
    * @param key - The key of the schedule to delete.
    */
   protected readonly onDeleteSchedule = (key: string) =>
-    this.scheduleCache.deleteItem(key);
+    CreateScheduleComponent.scheduleCache.deleteItem(key);
 
   private readonly submitSubject = new Subject<void>();
 
@@ -112,7 +113,7 @@ export class CreateScheduleComponent {
    * - Manages the state of the submit button and clears the cache after submission.
    */
   protected readonly onSubmit$ = this.submitSubject.asObservable().pipe(
-    withLatestFrom(this.scheduleCache.values$),
+    withLatestFrom(CreateScheduleComponent.scheduleCache.values$),
     switchMap(
       ([_, objs]: [void, { start: Date; end: Date; duration: number }[]]) =>
         this.service

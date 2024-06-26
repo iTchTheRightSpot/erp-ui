@@ -14,12 +14,15 @@ import { CacheService } from '@/app/global-service/cache.service';
   providedIn: 'root',
 })
 export class UserService {
+  private static readonly cacheService = new CacheService<
+    string,
+    Page<StaffDto>
+  >();
+
   private readonly domain = environment.domain;
   private readonly production = environment.production;
 
   private readonly http = inject(HttpClient);
-  private readonly cacheService: CacheService<string, Page<StaffDto>> =
-    inject(CacheService);
   private readonly toastService = inject(ToastService);
 
   private readonly cacheKey = (page: number, size: number, role: Role | null) =>
@@ -30,7 +33,7 @@ export class UserService {
     size: number = 30,
     role: Role | null = null,
   ) =>
-    this.cacheService
+    UserService.cacheService
       .getItem(this.cacheKey(pageNumber, size, role))
       .pipe(
         switchMap((page) =>
@@ -50,7 +53,7 @@ export class UserService {
           >(role ? `${this.domain}staff?page=${pageNum}&size=${size}&role=${role}` : `${this.domain}staff?page=${pageNum}&size=${size}`, { withCredentials: true })
           .pipe(
             tap((page) =>
-              this.cacheService.setItem(
+              UserService.cacheService.setItem(
                 this.cacheKey(pageNum, size, role),
                 page,
               ),

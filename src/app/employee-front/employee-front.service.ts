@@ -14,13 +14,16 @@ import { CacheService } from '@/app/global-service/cache.service';
   providedIn: 'root',
 })
 export class EmployeeFrontService {
+  private static readonly cachedService = new CacheService<
+    string,
+    AppointmentResponse[]
+  >();
+
   private readonly domain = environment.domain;
   private readonly production = environment.production;
 
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
-  private readonly cachedService: CacheService<string, AppointmentResponse[]> =
-    inject(CacheService);
 
   private readonly cacheKeyBuilder = (selected: Date) =>
     `${1 + selected.getMonth()}_${selected.getFullYear()}`;
@@ -37,7 +40,7 @@ export class EmployeeFrontService {
   readonly appointmentsOnSelectedMonth = (selected: Date) => {
     const key = this.cacheKeyBuilder(selected);
 
-    return this.cachedService.getItem(key).pipe(
+    return EmployeeFrontService.cachedService.getItem(key).pipe(
       switchMap((value) => {
         if (value) return of(value);
 
@@ -48,7 +51,9 @@ export class EmployeeFrontService {
 
         return this.production
           ? this.request(params).pipe(
-              tap((arr) => this.cachedService.setItem(key, arr)),
+              tap((arr) =>
+                EmployeeFrontService.cachedService.setItem(key, arr),
+              ),
             )
           : of<AppointmentResponse[]>(dummyAppointments(20));
       }),

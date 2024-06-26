@@ -19,13 +19,13 @@ import { CacheService } from '@/app/global-service/cache.service';
   providedIn: 'root',
 })
 export class BookStaffService {
+  private static readonly cacheService = new CacheService<string, StaffDto[]>();
+
   private readonly domain: string | undefined = environment.domain;
   private readonly production = environment.production;
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
   private readonly bookService = inject(BookService);
-  private readonly cacheService: CacheService<string, StaffDto[]> =
-    inject(CacheService);
 
   private readonly buildCacheKey = (services: BookServiceOfferedDto[]) =>
     services.map((s) => s.service_name).join('_');
@@ -44,7 +44,7 @@ export class BookStaffService {
     const key = this.buildCacheKey(services);
 
     return this.production
-      ? this.cacheService.getItem(key).pipe(
+      ? BookStaffService.cacheService.getItem(key).pipe(
           switchMap((value) => {
             if (value) return of(value);
 
@@ -75,7 +75,7 @@ export class BookStaffService {
               (obj.image_key =
                 obj.image_key.length === 0 ? img : obj.image_key),
           );
-          this.cacheService.setItem(key, staffs);
+          BookStaffService.cacheService.setItem(key, staffs);
         }),
         catchError((e: HttpErrorResponse) =>
           this.toastService.messageHandleIterateError<StaffDto>(e),

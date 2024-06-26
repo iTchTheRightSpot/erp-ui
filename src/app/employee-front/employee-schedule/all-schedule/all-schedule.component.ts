@@ -8,11 +8,16 @@ import { RouterLink } from '@angular/router';
 import { EMPLOYEE_SCHEDULE_CREATE_ROUTE } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
+import { TableComponent } from '@/app/employee-front/shared/table.component';
+import { AsyncPipe } from '@angular/common';
+import { AllServicesOffered } from '@/app/employee-front/employee-service/all-service-offered/all-service-offered.util';
+import { ScheduleTable } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
+import { BehaviorSubject, debounceTime, map, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-all-schedule',
   standalone: true,
-  imports: [RouterLink, CalendarComponent],
+  imports: [RouterLink, CalendarComponent, TableComponent, AsyncPipe],
   templateUrl: './all-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -23,19 +28,46 @@ export class AllScheduleComponent {
     EMPLOYEE_SCHEDULE_CREATE_ROUTE;
   protected toggleCalendar = false;
 
-  private readonly selectedDate = signal<Date>(new Date());
+  private readonly selectedDateSubject = new BehaviorSubject<Date>(new Date());
 
   protected readonly onDateSelected = (selected: Date) => {
-    this.selectedDate.set(selected);
+    this.selectedDateSubject.next(selected);
     this.service.updateSelectedDate(selected);
   };
 
-  protected readonly shifts$ = () => {
-    const date = this.selectedDate();
-    return this.service.shiftsByMonth(
-      date.getDate(),
-      date.getMonth() + 1,
-      date.getUTCFullYear(),
-    );
+  protected readonly onPrevNextCalendar = (selected: Date) => {
+    this.selectedDateSubject.next(selected);
   };
+
+  protected readonly tHead: Array<keyof ScheduleTable> = [
+    'id',
+    'startDate',
+    'startTime',
+    'endTime',
+  ];
+
+  protected readonly shifts$ = this.selectedDateSubject.asObservable().pipe(
+    debounceTime(400),
+    switchMap((date) =>
+      this.service
+        .shiftsByMonth(
+          date.getDate(),
+          date.getMonth() + 1,
+          date.getUTCFullYear(),
+        )
+        .pipe(
+          map((shifts) =>
+            shifts.map(
+              (shift) =>
+                ({
+                  id: shift.shift_id,
+                  startDate: shift.start.toLocaleDateString(),
+                  startTime: shift.start.toLocaleTimeString(),
+                  endTime: shift.end.toLocaleTimeString(),
+                }) as ScheduleTable,
+            ),
+          ),
+        ),
+    ),
+  );
 }

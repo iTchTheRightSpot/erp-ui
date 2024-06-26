@@ -20,6 +20,7 @@ import {
   mergeMap,
   Observable,
   of,
+  ReplaySubject,
   startWith,
   Subject,
   switchMap,
@@ -68,6 +69,7 @@ export class ServiceOfferedService {
             ServiceOfferedDto[]
           >(`${this.domain}employee/service-offered`, { withCredentials: true })
           .pipe(
+            tap((services) => this.serviceOfferedSubject.next(services)),
             catchError((e: HttpErrorResponse) =>
               this.toastService.messageHandleIterateError<ServiceOfferedDto>(e),
             ),
