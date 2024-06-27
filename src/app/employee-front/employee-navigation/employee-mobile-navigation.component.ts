@@ -5,13 +5,7 @@ import {
   model,
   output,
 } from '@angular/core';
-import {
-  EMPLOYEE_FRONT_APPOINTMENT,
-  EMPLOYEE_FRONT_DASHBOARD,
-  EMPLOYEE_FRONT_PROFILE,
-  EMPLOYEE_FRONT_SCHEDULE,
-  EMPLOYEE_FRONT_SERVICE,
-} from '@/app/employee-front/employee-front.util';
+import { EMPLOYEE_FRONT_DASHBOARD } from '@/app/employee-front/employee-front.util';
 import { RouterLink } from '@angular/router';
 import { SafeHtml } from '@angular/platform-browser';
 

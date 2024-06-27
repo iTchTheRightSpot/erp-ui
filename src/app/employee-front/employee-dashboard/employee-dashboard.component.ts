@@ -23,8 +23,8 @@ import { AuthenticationService } from '@/app/global-service/authentication.servi
 })
 export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
   constructor(
-    private readonly dashboardService: EmployeeDashboardService,
-    private readonly authenticationService: AuthenticationService,
+    dashboardService: EmployeeDashboardService,
+    authenticationService: AuthenticationService,
   ) {
     super(dashboardService, authenticationService);
   }

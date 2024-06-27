@@ -11,9 +11,11 @@ export const ownerRoleGuard = async () => {
   const bool = !user
     ? false
     : user.roles.includes(Role.OWNER) || user.roles.includes(Role.DEVELOPER);
+
   if (!bool)
     await router.navigate([
       `${EMPLOYEE_FRONT_HOME}/${EMPLOYEE_FRONT_SERVICE}/${EMPLOYEE_ALL_SERVICE_OFFERED_ROUTE}`,
     ]);
+
   return bool;
 };
