@@ -49,7 +49,7 @@ export class UserService {
               let params = new HttpParams();
               params = params.append('page', pageNumber);
               params = params.append('size', size);
-              params = params.append('name', name);
+              params = params.append('username', name);
               if (role) params = params.append('role', role);
               return this.usersRequest$(params);
             }),
@@ -65,7 +65,7 @@ export class UserService {
         tap((page) => {
           const pageNumber = params.get('page');
           const size = params.get('size');
-          const name = params.get('name');
+          const name = params.get('username');
 
           if (pageNumber !== null && size !== null && name !== null)
             UserService.cacheService.setItem(
