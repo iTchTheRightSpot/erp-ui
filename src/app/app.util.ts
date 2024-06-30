@@ -18,6 +18,17 @@ export enum Role {
   USER = 'USER',
 }
 
+export const keyOfRole = (role: string | null): Role | null => {
+  const roleMap: { [key: string]: Role } = {
+    [Role.EMPLOYEE]: Role.EMPLOYEE,
+    [Role.OWNER]: Role.OWNER,
+    [Role.DEVELOPER]: Role.DEVELOPER,
+    [Role.USER]: Role.USER,
+  };
+
+  return role ? roleMap[role] || null : null;
+};
+
 export interface ActiveUser {
   principal: string;
   user_id: string;
