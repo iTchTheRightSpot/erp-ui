@@ -20,6 +20,8 @@
           [roles]="user.roles"
           (onCardClicked)="onCardClicked($event)"
         />
+      } @empty {
+        no staffs
       }
     </div>
 
@@ -33,5 +35,7 @@
     </div>
   </section>
 } @else {
-  loading...
+  <div class="h-full w-full flex justify-center items-center">
+    <h1 class="capitalize text-gray-900 dark:text-white">loading...</h1>
+  </div>
 }
