@@ -36,7 +36,14 @@ export class AuthenticationService {
       );
 
   readonly isStaff = () => {
-    if (!this.production) return of(true);
+    if (!this.production) {
+      this.activeUserSignal.set({
+        principal: 'Admin Developer',
+        user_id: '1000',
+        roles: [Role.DEVELOPER],
+      });
+      return of(true);
+    }
 
     const staff = this.activeUserSignal();
 

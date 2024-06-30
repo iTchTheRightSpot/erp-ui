@@ -8,7 +8,7 @@ export interface StaffDto {
   email: string;
   image_key: string;
   bio: string;
-  role: Role;
+  roles: Role[];
 }
 
 export const staffs = () => {
@@ -25,7 +25,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       employee_id: '0',
@@ -34,7 +34,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       employee_id: '2',
@@ -44,7 +44,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       employee_id: '3',
@@ -54,7 +54,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
   ]);
   map.set('overgrown lawns', [
@@ -66,7 +66,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
   ]);
   map.set('utility cuts', [
@@ -78,7 +78,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       employee_id: '6',
@@ -88,19 +88,18 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
   ]);
   map.set('weekly trim and mow', [
     {
       employee_id: '7',
-
       name: 'Lebron James',
       email: 'franklyn@email.com',
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       employee_id: '8',
@@ -110,7 +109,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
   ]);
 
@@ -133,7 +132,7 @@ export const staffs$: Observable<Page<StaffDto>> = of({
       image_key: '/assets/images/staffs/engin-akyurt.jpg',
       bio: '',
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       name: 'Frank Leos',
@@ -141,7 +140,7 @@ export const staffs$: Observable<Page<StaffDto>> = of({
       email: 'Frank Leos',
       display_name: '',
       bio: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       name: 'Sam Leos',
@@ -149,7 +148,7 @@ export const staffs$: Observable<Page<StaffDto>> = of({
       email: 'Sam Leos',
       display_name: '',
       bio: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       name: 'Ben Leos',
@@ -157,7 +156,7 @@ export const staffs$: Observable<Page<StaffDto>> = of({
       email: 'Ben Leos',
       display_name: '',
       bio: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
     {
       name: 'Cheese Leos',
@@ -165,7 +164,7 @@ export const staffs$: Observable<Page<StaffDto>> = of({
       email: 'Cheese Leos',
       display_name: '',
       bio: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER],
     },
   ],
 } as Page<StaffDto>);

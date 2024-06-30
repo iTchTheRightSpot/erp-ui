@@ -1,0 +1,37 @@
+@if (users$ | async; as page) {
+  <section
+    class="min-h-screen w-full text-center p-2 bg-white dark:bg-gray-900"
+  >
+    <!--    max-w-screen-xl-->
+    <div
+      class="mb-5 text-left underline underline-offset-4 decoration-1 max-w-screen-sm text-gray-900 dark:text-white"
+    >
+      <h2 class="text-4xl tracking-tight font-medium">Users</h2>
+    </div>
+
+    <!-- body -->
+    <div class="grid gap-2 grid-cols-4 lg:grid-cols-8 xl:grid-cols-10">
+      @for (user of page.data; track user.employee_id) {
+        <app-user-card
+          [employeeId]="user.employee_id"
+          [image]="user.image_key"
+          [name]="user.name"
+          [displayName]="user.display_name"
+          [roles]="user.roles"
+          (onCardClicked)="onCardClicked($event)"
+        />
+      }
+    </div>
+
+    <!-- pagination component -->
+    <div class="p-3">
+      <app-paginator
+        [currentPage]="page.page"
+        [totalPages]="page.total_pages"
+        (goTo)="onPageNumberClicked($event)"
+      />
+    </div>
+  </section>
+} @else {
+  loading...
+}

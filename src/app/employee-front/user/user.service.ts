@@ -1,14 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Page, Role } from '@/app/app.util';
-import {
-  StaffDto,
-  staffs$,
-} from '@/app/store-front/book/book-staff/book-staff.dto';
+import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { catchError, of, switchMap, tap } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
+import { dummyUsers$ } from '@/app/employee-front/user/user.util';
 
 @Injectable({
   providedIn: 'root',
@@ -62,5 +60,5 @@ export class UserService {
               this.toastService.messageErrorNothing(e),
             ),
           )
-      : staffs$;
+      : dummyUsers$();
 }
