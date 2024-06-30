@@ -1,9 +1,9 @@
-<div class="p-2 flex flex-col gap-2">
+<div class="p-2 flex flex-col gap-2 text-gray-700 dark:text-gray-400">
   <div class="relative">
     <button
       (click)="toggle = !toggle"
       type="button"
-      class="flex gap-1.5 items-center text-base font-medium lg:text-xl font-base text-gray-900 underline underline-offset-4"
+      class="flex gap-1.5 items-center text-base font-medium lg:text-xl font-base underline underline-offset-4"
     >
       Create Schedule
       <svg
@@ -72,13 +72,14 @@
           </button>
         </div>
         @if (toggleCalendar) {
-          <div
-            class="w-full h-fit lg:max-w-[50%] xl:max-w-[35%] rounded-lg bg-white absolute top-10 bottom-0 left-0 z-40"
-          >
-            <app-calendar
-              [minDate]="minimumDateOnCalendar"
-              (onDateSelectedEmitter)="onCalendarDateSelected($event)"
-            />
+          <div class="absolute top-10 bottom-0 left-0 z-40">
+            <mat-card class="w-80">
+              <mat-calendar
+                [minDate]="minimumDateOnCalendar"
+                [(selected)]="selectedDate"
+                (selectedChange)="onCalendarDateSelected($event)"
+              />
+            </mat-card>
           </div>
         }
         <div
@@ -114,7 +115,7 @@
 
       <app-time-picker
         [form]="form"
-        [selected]="selected()"
+        [selected]="selectedDate"
         (submitEmitter)="onDateTimePicker($event)"
       />
     </div>

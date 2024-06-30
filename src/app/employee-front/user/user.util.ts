@@ -1,1 +1,1 @@
-export const EMPLOYEE_ALL_USERS_ROUTE = 'users';
+export const EMPLOYEE_ALL_USERS_ROUTE = '';

@@ -14,7 +14,7 @@ import { SafeHtml } from '@angular/platform-browser';
   standalone: true,
   imports: [RouterLink],
   template: `
-    <div class="h-screen flex fixed top-0 right-0 bottom-0 left-0 z-40">
+    <div class="h-full flex fixed top-0 right-0 bottom-0 left-0 z-40">
       <aside id="logo-sidebar" class="h-full" aria-label="Sidebar">
         <div
           class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800"

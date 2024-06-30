@@ -10,7 +10,7 @@ import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-
   standalone: true,
   imports: [ServiceOfferedFormComponent, AsyncPipe],
   template: `
-    <div class="w-full p-2">
+    <div class="w-full p-2 text-gray-700 dark:text-gray-400">
       <div class="w-full mb-4">
         <h1
           class="underline underline-offset-4 text-lg lg:text-3xl font-medium"

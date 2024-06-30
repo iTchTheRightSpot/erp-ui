@@ -183,7 +183,7 @@ export class EmployeeAppointmentComponent {
     this.appointmentService.updateAppointmentStatus({
       appointment_id: obj.id,
       status: obj.status,
-      employee_email: user ? user.principal : '',
+      employee_id: user ? user.user_id : '',
     } as UpdateAppointmentStatusDto);
   };
 }

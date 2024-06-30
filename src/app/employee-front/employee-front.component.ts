@@ -20,8 +20,8 @@ import { Role } from '@/app/app.util';
   standalone: true,
   imports: [RouterOutlet, EmployeeNavigationComponent, AsyncPipe],
   template: `
-    <div class="flex">
-      <div>
+    <div class="min-h-screen flex bg-white dark:bg-gray-900">
+      <div class="grow-1">
         <app-employee-navigation
           [routes]="routes"
           [logout]="(logout$ | async) || false"

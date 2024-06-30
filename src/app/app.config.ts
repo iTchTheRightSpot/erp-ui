@@ -13,11 +13,13 @@ import {
   authenticationRedirectInterceptor,
   csrfInterceptor,
 } from './global-service/global.interceptor';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
+    provideAnimations(),
     provideHttpClient(
       withFetch(),
       withInterceptors([csrfInterceptor, authenticationRedirectInterceptor]),

@@ -10,6 +10,7 @@ import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appoin
 import {
   BehaviorSubject,
   catchError,
+  debounceTime,
   delay,
   map,
   merge,
@@ -41,7 +42,10 @@ export class EmployeeAppointmentService {
     Observable<boolean>
   >();
 
-  readonly subject$ = this.subject.asObservable().pipe(mergeMap((obs) => obs));
+  readonly subject$ = this.subject.asObservable().pipe(
+    debounceTime(400),
+    mergeMap((obs) => obs),
+  );
 
   readonly updateAppointment$ = this.updateAppointmentStatusSubject
     .asObservable()

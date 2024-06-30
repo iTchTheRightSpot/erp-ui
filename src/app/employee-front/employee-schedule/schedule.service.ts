@@ -33,9 +33,6 @@ export class ScheduleService {
   // Signal for tracking the selected date
   private readonly selectedDateSignal = signal<Date>(new Date());
 
-  // Exposing the selected date signal as a readonly property
-  readonly selected = this.selectedDateSignal;
-
   private readonly shiftsCacheKey = (month: number, year: number) =>
     `${month}_${year}`;
 
@@ -93,7 +90,7 @@ export class ScheduleService {
     this.http
       .get<
         { shift_id: string; start: string; end: string }[]
-      >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month + 1}&year=${year}&employee_email=${this.authenticationService.activeUser()?.principal}`, { withCredentials: true })
+      >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month + 1}&year=${year}&employee_id=${this.authenticationService.activeUser()?.user_id}`, { withCredentials: true })
       .pipe(
         map((res) =>
           res.map(

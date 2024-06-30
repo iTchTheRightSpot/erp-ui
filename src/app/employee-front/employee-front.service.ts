@@ -51,7 +51,7 @@ export class EmployeeFrontService {
         params = params.append('month', 1 + selected.getMonth());
         params = params.append('year', selected.getFullYear());
         const user = this.authenticationService.activeUser();
-        params = params.append('employee_email', user ? user.principal : '');
+        params = params.append('employee_id', user ? user.user_id : '');
 
         return this.production
           ? this.request(params).pipe(

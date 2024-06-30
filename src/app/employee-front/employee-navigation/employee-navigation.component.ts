@@ -52,7 +52,7 @@ import { SafeHtml } from '@angular/platform-browser';
 
     <aside
       id="logo-sidebar"
-      class="hidden lg:block w-fit h-screen"
+      class="hidden lg:block w-fit h-full"
       aria-label="Sidebar"
     >
       <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">

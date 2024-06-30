@@ -8,17 +8,21 @@ import { CacheService } from '@/app/global-service/cache.service';
 import { filter, startWith, Subject, switchMap, tap } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { DesiredTimeDto } from '@/app/employee-front/employee-schedule/employee-schedule.util';
-import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatCalendar } from '@angular/material/datepicker';
+import { MatCard } from '@angular/material/card';
 
 @Component({
   selector: 'app-create-schedule',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     DatePipe,
     TimePickerComponent,
     NgStyle,
     AsyncPipe,
-    CalendarComponent,
+    MatCard,
+    MatCalendar,
   ],
   templateUrl: './create-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +36,7 @@ export class CreateScheduleComponent {
   private readonly service = inject(ScheduleService);
   private readonly fb = inject(FormBuilder);
 
-  protected selected = this.service.selected;
+  protected selectedDate = new Date();
   protected toggle = false;
   protected dropdownToggle = false;
   protected toggleCalendar = false;
@@ -40,8 +44,10 @@ export class CreateScheduleComponent {
 
   protected readonly staffs$ = this.service.staffs$;
 
-  protected readonly onCalendarDateSelected = (selected: Date) =>
-    this.service.updateSelectedDate(selected);
+  protected readonly onCalendarDateSelected = (selected: Date | null) => {
+    if (selected)
+      this.service.updateSelectedDate((this.selectedDate = selected));
+  };
 
   /**
    * Converts a Date object to a string representing hours and minutes.
@@ -55,7 +61,7 @@ export class CreateScheduleComponent {
     CreateScheduleComponent.scheduleCache.entrySet$.pipe(
       filter((entries) =>
         entries.every(
-          ([key, value]) =>
+          ([, value]) =>
             value.start !== undefined &&
             value.start !== null &&
             value.end !== undefined &&
