@@ -167,7 +167,7 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
             [email]="email()"
             [bio]="bio()"
             [roles]="roles()"
-            [btnLoading]="updateRoleStatus()"
+            [updateRoleStatus]="updateRoleStatus()"
             (onUpdateRoleEmitter)="onUpdateRole($event)"
           />
         </div>

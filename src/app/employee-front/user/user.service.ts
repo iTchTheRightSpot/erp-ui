@@ -1,17 +1,12 @@
-import { inject, Injectable } from '@angular/core';
-import { keyOfRole, Page, Role } from '@/app/app.util';
-import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
-import { catchError, delay, map, of, startWith, switchMap, tap } from 'rxjs';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpParams,
-  HttpResponse,
-} from '@angular/common/http';
-import { environment } from '@/environments/environment';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
-import { CacheService } from '@/app/global-service/cache.service';
-import { dummyUsers$ } from '@/app/employee-front/user/user.util';
+import {inject, Injectable} from '@angular/core';
+import {keyOfRole, Page, Role} from '@/app/app.util';
+import {StaffDto} from '@/app/store-front/book/book-staff/book-staff.dto';
+import {catchError, concat, concatMap, map, of, switchMap, tap, timer} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse,} from '@angular/common/http';
+import {environment} from '@/environments/environment';
+import {ToastService} from '@/app/shared-components/toast/toast.service';
+import {CacheService} from '@/app/global-service/cache.service';
+import {dummyUsers$} from '@/app/employee-front/user/user.util';
 
 @Injectable({
   providedIn: 'root',
@@ -91,11 +86,7 @@ export class UserService {
     role: Role | null = null,
     name: string = '',
   ) => {
-    if (!this.production)
-      return of().pipe(
-        switchMap(() => of(false).pipe(delay(2000))),
-        startWith(true),
-      );
+    if (!this.production) return concat(of(true), timer(5000).pipe(concatMap(() => of(false))));
 
     let params = new HttpParams();
     params = params.append('employee_id', obj.employeeId);
