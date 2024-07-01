@@ -20,7 +20,7 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
         [alt]="name()"
       />
       <button
-        (click)="onCardClickEmitter(employeeId())"
+        (click)="toggleUserDetailComponent = !toggleUserDetailComponent"
         class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
       >
         {{ name() }}
@@ -102,7 +102,7 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
               </li>
             }
             @default {
-              <li class="">
+              <li>
                 <button
                   type="button"
                   matTooltip="{{ role }}"
@@ -167,6 +167,8 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
             [email]="email()"
             [bio]="bio()"
             [roles]="roles()"
+            [btnLoading]="updateRoleStatus()"
+            (onUpdateRoleEmitter)="onUpdateRole($event)"
           />
         </div>
       </div>
@@ -186,11 +188,10 @@ export class UserCardComponent {
   bio = input.required<string>();
   displayName = input.required<string>();
   roles = input.required<Role[]>();
+  updateRoleStatus = input.required<boolean>();
 
-  readonly onCardClicked = output<string>();
+  readonly onUpdateRoleEmitter = output<{ employeeId: string; role: Role }>();
 
-  protected readonly onCardClickEmitter = (employeeId: string) => {
-    this.toggleUserDetailComponent = true;
-    this.onCardClicked.emit(employeeId);
-  };
+  protected readonly onUpdateRole = (obj: { employeeId: string; role: Role }) =>
+    this.onUpdateRoleEmitter.emit(obj);
 }

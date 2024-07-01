@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { keyOfRole, Page, Role } from '@/app/app.util';
 import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
-import { catchError, of, switchMap, tap } from 'rxjs';
+import { catchError, delay, map, of, startWith, switchMap, tap } from 'rxjs';
 import {
   HttpClient,
   HttpErrorResponse,
   HttpParams,
+  HttpResponse,
 } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
@@ -51,12 +52,12 @@ export class UserService {
               params = params.append('size', size);
               params = params.append('username', name);
               if (role) params = params.append('role', role);
-              return this.usersRequest$(params);
+              return this.allUsersRequest$(params);
             }),
           )
       : dummyUsers$();
 
-  private readonly usersRequest$ = (params: HttpParams) =>
+  private readonly allUsersRequest$ = (params: HttpParams) =>
     this.http
       .get<
         Page<StaffDto>
@@ -81,5 +82,45 @@ export class UserService {
         catchError((e: HttpErrorResponse) =>
           this.toastService.messageErrorNothing(e),
         ),
+      );
+
+  readonly updateUserRole = (
+    obj: { employeeId: string; role: Role },
+    pageNumber: number = 0,
+    size: number = 30,
+    role: Role | null = null,
+    name: string = '',
+  ) => {
+    if (!this.production)
+      return of().pipe(
+        switchMap(() => of(false).pipe(delay(2000))),
+        startWith(true),
+      );
+
+    let params = new HttpParams();
+    params = params.append('employee_id', obj.employeeId);
+    params = params.append('role', obj.role);
+
+    let allUsersParams = new HttpParams();
+    allUsersParams = allUsersParams.append('page', pageNumber);
+    allUsersParams = allUsersParams.append('size', size);
+    allUsersParams = allUsersParams.append('username', name);
+    if (role) allUsersParams = allUsersParams.append('role', role);
+
+    return this.updateUserRoleRequest(params, allUsersParams);
+  };
+
+  private readonly updateUserRoleRequest = (
+    params: HttpParams,
+    allUsersParams: HttpParams,
+  ) =>
+    this.http
+      .patch<
+        HttpResponse<any>
+      >(`${this.domain}staff`, {}, { withCredentials: true, params: params })
+      .pipe(
+        switchMap(() => this.allUsersRequest$(allUsersParams)),
+        map(() => false),
+        catchError((e) => this.toastService.messageErrorBool(e)),
       );
 }

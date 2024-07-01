@@ -6,9 +6,14 @@ import { UserCardComponent } from '@/app/employee-front/user/user-card/user-card
 import { SearchBarComponent } from '@/app/employee-front/user/search-bar/search-bar.component';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { SearchProperties } from '@/app/employee-front/user/search-bar/search-bar.util';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  mergeMap,
+  Observable,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { Role } from '@/app/app.util';
-import { UserDetailsComponent } from '@/app/employee-front/user/user-details/user-details.component';
 
 @Component({
   selector: 'app-all-users',
@@ -43,8 +48,6 @@ export class AllUsersComponent {
       ),
     );
 
-  protected readonly onCardClicked = (employeeId: string) => {};
-
   private currentPageNumber = 0;
   protected readonly onPageNumberClicked = (page: number) =>
     this.userSubject.next({
@@ -62,4 +65,23 @@ export class AllUsersComponent {
       role: null,
       name: (this.search = obj.search),
     });
+
+  private readonly updateRoleSubject = new Subject<Observable<boolean>>();
+  protected readonly updateRoleStatus$ = this.updateRoleSubject
+    .asObservable()
+    .pipe(mergeMap((obs) => obs));
+
+  protected readonly onUpdateRoleEmitter = (obj: {
+    employeeId: string;
+    role: Role;
+  }) =>
+    this.updateRoleSubject.next(
+      this.service.updateUserRole(
+        obj,
+        this.currentPageNumber,
+        30,
+        null,
+        this.search,
+      ),
+    );
 }

@@ -28,7 +28,8 @@
           [roles]="user.roles"
           [email]="user.email"
           [bio]="user.bio"
-          (onCardClicked)="onCardClicked($event)"
+          [updateRoleStatus]="(updateRoleStatus$ | async) || false"
+          (onUpdateRoleEmitter)="onUpdateRoleEmitter($event)"
         />
       } @empty {
         no staffs
