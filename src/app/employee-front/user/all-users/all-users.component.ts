@@ -10,6 +10,7 @@ import {
   BehaviorSubject,
   mergeMap,
   Observable,
+  startWith,
   Subject,
   switchMap,
 } from 'rxjs';
@@ -76,12 +77,8 @@ export class AllUsersComponent {
     role: Role;
   }) =>
     this.updateRoleSubject.next(
-      this.service.updateUserRole(
-        obj,
-        this.currentPageNumber,
-        30,
-        null,
-        this.search,
-      ),
+      this.service
+        .updateUserRole(obj, this.currentPageNumber, 30, null, this.search)
+        .pipe(startWith(true)),
     );
 }
