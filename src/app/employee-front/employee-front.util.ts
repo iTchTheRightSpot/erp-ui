@@ -73,7 +73,10 @@ export const dummyAppointments = (num: number) => {
       detail: lorem,
       address: address,
       phone: '0000000000',
-      image: '',
+      image:
+        i % 2 === 0
+          ? 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png'
+          : 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       status:
         i % 2 === 0 ? ConfirmationStatus.CONFIRMED : ConfirmationStatus.PENDING,
       created_at: today,

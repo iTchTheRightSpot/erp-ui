@@ -40,6 +40,9 @@ export class EmployeeFrontService {
    * @return an Observable that emits an array of {@link AppointmentResponse}.
    * */
   readonly appointmentsOnSelectedMonth = (selected: Date) => {
+    if (!this.production)
+      return of<AppointmentResponse[]>(dummyAppointments(20));
+
     const key = this.cacheKeyBuilder(selected);
 
     return EmployeeFrontService.cachedService.getItem(key).pipe(
@@ -53,13 +56,9 @@ export class EmployeeFrontService {
         const user = this.authenticationService.activeUser();
         params = params.append('employee_id', user ? user.user_id : '');
 
-        return this.production
-          ? this.request(params).pipe(
-              tap((arr) =>
-                EmployeeFrontService.cachedService.setItem(key, arr),
-              ),
-            )
-          : of<AppointmentResponse[]>(dummyAppointments(20));
+        return this.request(params).pipe(
+          tap((arr) => EmployeeFrontService.cachedService.setItem(key, arr)),
+        );
       }),
     );
   };
