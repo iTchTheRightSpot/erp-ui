@@ -21,7 +21,9 @@ import { AppointmentDetail } from '@/app/employee-front/shared/about-appointment
       <div class="w-full">
         <!-- customer info -->
         <div class="">
-          <h1 class="mb-2 text-2xl text-gray-900 underline underline-offset-4 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+          <h1
+            class="mb-2 text-2xl text-gray-900 underline underline-offset-4 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          >
             Customer information
           </h1>
 
@@ -79,7 +81,9 @@ import { AppointmentDetail } from '@/app/employee-front/shared/about-appointment
 
         <!-- appointment info -->
         <div class="w-full">
-          <h1 class="my-3 text-2xl text-gray-900 underline underline-offset-4 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+          <h1
+            class="my-3 text-2xl text-gray-900 underline underline-offset-4 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          >
             Appointment information
           </h1>
 
