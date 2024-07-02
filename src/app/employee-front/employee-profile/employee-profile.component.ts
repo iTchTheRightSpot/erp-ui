@@ -15,7 +15,7 @@ import { NgClass } from '@angular/common';
     <div class="p-2 text-gray-900 dark:text-white">
       <div class="w-full">
         <h1
-          class="mb-6 text-4xl underline underline-offset-4 font-medium tracking-tight text-gray-900 dark:text-white"
+          class="mb-6 text-4xl underline underline-offset-4 decoration-1 font-light tracking-tight text-gray-900 dark:text-white"
         >
           Profile
         </h1>
