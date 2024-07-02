@@ -78,7 +78,7 @@ import { NgClass } from '@angular/common';
         <!-- user details -->
         <div class="flex-1">
           <div
-            class="w-full font-light text-2xl underline-offset-4 decoration-1 mb-2 flex gap-2"
+            class="w-full font-light text-2xl underline-offset-4 decoration-1 mb-5 flex gap-2"
           >
             <a
               [routerLink]="EMPLOYEE_UPDATE_PROFILE_ROUTE"
