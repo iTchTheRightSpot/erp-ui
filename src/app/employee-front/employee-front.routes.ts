@@ -52,6 +52,10 @@ export const routes: Routes = [
       import('./employee-profile/employee-profile.component').then(
         (m) => m.EmployeeProfileComponent,
       ),
+    loadChildren: () =>
+      import('./employee-profile/employee-profile.routes').then(
+        (m) => m.routes,
+      ),
   },
   {
     path: EMPLOYEE_FRONT_USER,

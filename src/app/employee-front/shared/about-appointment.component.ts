@@ -10,7 +10,7 @@ import { AppointmentDetail } from '@/app/employee-front/shared/about-appointment
   imports: [NgClass],
   template: `
     <div
-      class="min-w-full p-2 bg-white flex gap-1 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+      class="min-w-full p-2 bg-white flex flex-col md:flex-row gap-3 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
       <img
         class="w-36 h-36 md:w-52 md:h-52"

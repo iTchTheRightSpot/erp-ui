@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Role } from '@/app/app.util';
-import { UpdateProfileDto } from '@/app/employee-front/employee-profile/general-information-form/general-information.util';
+import { UpdateProfileDto } from '@/app/employee-front/employee-profile/employee-profile.util';
 
 @Component({
   selector: 'app-general-information-form',

@@ -41,7 +41,8 @@ export class AuthenticationService {
         name: 'Landscape Developer',
         display_name: 'Developer',
         email: 'developer@landscape.com',
-        image_key: '',
+        image_key:
+          'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
         bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cupiditate, dignissimos dolores eos est ex harum impedit iste maxime minus, nesciunt odit, porro possimus repellat sapiente sed sint ullam velit.',
         roles: [Role.DEVELOPER],
       });

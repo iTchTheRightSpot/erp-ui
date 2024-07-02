@@ -16,7 +16,7 @@ import {
   timer,
 } from 'rxjs';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
-import { UpdateProfileDto } from '@/app/employee-front/employee-profile/general-information-form/general-information.util';
+import { UpdateProfileDto } from '@/app/employee-front/employee-profile/employee-profile.util';
 
 @Injectable({
   providedIn: 'root',
