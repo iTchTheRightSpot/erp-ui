@@ -29,7 +29,7 @@ import { Role } from '@/app/app.util';
         />
       </div>
 
-      <div class="flex-1">
+      <div class="flex-1 overflow-hidden">
         <router-outlet></router-outlet>
       </div>
     </div>

@@ -56,7 +56,7 @@
       Appointment(s) - {{ selected.toDateString() }}
     </h1>
 
-    <div class="overflow-x-auto">
+    <div class="w-full">
       <app-table
         [tHead]="thead"
         [tBody]="(appointments$ | async) || []"

@@ -58,7 +58,7 @@ import { Role } from '@/app/app.util';
         </a>
       </div>
 
-      <div class="w-full">
+      <div class="w-full overflow-y-auto">
         <app-table
           [tHead]="tHead"
           [tBody]="(tBody$ | async) || []"
