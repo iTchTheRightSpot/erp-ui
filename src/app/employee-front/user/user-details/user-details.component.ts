@@ -12,7 +12,7 @@ import { keyOfRole, Role } from '@/app/app.util';
   imports: [],
   template: `
     <div
-      class="min-w-full flex flex-col md:flex-row p-2 gap-3 md:gap-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+      class="min-w-full overflow-y-scroll flex flex-col md:flex-row p-2 gap-3 md:gap-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
       <img class="w-36 h-36" [src]="image()" alt="" />
       <div class="px-3 flex-1 flex flex-col gap-3 text-left">
