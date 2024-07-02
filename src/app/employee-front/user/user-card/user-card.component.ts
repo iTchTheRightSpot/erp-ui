@@ -7,6 +7,7 @@ import {
 import { Role } from '@/app/app.util';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserDetailsComponent } from '@/app/employee-front/user/user-details/user-details.component';
+import { TrackRole } from '@/app/employee-front/user/user.util';
 
 @Component({
   selector: 'app-user-card',
@@ -27,15 +28,15 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
       </button>
       <p>{{ displayName() }}</p>
       <ul class="flex justify-center mt-4 gap-2">
-        @for (role of roles(); track role) {
-          @switch (role) {
+        @for (obj of trackRole(roles()); track obj.id) {
+          @switch (obj.role) {
             @case (Role.DEVELOPER) {
               <li
                 class="text-[#ea4c89] hover:text-gray-900 dark:hover:text-white"
               >
                 <button
                   type="button"
-                  matTooltip="{{ role }}"
+                  matTooltip="{{ obj.role }}"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -59,7 +60,7 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
               >
                 <button
                   type="button"
-                  matTooltip="{{ role }}"
+                  matTooltip="{{ obj.role }}"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -83,7 +84,7 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
               >
                 <button
                   type="button"
-                  matTooltip="{{ role }}"
+                  matTooltip="{{ obj.role }}"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -105,7 +106,7 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
               <li>
                 <button
                   type="button"
-                  matTooltip="{{ role }}"
+                  matTooltip="{{ obj.role }}"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -193,6 +194,8 @@ export class UserCardComponent {
   updateRoleStatus = input.required<boolean>();
 
   readonly onUpdateRoleEmitter = output<{ employeeId: string; role: Role }>();
+
+  protected readonly trackRole = (roles: Role[]) => TrackRole(roles);
 
   protected readonly onUpdateRole = (obj: { employeeId: string; role: Role }) =>
     this.onUpdateRoleEmitter.emit(obj);

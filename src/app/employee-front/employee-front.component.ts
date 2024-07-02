@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { EmployeeNavigationComponent } from '@/app/employee-front/employee-navigation/employee-navigation.component';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 import { AsyncPipe } from '@angular/common';
 import { Subject, switchMap } from 'rxjs';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {
   EMPLOYEE_FRONT_APPOINTMENT,
   EMPLOYEE_FRONT_DASHBOARD,
@@ -14,6 +14,7 @@ import {
   EMPLOYEE_FRONT_USER,
 } from '@/app/employee-front/employee-front.util';
 import { Role } from '@/app/app.util';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Component({
   selector: 'app-employee-front',
@@ -23,7 +24,7 @@ import { Role } from '@/app/app.util';
     <div class="min-h-screen flex bg-white dark:bg-gray-900">
       <div class="grow-1">
         <app-employee-navigation
-          [routes]="routes"
+          [routes]="routes(user())"
           [logout]="(logout$ | async) || false"
           (logoutEmitter)="emit()"
         />
@@ -37,34 +38,10 @@ import { Role } from '@/app/app.util';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeFrontComponent {
-  constructor(
-    private readonly authenticationService: AuthenticationService,
-    protected readonly sanitize: DomSanitizer,
-  ) {
-    const user = this.authenticationService.activeUser();
+  private readonly authenticationService = inject(AuthenticationService);
+  private readonly sanitize = inject(DomSanitizer);
 
-    if (
-      user &&
-      (user.roles.includes(Role.DEVELOPER) || user.roles.includes(Role.OWNER))
-    )
-      this.routes.push({
-        link: EMPLOYEE_FRONT_USER,
-        html: this.sanitize.bypassSecurityTrustHtml(`
-            <svg
-                class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 18"
-            >
-                <path
-                  d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
-                />
-            </svg>
-            <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-      `),
-      });
-  }
+  protected readonly user = this.authenticationService.activeUser;
 
   private readonly subject = new Subject<void>();
 
@@ -74,7 +51,17 @@ export class EmployeeFrontComponent {
 
   protected readonly emit = () => this.subject.next();
 
-  protected readonly routes = [
+  protected readonly routes = (
+    dto: UserDto | undefined,
+  ): { link: string; html: SafeHtml }[] => {
+    const user = dto;
+    return user &&
+      (user.roles.includes(Role.OWNER) || user.roles.includes(Role.DEVELOPER))
+      ? [...this.employeeRoutes, ...this.ownerRoutes]
+      : this.employeeRoutes;
+  };
+
+  private readonly employeeRoutes = [
     {
       link: EMPLOYEE_FRONT_DASHBOARD,
       html: this.sanitize.bypassSecurityTrustHtml(
@@ -163,6 +150,26 @@ export class EmployeeFrontComponent {
           <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
         </svg>
         <span class="flex-1 ms-3 whitespace-nowrap">Profile</span>
+      `),
+    },
+  ];
+
+  private readonly ownerRoutes = [
+    {
+      link: EMPLOYEE_FRONT_USER,
+      html: this.sanitize.bypassSecurityTrustHtml(`
+            <svg
+                class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 18"
+            >
+                <path
+                  d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
+                />
+            </svg>
+            <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
       `),
     },
   ];

@@ -3,6 +3,7 @@ import { keyOfRole, Page, Role } from '@/app/app.util';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 import {
   catchError,
+  combineLatest,
   concat,
   concatMap,
   map,
@@ -21,6 +22,7 @@ import { environment } from '@/environments/environment';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
 import { dummyUsers$ } from '@/app/employee-front/user/user.util';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +37,7 @@ export class UserService {
   private readonly production = environment.production;
 
   private readonly http = inject(HttpClient);
+  private readonly authenticationService = inject(AuthenticationService);
   private readonly toastService = inject(ToastService);
 
   private readonly cacheKey = (
@@ -125,7 +128,24 @@ export class UserService {
         HttpResponse<any>
       >(`${this.domain}staff`, {}, { withCredentials: true, params: params })
       .pipe(
-        switchMap(() => this.allUsersRequest$(allUsersParams)),
+        switchMap(() => {
+          const request$ = this.allUsersRequest$(allUsersParams);
+          const user = this.authenticationService.activeUser();
+          const userIdInRequest = params.get('employee_id');
+
+          if (
+            user &&
+            userIdInRequest !== null &&
+            user.user_id === userIdInRequest
+          ) {
+            return combineLatest([
+              request$,
+              this.authenticationService.activeUser$(),
+            ]);
+          }
+
+          return request$;
+        }),
         map(() => false),
         catchError((e) => this.toastService.messageErrorBool(e)),
       );

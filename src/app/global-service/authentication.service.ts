@@ -33,10 +33,7 @@ export class AuthenticationService {
         map((staff) =>
           staff && Object.keys(staff).length === 0 ? undefined : staff,
         ),
-        tap((staff) => {
-          console.log('obn ', staff);
-          this.activeUserSignal.set(staff);
-        }),
+        tap((staff) => this.activeUserSignal.set(staff)),
         catchError((err) => this.toastService.messageErrorNothing(err)),
       );
 
