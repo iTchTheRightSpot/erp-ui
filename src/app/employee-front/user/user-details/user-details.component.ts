@@ -12,9 +12,9 @@ import { keyOfRole, Role } from '@/app/app.util';
   imports: [],
   template: `
     <div
-      class="min-w-full overflow-y-scroll flex flex-col md:flex-row p-2 gap-3 md:gap-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+      class="min-w-full flex flex-col md:flex-row p-2 pb-10 gap-3 md:gap-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
-      <img class="w-36 h-36" [src]="image()" alt="" />
+      <img class="w-36 h-36" [src]="image()" alt="user profile photo" />
       <div class="px-3 flex-1 flex flex-col gap-3 text-left">
         <!-- fullname -->
         <div class="sm:col-span-2">
@@ -81,7 +81,6 @@ import { keyOfRole, Role } from '@/app/app.util';
             }
           </select>
         </div>
-
         <!-- add role -->
         @if (filterRoles(roles()).length > 0) {
           <form class="sm:col-span-2">
@@ -133,7 +132,6 @@ import { keyOfRole, Role } from '@/app/app.util';
             </div>
           </form>
         }
-
         <!-- bio -->
         <div class="sm:col-span-2">
           <label
@@ -147,7 +145,7 @@ import { keyOfRole, Role } from '@/app/app.util';
             [value]="bio()"
             disabled
             id="bio"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            class="auto-resize bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
           ></textarea>
         </div>
       </div>
