@@ -18,7 +18,7 @@ import { DomSanitizer } from '@angular/platform-browser';
       >
         <app-navigation
           [isStaff]="(isStaff | async) || false"
-          [isSignedIn]="activeUser()?.principal !== ''"
+          [isSignedIn]="activeUser()?.display_name !== ''"
           [logout]="(logout$ | async) || false"
           (logoutEmitter)="emit()"
         />

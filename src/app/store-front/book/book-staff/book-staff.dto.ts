@@ -1,8 +1,8 @@
 import { Page, Role } from '@/app/app.util';
 import { Observable, of } from 'rxjs';
 
-export interface StaffDto {
-  employee_id: string;
+export interface UserDto {
+  user_id: string;
   name: string;
   display_name: string;
   email: string;
@@ -12,14 +12,14 @@ export interface StaffDto {
 }
 
 export const staffs = () => {
-  const map = new Map<string, StaffDto[]>();
+  const map = new Map<string, UserDto[]>();
 
   const lorem =
     'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea impedit maxime officiis rem unde. Aperiam asperiores dolor expedita explicabo illo maiores nobis quasi sit suscipit vitae. Nemo nesciunt quos saepe!';
   const engin = './assets/images/staffs/engin-akyurt.jpg';
   map.set('power grooming', [
     {
-      employee_id: '1',
+      user_id: '1',
       name: 'Ketut Subiyant',
       email: 'boom@email.com',
       image_key: engin,
@@ -28,7 +28,7 @@ export const staffs = () => {
       roles: [Role.OWNER],
     },
     {
-      employee_id: '0',
+      user_id: '0',
       name: 'Tony',
       email: 'tony-benjamin@email.com',
       image_key: engin,
@@ -37,7 +37,7 @@ export const staffs = () => {
       roles: [Role.OWNER],
     },
     {
-      employee_id: '2',
+      user_id: '2',
 
       name: 'benjamin',
       email: 'benjamin@email.com',
@@ -47,7 +47,7 @@ export const staffs = () => {
       roles: [Role.OWNER],
     },
     {
-      employee_id: '3',
+      user_id: '3',
 
       name: 'phil',
       email: 'phil-benjamin@email.com',
@@ -59,7 +59,7 @@ export const staffs = () => {
   ]);
   map.set('overgrown lawns', [
     {
-      employee_id: '4',
+      user_id: '4',
 
       name: 'ashley',
       email: 'ashley@email.com',
@@ -71,7 +71,7 @@ export const staffs = () => {
   ]);
   map.set('utility cuts', [
     {
-      employee_id: '5',
+      user_id: '5',
 
       name: 'fred',
       email: 'fred@email.com',
@@ -81,10 +81,10 @@ export const staffs = () => {
       roles: [Role.OWNER],
     },
     {
-      employee_id: '6',
+      user_id: '6',
 
-      name: 'letitia',
-      email: 'letitia@email.com',
+      name: 'gang',
+      email: 'gang@email.com',
       image_key: engin,
       bio: lorem,
       display_name: '',
@@ -93,7 +93,7 @@ export const staffs = () => {
   ]);
   map.set('weekly trim and mow', [
     {
-      employee_id: '7',
+      user_id: '7',
       name: 'Lebron James',
       email: 'franklyn@email.com',
       image_key: engin,
@@ -102,7 +102,7 @@ export const staffs = () => {
       roles: [Role.OWNER],
     },
     {
-      employee_id: '8',
+      user_id: '8',
 
       name: 'cousins',
       email: 'cousins@email.com',
@@ -116,7 +116,7 @@ export const staffs = () => {
   return map;
 };
 
-export const staffs$: Observable<Page<StaffDto>> = of({
+export const staffs$: Observable<Page<UserDto>> = of({
   page: 0,
   size: 10,
   total_pages: 1,
@@ -167,4 +167,4 @@ export const staffs$: Observable<Page<StaffDto>> = of({
       roles: [Role.OWNER],
     },
   ],
-} as Page<StaffDto>);
+} as Page<UserDto>);

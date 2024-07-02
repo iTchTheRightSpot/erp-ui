@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { BOOK_APPOINTMENT_DATES_ROUTE } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { BookService } from '@/app/store-front/book/book.service';
-import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Component({
   selector: 'app-book-staff',
@@ -70,7 +70,7 @@ export class BookStaffComponent {
 
   protected readonly staffs$ = this.service.staffs$();
 
-  protected readonly selectedStaff = (staff: StaffDto) => {
+  protected readonly selectedStaff = (staff: UserDto) => {
     this.bookService.setStaffSelected(staff);
     this.router.navigate([`${BOOK_ROUTE}/${BOOK_APPOINTMENT_DATES_ROUTE}`]);
   };

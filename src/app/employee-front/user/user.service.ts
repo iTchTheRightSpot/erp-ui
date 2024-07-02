@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { keyOfRole, Page, Role } from '@/app/app.util';
-import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 import {
   catchError,
   concat,
@@ -28,7 +28,7 @@ import { dummyUsers$ } from '@/app/employee-front/user/user.util';
 export class UserService {
   private static readonly cacheService = new CacheService<
     string,
-    Page<StaffDto>
+    Page<UserDto>
   >();
 
   private readonly domain = environment.domain;
@@ -69,7 +69,7 @@ export class UserService {
   private readonly allUsersRequest$ = (params: HttpParams) =>
     this.http
       .get<
-        Page<StaffDto>
+        Page<UserDto>
       >(`${this.domain}staff`, { withCredentials: true, params: params })
       .pipe(
         tap((page) => {

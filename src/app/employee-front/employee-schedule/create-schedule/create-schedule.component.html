@@ -91,7 +91,7 @@
             class="w-full overflow-y-auto text-gray-700 dark:text-gray-200"
             aria-labelledby="dropdownUsersButton"
           >
-            @for (staff of (staffs$ | async)?.data; track staff.employee_id) {
+            @for (staff of (staffs$ | async)?.data; track staff.user_id) {
               <li class="w-full">
                 <button
                   (click)="onSelectedStaffEmail(staff.email)"

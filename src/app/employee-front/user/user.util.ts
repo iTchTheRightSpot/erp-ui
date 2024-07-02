@@ -1,4 +1,4 @@
-import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { Page, Role } from '@/app/app.util';
 import { of } from 'rxjs';
 
@@ -8,9 +8,9 @@ export const dummyUsers$ = () => {
   const lorem =
     'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea impedit maxime officiis rem unde. Aperiam asperiores dolor expedita explicabo illo maiores nobis quasi sit suscipit vitae. Nemo nesciunt quos saepe!';
 
-  const users: StaffDto[] = [
+  const users: UserDto[] = [
     {
-      employee_id: '0',
+      user_id: '0',
       name: 'Bonnie Green',
       email: 'boom@email.com',
       image_key:
@@ -20,7 +20,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.DEVELOPER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '1',
+      user_id: '1',
       name: 'Helene Engels',
       email: 'tony-benjamin@email.com',
       image_key:
@@ -30,7 +30,7 @@ export const dummyUsers$ = () => {
       roles: [Role.EMPLOYEE],
     },
     {
-      employee_id: '2',
+      user_id: '2',
       name: 'Jese Leos',
       email: 'benjamin@email.com',
       image_key:
@@ -40,7 +40,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.EMPLOYEE],
     },
     {
-      employee_id: '3',
+      user_id: '3',
       name: 'Joseph Mcfall',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -50,7 +50,7 @@ export const dummyUsers$ = () => {
       roles: [Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '4',
+      user_id: '4',
       name: 'Lana Byrd',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -60,7 +60,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '5',
+      user_id: '5',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -70,7 +70,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '50',
+      user_id: '50',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -80,7 +80,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '200',
+      user_id: '200',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -90,7 +90,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '6',
+      user_id: '6',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -100,7 +100,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '7',
+      user_id: '7',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -110,7 +110,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '8',
+      user_id: '8',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -120,7 +120,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '9',
+      user_id: '9',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -130,7 +130,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '10',
+      user_id: '10',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -140,7 +140,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '11',
+      user_id: '11',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -150,7 +150,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '12',
+      user_id: '12',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -160,7 +160,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '13',
+      user_id: '13',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -170,7 +170,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '14',
+      user_id: '14',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -180,7 +180,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '15',
+      user_id: '15',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -190,7 +190,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '16',
+      user_id: '16',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -200,7 +200,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '17',
+      user_id: '17',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -210,7 +210,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '170',
+      user_id: '170',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -220,7 +220,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '18',
+      user_id: '18',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -230,7 +230,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '19',
+      user_id: '19',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -240,7 +240,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '20',
+      user_id: '20',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -250,7 +250,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '21',
+      user_id: '21',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -260,7 +260,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '22',
+      user_id: '22',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -270,7 +270,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '23',
+      user_id: '23',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -280,7 +280,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '24',
+      user_id: '24',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -290,7 +290,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '25',
+      user_id: '25',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -300,7 +300,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '26',
+      user_id: '26',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -310,7 +310,7 @@ export const dummyUsers$ = () => {
       roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
     },
     {
-      employee_id: '27',
+      user_id: '27',
       name: 'Neil Sims',
       email: 'phil-benjamin@email.com',
       image_key:
@@ -321,7 +321,7 @@ export const dummyUsers$ = () => {
     },
   ];
 
-  return of<Page<StaffDto>>({
+  return of<Page<UserDto>>({
     page: 0,
     size: 10,
     total_pages: users.length,

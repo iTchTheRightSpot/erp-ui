@@ -1,10 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { catchError, delay, map, merge, of, startWith, tap } from 'rxjs';
-import { ActiveUser, Role } from '@/app/app.util';
-import { Router } from '@angular/router';
+import { Role } from '@/app/app.util';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,6 @@ export class AuthenticationService {
   private readonly domain = environment.domain;
   private readonly production = environment.production;
   private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
 
   readonly csrf = () =>
@@ -25,11 +24,11 @@ export class AuthenticationService {
         }>(`${this.domain}csrf`, { withCredentials: true })
       : of({ token: 'token', parameterName: 'name', headerName: 'header' });
 
-  private readonly activeUserSignal = signal<ActiveUser | undefined>(undefined);
+  private readonly activeUserSignal = signal<UserDto | undefined>(undefined);
 
-  private readonly activeUser$ = () =>
+  readonly activeUser$ = () =>
     this.http
-      .get<ActiveUser>(`${this.domain}active`, { withCredentials: true })
+      .get<UserDto>(`${this.domain}active`, { withCredentials: true })
       .pipe(
         tap((staff) => this.activeUserSignal.set(staff)),
         catchError((err) => this.toastService.messageErrorNothing(err)),
@@ -38,8 +37,12 @@ export class AuthenticationService {
   readonly isStaff = () => {
     if (!this.production) {
       this.activeUserSignal.set({
-        principal: 'Admin Developer',
         user_id: '1000',
+        name: 'Landscape Developer',
+        display_name: 'Developer',
+        email: 'developer@landscape.com',
+        image_key: '',
+        bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cupiditate, dignissimos dolores eos est ex harum impedit iste maxime minus, nesciunt odit, porro possimus repellat sapiente sed sint ullam velit.',
         roles: [Role.DEVELOPER],
       });
       return of(true);

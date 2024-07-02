@@ -18,9 +18,9 @@
 
     <!-- body -->
     <div class="flex flex-wrap gap-2">
-      @for (user of page.data; track user.employee_id) {
+      @for (user of page.data; track user.user_id) {
         <app-user-card
-          [employeeId]="user.employee_id"
+          [employeeId]="user.user_id"
           [image]="user.image_key"
           [name]="user.name"
           [displayName]="user.display_name"

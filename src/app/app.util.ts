@@ -29,12 +29,6 @@ export const keyOfRole = (role: string | null): Role | null => {
   return role ? roleMap[role] || null : null;
 };
 
-export interface ActiveUser {
-  principal: string;
-  user_id: string;
-  roles: Role[];
-}
-
 /**
  * Converts seconds to string format.
  * */

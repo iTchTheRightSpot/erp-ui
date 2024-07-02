@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { BookDto } from '@/app/store-front/book/book.util';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
-import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -39,7 +39,7 @@ export class BookService {
    *
    * @param staff The selected staff member for booking.
    */
-  readonly setStaffSelected = (staff: StaffDto) =>
+  readonly setStaffSelected = (staff: UserDto) =>
     this.bookingInfoSignal.set({
       servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: staff,

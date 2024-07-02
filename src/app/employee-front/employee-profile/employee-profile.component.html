@@ -1,12 +1,25 @@
-<div class="flex text-gray-900 dark:text-white">
-  <div class="p-3">
-    right side
-    <div class="">image container</div>
-    <div class="">add more services container</div>
+<div class="p-2 text-gray-900 dark:text-white">
+  <div class="w-full">
+    <h1>Profile</h1>
   </div>
 
-  <!-- user details -->
-  <div class="flex-1">
-    <app-general-information-form />
+  <div class="flex">
+    <div class="p-3">
+      right side
+      <div class="">image container</div>
+      <div class="">add more services container</div>
+    </div>
+
+    <!-- user details -->
+    <div class="flex-1">
+      <app-general-information-form
+        [form]="form"
+        [employeeId]="user()?.user_id || ''"
+        [email]="user()?.email || ''"
+        [roles]="user()?.roles || []"
+        [updateProfileStatus]="(updateProfileStatus$ | async) || false"
+        (updateProfileEmitter)="onUpdateProfileEmitter($event)"
+      />
+    </div>
   </div>
 </div>

@@ -8,7 +8,7 @@ import {
 import { catchError, of, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import {
-  StaffDto,
+  UserDto,
   staffs,
 } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { BookService } from '@/app/store-front/book/book.service';
@@ -19,7 +19,7 @@ import { CacheService } from '@/app/global-service/cache.service';
   providedIn: 'root',
 })
 export class BookStaffService {
-  private static readonly cacheService = new CacheService<string, StaffDto[]>();
+  private static readonly cacheService = new CacheService<string, UserDto[]>();
 
   private readonly domain: string | undefined = environment.domain;
   private readonly production = environment.production;
@@ -65,7 +65,7 @@ export class BookStaffService {
   private readonly request$ = (params: HttpParams, key: string) =>
     this.http
       .get<
-        StaffDto[]
+        UserDto[]
       >(`${this.domain}service-offered/staffs`, { withCredentials: true, params: params })
       .pipe(
         tap((staffs) => {
@@ -78,7 +78,7 @@ export class BookStaffService {
           BookStaffService.cacheService.setItem(key, staffs);
         }),
         catchError((e: HttpErrorResponse) =>
-          this.toastService.messageHandleIterateError<StaffDto>(e),
+          this.toastService.messageHandleIterateError<UserDto>(e),
         ),
       );
 }
