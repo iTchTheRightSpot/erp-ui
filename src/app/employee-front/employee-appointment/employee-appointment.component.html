@@ -39,7 +39,7 @@
 
     <div
       [style]="{ display: toggleMobileCalendar ? 'block' : 'none' }"
-      class="w-full h-fit bg-white lg:max-w-[50%] xl:max-w-[35%] rounded-lg bg-white absolute top-20 bottom-0 left-0 z-40"
+      class="w-full h-fit bg-white lg:max-w-[50%] xl:max-w-[35%] rounded-lg absolute top-20 bottom-0 left-0 z-40"
     >
       <app-calendar
         [toHighlight]="(daysToHighlight$ | async) || []"
