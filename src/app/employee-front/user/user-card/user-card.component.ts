@@ -158,7 +158,9 @@ import { UserDetailsComponent } from '@/app/employee-front/user/user-details/use
           </button>
         </div>
 
-        <div class="w-full max-h-[500px] xl:max-h-fit overflow-y-scroll mx-auto">
+        <div
+          class="w-full max-h-[500px] xl:max-h-fit overflow-y-scroll mx-auto"
+        >
           <app-user-details
             [employeeId]="employeeId()"
             [image]="image()"
