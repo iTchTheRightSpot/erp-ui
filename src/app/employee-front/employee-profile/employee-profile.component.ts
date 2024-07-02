@@ -13,9 +13,7 @@ import {
 import { EmployeeProfileService } from '@/app/employee-front/employee-profile/employee-profile.service';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { AsyncPipe } from '@angular/common';
-import {
-  UpdateProfileDto
-} from "@/app/employee-front/employee-profile/general-information-form/general-information.util";
+import { UpdateProfileDto } from '@/app/employee-front/employee-profile/general-information-form/general-information.util';
 
 @Component({
   selector: 'app-employee-profile',
@@ -31,7 +29,8 @@ export class EmployeeProfileComponent {
   protected readonly updateProfileStatus$ =
     this.profileService.updateProfileStatus$;
 
-  protected readonly onUpdateProfileEmitter = (dto: UpdateProfileDto) => this.profileService.updateUserProfile(dto);
+  protected readonly onUpdateProfileEmitter = (dto: UpdateProfileDto) =>
+    this.profileService.updateUserProfile(dto);
 
   constructor(
     private readonly profileService: EmployeeProfileService,
@@ -55,6 +54,4 @@ export class EmployeeProfileComponent {
       ]),
     });
   }
-
-
 }

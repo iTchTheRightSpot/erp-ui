@@ -38,5 +38,6 @@ export class GeneralInformationFormComponent {
     } as UpdateProfileDto;
   };
 
-  protected readonly submit = () => this.updateProfileEmitter.emit(this.buildForm());
+  protected readonly submit = () =>
+    this.updateProfileEmitter.emit(this.buildForm());
 }

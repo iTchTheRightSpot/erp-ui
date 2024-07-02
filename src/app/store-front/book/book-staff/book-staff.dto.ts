@@ -1,5 +1,4 @@
-import { Page, Role } from '@/app/app.util';
-import { Observable, of } from 'rxjs';
+import { Role } from '@/app/app.util';
 
 export interface UserDto {
   user_id: string;
@@ -115,56 +114,3 @@ export const staffs = () => {
 
   return map;
 };
-
-export const staffs$: Observable<Page<UserDto>> = of({
-  page: 0,
-  size: 10,
-  total_pages: 1,
-  total_elements: 10,
-  number_of_elements: 10,
-  has_previous_page: false,
-  has_next_page: false,
-  is_empty: false,
-  data: [
-    {
-      name: 'Jese Leos',
-      email: 'Jese Leos',
-      image_key: '/assets/images/staffs/engin-akyurt.jpg',
-      bio: '',
-      display_name: '',
-      roles: [Role.OWNER],
-    },
-    {
-      name: 'Frank Leos',
-      image_key: 'assets/images/staffs/engin-akyurt.jpg',
-      email: 'Frank Leos',
-      display_name: '',
-      bio: '',
-      roles: [Role.OWNER],
-    },
-    {
-      name: 'Sam Leos',
-      image_key: '/assets/images/staffs/engin-akyurt.jpg',
-      email: 'Sam Leos',
-      display_name: '',
-      bio: '',
-      roles: [Role.OWNER],
-    },
-    {
-      name: 'Ben Leos',
-      image_key: '/assets/images/staffs/engin-akyurt.jpg',
-      email: 'Ben Leos',
-      display_name: '',
-      bio: '',
-      roles: [Role.OWNER],
-    },
-    {
-      name: 'Cheese Leos',
-      image_key: '/assets/images/staffs/engin-akyurt.jpg',
-      email: 'Cheese Leos',
-      display_name: '',
-      bio: '',
-      roles: [Role.OWNER],
-    },
-  ],
-} as Page<UserDto>);
