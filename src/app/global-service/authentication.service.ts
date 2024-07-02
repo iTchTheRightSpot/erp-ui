@@ -30,7 +30,13 @@ export class AuthenticationService {
     this.http
       .get<UserDto>(`${this.domain}active`, { withCredentials: true })
       .pipe(
-        tap((staff) => this.activeUserSignal.set(staff)),
+        map((staff) =>
+          staff && Object.keys(staff).length === 0 ? undefined : staff,
+        ),
+        tap((staff) => {
+          console.log('obn ', staff);
+          this.activeUserSignal.set(staff);
+        }),
         catchError((err) => this.toastService.messageErrorNothing(err)),
       );
 
@@ -46,7 +52,13 @@ export class AuthenticationService {
         bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cupiditate, dignissimos dolores eos est ex harum impedit iste maxime minus, nesciunt odit, porro possimus repellat sapiente sed sint ullam velit.',
         roles: [Role.DEVELOPER],
       });
-      return of(true);
+      const user = this.activeUser();
+
+      return of(
+        user?.roles.includes(Role.DEVELOPER) ||
+          user?.roles.includes(Role.OWNER) ||
+          user?.roles.includes(Role.EMPLOYEE),
+      );
     }
 
     const staff = this.activeUserSignal();
@@ -60,11 +72,12 @@ export class AuthenticationService {
     }
 
     return this.activeUser$().pipe(
-      map(
-        (s) =>
-          s.roles.includes(Role.EMPLOYEE) ||
-          s.roles.includes(Role.OWNER) ||
-          s.roles.includes(Role.DEVELOPER),
+      map((s) =>
+        s
+          ? s.roles.includes(Role.EMPLOYEE) ||
+            s.roles.includes(Role.OWNER) ||
+            s.roles.includes(Role.DEVELOPER)
+          : false,
       ),
     );
   };

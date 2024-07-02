@@ -5,7 +5,7 @@ import { AuthenticationService } from '@/app/global-service/authentication.servi
 import { Subject, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { Role } from '@/app/app.util';
-import { DomSanitizer } from '@angular/platform-browser';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Component({
   selector: 'app-store-front',
@@ -17,8 +17,8 @@ import { DomSanitizer } from '@angular/platform-browser';
         class="lg-scr h-fit rounded-b z-10 border-b border-transparent fixed left-0 top-0 right-0"
       >
         <app-navigation
-          [isStaff]="(isStaff | async) || false"
-          [isSignedIn]="activeUser()?.display_name !== ''"
+          [isStaff]="(isStaff$ | async) || false"
+          [isSignedIn]="isSignedIn(activeUser())"
           [logout]="(logout$ | async) || false"
           (logoutEmitter)="emit()"
         />
@@ -32,7 +32,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class StoreFrontComponent {
   private readonly authenticationService = inject(AuthenticationService);
 
-  protected readonly isStaff = this.authenticationService.isStaff();
+  protected readonly isStaff$ = this.authenticationService.isStaff();
   protected readonly activeUser = this.authenticationService.activeUser;
   private readonly subject = new Subject<void>();
 
@@ -42,4 +42,7 @@ export class StoreFrontComponent {
 
   protected readonly emit = () => this.subject.next();
   protected readonly Role = Role;
+
+  protected readonly isSignedIn = (dto: UserDto | undefined) =>
+    !dto ? false : dto.user_id !== '';
 }
