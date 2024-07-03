@@ -64,7 +64,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-5 h-5 text-white hover:text-[var(--app-theme-hover)]"
+                class="w-5 h-5 text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
               >
                 <path
                   stroke-linecap="round"
@@ -103,7 +103,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6 text-white hover:text-[var(--app-theme-hover)]"
+                  class="w-6 h-6 text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
                 >
                   <path
                     stroke-linecap="round"
