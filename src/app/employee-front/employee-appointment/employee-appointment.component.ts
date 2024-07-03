@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
-import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
 import {
   BehaviorSubject,
@@ -24,6 +23,7 @@ import {
 } from '@/app/employee-front/employee-front.util';
 import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
+import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 
 @Component({
   selector: 'app-employee-appointment',
@@ -31,8 +31,8 @@ import { AuthenticationService } from '@/app/global-service/authentication.servi
   imports: [
     AsyncPipe,
     TableComponent,
-    CalendarComponent,
     AboutAppointmentComponent,
+    CalendarComponent,
   ],
   templateUrl: './employee-appointment.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -128,8 +128,9 @@ export class EmployeeAppointmentComponent {
   /**
    * Updates UI based on the
    * */
-  protected readonly onCalendarDateClick = (selected: Date) =>
-    this.calendarDateSubject.next((this.selected = selected));
+  protected readonly onCalendarDateClick = (selected: Date) => {
+    if (selected) this.calendarDateSubject.next((this.selected = selected));
+  };
 
   protected readonly onPrevNextCalendarClick = (date: Date) =>
     this.appointmentService.updateParentOnChangeMonthYear(

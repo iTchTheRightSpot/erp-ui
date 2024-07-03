@@ -1,22 +1,24 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EMPLOYEE_SCHEDULE_CREATE_ROUTE } from '@/app/employee-front/employee-schedule/employee-schedule.util';
-import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { AsyncPipe } from '@angular/common';
 import { ScheduleTable } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
 import { BehaviorSubject, debounceTime, map, switchMap } from 'rxjs';
+import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 
 @Component({
   selector: 'app-all-schedule',
   standalone: true,
-  imports: [RouterLink, CalendarComponent, TableComponent, AsyncPipe],
+  imports: [RouterLink, TableComponent, AsyncPipe, CalendarComponent],
   templateUrl: './all-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllScheduleComponent {
   private readonly service = inject(ScheduleService);
+
+  protected readonly currentDate = new Date();
 
   protected readonly EMPLOYEE_SCHEDULE_CREATE_ROUTE =
     EMPLOYEE_SCHEDULE_CREATE_ROUTE;

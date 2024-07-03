@@ -39,12 +39,12 @@
 
     <div
       [style]="{ display: toggleMobileCalendar ? 'block' : 'none' }"
-      class="w-full h-fit bg-white lg:max-w-[50%] xl:max-w-[35%] rounded-lg absolute top-20 bottom-0 left-0 z-40"
+      class="w-full max-w-lg rounded-lg absolute top-20 bottom-0 left-0 right-20 z-40 bg-red-500"
     >
       <app-calendar
-        [toHighlight]="(daysToHighlight$ | async) || []"
-        (onDateSelectedEmitter)="onCalendarDateClick($event)"
-        (previousNextEmitter)="onPrevNextCalendarClick($event)"
+        [datesToHighlight]="(daysToHighlight$ | async) || []"
+        (onCalendarDateSelectedEmitter)="onCalendarDateClick($event)"
+        (onPreviousNextCalendarDateEmitter)="onPrevNextCalendarClick($event)"
       />
     </div>
   </div>

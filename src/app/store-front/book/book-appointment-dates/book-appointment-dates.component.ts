@@ -7,8 +7,8 @@ import {
   BOOK_STAFF_ROUTE,
 } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
+import { formatSeconds, toHrMins } from '@/app/app.util';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
-import { toHrMins, formatSeconds } from '@/app/app.util';
 
 @Component({
   selector: 'app-book-appointment-dates',
