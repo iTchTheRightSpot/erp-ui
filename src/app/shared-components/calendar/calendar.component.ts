@@ -24,27 +24,16 @@ import { tap } from 'rxjs';
   providers: [provideNativeDateAdapter()],
   imports: [MatCalendar, MatCard],
   template: `
-    @if (datesToHighlight(); as highlight) {
-      @if (highlight.length > 0) {
-        <mat-card class="w-full text-black">
-          <mat-calendar
-            [minDate]="minimumDateOnCalendar() || null"
-            [(selected)]="onSelectedDate"
-            [dateClass]="dateClass"
-            [headerComponent]="header"
-            (selectedChange)="emitCalendarDateSelected($event)"
-          />
-        </mat-card>
-      } @else {
-        <mat-card class="w-full text-black">
-          <mat-calendar
-            [minDate]="minimumDateOnCalendar() || null"
-            [(selected)]="onSelectedDate"
-            [headerComponent]="header"
-            (selectedChange)="emitCalendarDateSelected($event)"
-          />
-        </mat-card>
-      }
+    @if (datesToHighlightImpl(datesToHighlight())) {
+      <mat-card class="w-full text-black">
+        <mat-calendar
+          [minDate]="minimumDateOnCalendar() || null"
+          [(selected)]="onSelectedDate"
+          [dateClass]="dateClass"
+          [headerComponent]="header"
+          (selectedChange)="emitCalendarDateSelected($event)"
+        />
+      </mat-card>
     } @else {
       <mat-card class="w-full text-black">
         <mat-calendar
@@ -84,6 +73,8 @@ export class CalendarComponent {
 
   readonly onCalendarDateSelectedEmitter = output<Date>();
   readonly onPreviousNextCalendarDateEmitter = output<Date>();
+
+  protected readonly datesToHighlightImpl = (dates: Date[] | undefined) => dates ? dates.length > 0 : false;
 
   protected readonly emitCalendarDateSelected = (
     date: Date | undefined | null,

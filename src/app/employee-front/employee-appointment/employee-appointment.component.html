@@ -42,6 +42,7 @@
       class="w-full max-w-lg rounded-lg absolute top-20 bottom-0 left-0 right-20 z-40 bg-red-500"
     >
       <app-calendar
+        [selectedDate]="selectedDate"
         [datesToHighlight]="(daysToHighlight$ | async) || []"
         (onCalendarDateSelectedEmitter)="onCalendarDateClick($event)"
         (onPreviousNextCalendarDateEmitter)="onPrevNextCalendarClick($event)"
@@ -53,7 +54,7 @@
     <h1
       class="mb-4 text-lg lg:text-2xl font-medium tracking-tight leading-none"
     >
-      Appointment(s) - {{ selected.toDateString() }}
+      Appointment(s) - {{ selectedDate.toDateString() }}
     </h1>
 
     <div class="w-full">

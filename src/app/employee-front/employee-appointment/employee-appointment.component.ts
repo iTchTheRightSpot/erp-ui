@@ -38,14 +38,14 @@ import { CalendarComponent } from '@/app/shared-components/calendar/calendar.com
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeAppointmentComponent {
-  protected selected = new Date();
+  protected selectedDate = new Date();
   protected toggleMobileCalendar = false;
 
   constructor(
     private readonly appointmentService: EmployeeAppointmentService,
     private readonly authenticationService: AuthenticationService,
   ) {
-    this.appointmentService.onUpdateCalendarMonth(this.selected);
+    this.appointmentService.onUpdateCalendarMonth(this.selectedDate);
   }
 
   protected readonly thead: Array<keyof AppointmentDeconstruct> = [
@@ -85,15 +85,15 @@ export class EmployeeAppointmentComponent {
       map((dates) =>
         dates.filter(
           (date) =>
-            date.getMonth() === this.selected.getMonth() &&
-            date.getFullYear() === this.selected.getFullYear(),
+            date.getMonth() === this.selectedDate.getMonth() &&
+            date.getFullYear() === this.selectedDate.getFullYear(),
         ),
       ),
       map((dates: Date[] | undefined) => dates?.length),
     );
 
   private readonly calendarDateSubject = new BehaviorSubject<Date>(
-    this.selected,
+    this.selectedDate,
   );
 
   protected get appointments$(): Observable<AppointmentDeconstruct[]> {
@@ -129,12 +129,12 @@ export class EmployeeAppointmentComponent {
    * Updates UI based on the
    * */
   protected readonly onCalendarDateClick = (selected: Date) => {
-    if (selected) this.calendarDateSubject.next((this.selected = selected));
+    if (selected) this.calendarDateSubject.next((this.selectedDate = selected));
   };
 
   protected readonly onPrevNextCalendarClick = (date: Date) =>
     this.appointmentService.updateParentOnChangeMonthYear(
-      (this.selected = date),
+      (this.selectedDate = date),
     );
 
   protected toggleAboutAppointment = false;
