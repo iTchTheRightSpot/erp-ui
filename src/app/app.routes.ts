@@ -30,16 +30,16 @@ export const routes: Routes = [
   {
     path: UNAUTHORIZED,
     loadComponent: () =>
-      import('./shared-components/unauthorized/unauthorized.component').then(
+      import('./shared-components/unauthorized.component').then(
         (m) => m.UnauthorizedComponent,
       ),
   },
   {
     path: '404',
     loadComponent: () =>
-      import(
-        './shared-components/page-not-found/page-not-found.component'
-      ).then((m) => m.PageNotFoundComponent),
+      import('./shared-components/page-not-found.component').then(
+        (m) => m.PageNotFoundComponent,
+      ),
   },
   { path: '**', redirectTo: '/404' },
 ];
