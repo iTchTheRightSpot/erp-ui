@@ -74,7 +74,8 @@ export class CalendarComponent {
   readonly onCalendarDateSelectedEmitter = output<Date>();
   readonly onPreviousNextCalendarDateEmitter = output<Date>();
 
-  protected readonly datesToHighlightImpl = (dates: Date[] | undefined) => dates ? dates.length > 0 : false;
+  protected readonly datesToHighlightImpl = (dates: Date[] | undefined) =>
+    dates ? dates.length > 0 : false;
 
   protected readonly emitCalendarDateSelected = (
     date: Date | undefined | null,
