@@ -3,13 +3,14 @@ import { environment } from '@/environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpResponse,
+  HttpResponse
 } from '@angular/common/http';
 import { EmployeeFrontService } from '@/app/employee-front/employee-front.service';
 import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
 import {
   BehaviorSubject,
   catchError,
+  debounceTime,
   delay,
   map,
   merge,
@@ -17,13 +18,13 @@ import {
   Observable,
   of,
   startWith,
-  Subject,
+  Subject
 } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { AppointmentResponse } from '@/app/employee-front/employee-front.util';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EmployeeAppointmentService {
   protected readonly domain = environment.domain;
@@ -41,7 +42,10 @@ export class EmployeeAppointmentService {
     Observable<boolean>
   >();
 
-  readonly subject$ = this.subject.asObservable().pipe(mergeMap((obs) => obs));
+  readonly subject$ = this.subject.asObservable().pipe(
+    debounceTime(400),
+    mergeMap((obs) => obs)
+  );
 
   readonly updateAppointment$ = this.updateAppointmentStatusSubject
     .asObservable()
@@ -72,9 +76,9 @@ export class EmployeeAppointmentService {
           .pipe(
             map(() => false),
             catchError((e: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(e),
+              this.toastService.messageErrorBool(e)
             ),
-            startWith(true),
+            startWith(true)
           )
       : merge(of(true), of(false).pipe(delay(5000)));
 }

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { AsyncPipe } from '@angular/common';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
@@ -7,22 +6,27 @@ import { EmployeeAppointmentComponent } from '@/app/employee-front/employee-appo
 import { map } from 'rxjs';
 import { AppointmentDeconstruct } from '@/app/employee-front/employee-front.util';
 import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboard/employee-dashboard.service';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
+import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 
 @Component({
   selector: 'app-employee-dashboard',
   standalone: true,
   imports: [
-    CalendarComponent,
     TableComponent,
     AsyncPipe,
     AboutAppointmentComponent,
+    CalendarComponent
   ],
   templateUrl: './employee-dashboard.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
-  constructor(private readonly dashboardService: EmployeeDashboardService) {
-    super(dashboardService);
+  constructor(
+    dashboardService: EmployeeDashboardService,
+    authenticationService: AuthenticationService
+  ) {
+    super(dashboardService, authenticationService);
   }
 
   protected override thead: Array<keyof AppointmentDeconstruct> = [
@@ -30,7 +34,7 @@ export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
     'status',
     'client',
     'service',
-    'timeslot',
+    'timeslot'
   ];
 
   protected readonly apps$ = super.appointments$.pipe(
@@ -42,9 +46,9 @@ export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
             status: obj.status,
             service: obj.service,
             client: obj.client,
-            timeslot: obj.timeslot,
-          }) as AppointmentDeconstruct,
-      ),
-    ),
+            timeslot: obj.timeslot
+          }) as AppointmentDeconstruct
+      )
+    )
   );
 }

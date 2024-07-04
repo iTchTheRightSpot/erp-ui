@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output,
+  output
 } from '@angular/core';
 import { EmployeeMobileNavigationComponent } from '@/app/employee-front/employee-navigation/employee-mobile-navigation.component';
 import { EMPLOYEE_FRONT_DASHBOARD } from '@/app/employee-front/employee-front.util';
@@ -52,7 +52,7 @@ import { SafeHtml } from '@angular/platform-browser';
 
     <aside
       id="logo-sidebar"
-      class="hidden lg:block w-fit h-screen"
+      class="hidden lg:block w-fit h-full"
       aria-label="Sidebar"
     >
       <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
@@ -125,7 +125,7 @@ import { SafeHtml } from '@angular/platform-browser';
       </div>
     </aside>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeNavigationComponent {
   logout = input.required<boolean>();

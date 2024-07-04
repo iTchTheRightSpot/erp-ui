@@ -11,6 +11,6 @@ export const employeeRouteGuard = () => {
     .pipe(
       tap((bool) => {
         if (!bool) router.navigate([`${UNAUTHORIZED}`]);
-      }),
+      })
     );
 };

@@ -1,10 +1,10 @@
 import { Injectable, signal } from '@angular/core';
 import { BookDto } from '@/app/store-front/book/book.util';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
-import { StaffDto } from '@/app/store-front/book/book-staff/book-staff.dto';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BookService {
   /**
@@ -16,7 +16,7 @@ export class BookService {
     servicesOffered: undefined,
     staff: undefined,
     selectedDate: new Date(),
-    time: undefined,
+    time: undefined
   });
 
   readonly bookingInfo = this.bookingInfoSignal;
@@ -31,7 +31,7 @@ export class BookService {
       servicesOffered: services,
       staff: this.bookingInfoSignal().staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
-      time: this.bookingInfoSignal().time,
+      time: this.bookingInfoSignal().time
     });
 
   /**
@@ -39,12 +39,12 @@ export class BookService {
    *
    * @param staff The selected staff member for booking.
    */
-  readonly setStaffSelected = (staff: StaffDto) =>
+  readonly setStaffSelected = (staff: UserDto) =>
     this.bookingInfoSignal.set({
       servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
-      time: this.bookingInfoSignal().time,
+      time: this.bookingInfoSignal().time
     });
 
   /**
@@ -57,7 +57,7 @@ export class BookService {
       servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: this.bookingInfoSignal().staff,
       selectedDate: date,
-      time: this.bookingInfoSignal().time,
+      time: this.bookingInfoSignal().time
     });
 
   /**
@@ -70,6 +70,6 @@ export class BookService {
       servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: this.bookingInfoSignal().staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
-      time: time,
+      time: time
     });
 }

@@ -8,20 +8,26 @@ export const UNAUTHORIZED = 'unauthorized';
 export const toHrMins = (time: Date) =>
   new Date(time).toLocaleTimeString([], {
     hour: '2-digit',
-    minute: '2-digit',
+    minute: '2-digit'
   });
 
 export enum Role {
   EMPLOYEE = 'EMPLOYEE',
   OWNER = 'OWNER',
   DEVELOPER = 'DEVELOPER',
-  USER = 'USER',
+  USER = 'USER'
 }
 
-export interface ActiveUser {
-  principal: string;
-  role: Role;
-}
+export const keyOfRole = (role: string | null): Role | null => {
+  const roleMap: { [key: string]: Role } = {
+    [Role.EMPLOYEE]: Role.EMPLOYEE,
+    [Role.OWNER]: Role.OWNER,
+    [Role.DEVELOPER]: Role.DEVELOPER,
+    [Role.USER]: Role.USER
+  };
+
+  return role ? roleMap[role] || null : null;
+};
 
 /**
  * Converts seconds to string format.
@@ -64,3 +70,15 @@ const secImpl = (seconds: number) => {
   }
   return `${seconds} secs`;
 };
+
+export interface Page<T> {
+  page: number;
+  size: number;
+  total_pages: number;
+  total_elements: number;
+  number_of_elements: number;
+  has_previous_page: boolean;
+  has_next_page: boolean;
+  data: T[];
+  is_empty: boolean;
+}

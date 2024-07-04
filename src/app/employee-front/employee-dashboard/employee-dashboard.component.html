@@ -43,9 +43,9 @@
 
     <div class="flex-1">
       <h1
-        class="mb-4 text-lg lg:text-2xl font-medium tracking-tight leading-none"
+        class="mb-4 text-lg lg:text-2xl font-medium text-gray-700 dark:text-gray-400 tracking-tight leading-none"
       >
-        Appointment(s) - {{ selected.toDateString() }}
+        Appointment(s) - {{ selectedDate.toDateString() }}
       </h1>
 
       <div class="">
@@ -60,22 +60,23 @@
 
   <!-- right -->
   <div class="flex flex-col gap-2 2xl:max-w-[75%]">
-    <div class="hidden lg:block">
+    <div class="hidden max-w-lg rounded-lg lg:block">
       <app-calendar
-        [toHighlight]="(daysToHighlight$ | async) || []"
-        (onDateSelectedEmitter)="onCalendarDateClick($event)"
-        (previousNextEmitter)="onPrevNextCalendarClick($event)"
+        [selectedDate]="selectedDate"
+        [datesToHighlight]="(daysToHighlight$ | async) || []"
+        (onCalendarDateSelectedEmitter)="onCalendarDateClick($event)"
+        (onPreviousNextCalendarDateEmitter)="onPrevNextCalendarClick($event)"
       />
     </div>
 
     <div class="mt-5">
       <h1
-        class="mb-4 text-lg lg:text-2xl font-medium tracking-tight leading-none"
+        class="mb-4 text-lg lg:text-2xl font-medium tracking-tight leading-none text-gray-700 dark:text-gray-400"
       >
         Upcoming Appointments
       </h1>
 
-      <div class="hidden lg:block">
+      <div class="hidden lg:block text-gray-700 dark:text-gray-400">
         TODO not quite sure what I want to render here
       </div>
     </div>
@@ -109,11 +110,12 @@
         </button>
       </div>
 
-      <div class="bg-white 2xl:max-w-[75%] mx-auto">
+      <div class="bg-white max-w-lg mx-auto">
         <app-calendar
-          [toHighlight]="(daysToHighlight$ | async) || []"
-          (onDateSelectedEmitter)="onCalendarDateClick($event)"
-          (previousNextEmitter)="onPrevNextCalendarClick($event)"
+          [selectedDate]="selectedDate"
+          [datesToHighlight]="(daysToHighlight$ | async) || []"
+          (onCalendarDateSelectedEmitter)="onCalendarDateClick($event)"
+          (onPreviousNextCalendarDateEmitter)="onPrevNextCalendarClick($event)"
         />
       </div>
     </div>

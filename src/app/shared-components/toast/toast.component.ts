@@ -13,7 +13,7 @@ import { NgStyle } from '@angular/common';
       {{ message() }}
     </h3>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastComponent {
   message = input.required<string>();

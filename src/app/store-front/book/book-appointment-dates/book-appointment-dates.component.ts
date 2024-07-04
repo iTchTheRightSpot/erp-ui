@@ -4,18 +4,18 @@ import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import {
   BOOK_CHECKOUT_ROUTE,
-  BOOK_STAFF_ROUTE,
+  BOOK_STAFF_ROUTE
 } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
+import { formatSeconds, toHrMins } from '@/app/app.util';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
-import { toHrMins, formatSeconds } from '@/app/app.util';
 
 @Component({
   selector: 'app-book-appointment-dates',
   standalone: true,
   imports: [AsyncPipe, CalendarComponent],
   templateUrl: './book-appointment-dates.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookAppointmentDatesComponent {
   private readonly router = inject(Router);

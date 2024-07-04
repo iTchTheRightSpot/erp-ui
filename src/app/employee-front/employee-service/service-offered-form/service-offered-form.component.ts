@@ -3,7 +3,7 @@ import {
   Component,
   effect,
   input,
-  output,
+  output
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-offered-form/service-offer-form.util';
@@ -15,7 +15,7 @@ import { NgClass } from '@angular/common';
   imports: [ReactiveFormsModule, NgClass],
   styleUrl: '../../../shared-components/number-input.component.css',
   templateUrl: './service-offered-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServiceOfferedFormComponent {
   form = input.required<FormGroup>();
@@ -50,7 +50,7 @@ export class ServiceOfferedFormComponent {
       price: price ? price : 0,
       visible: visible,
       duration: duration ? duration : 0,
-      cleanUp: cleanUp ? cleanUp : 0,
+      cleanUp: cleanUp ? cleanUp : 0
     } as ServiceOfferForm;
   };
 

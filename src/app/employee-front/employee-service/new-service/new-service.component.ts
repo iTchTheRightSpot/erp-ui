@@ -10,7 +10,7 @@ import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-
   standalone: true,
   imports: [ServiceOfferedFormComponent, AsyncPipe],
   template: `
-    <div class="w-full p-2">
+    <div class="w-full p-2 text-gray-700 dark:text-gray-400">
       <div class="w-full mb-4">
         <h1
           class="underline underline-offset-4 text-lg lg:text-3xl font-medium"
@@ -29,7 +29,7 @@ import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewServiceComponent {
   private readonly service = inject(ServiceOfferedService);
@@ -43,7 +43,7 @@ export class NewServiceComponent {
     price: new FormControl('', [Validators.required]),
     visible: new FormControl(true, [Validators.required]),
     duration: new FormControl('', [Validators.required]),
-    cleanUp: new FormControl('', [Validators.required]),
+    cleanUp: new FormControl('', [Validators.required])
   });
 
   protected readonly btnLoading$ = this.service.onCreateUpdate$;
@@ -55,6 +55,6 @@ export class NewServiceComponent {
       price: obj.price,
       is_visible: obj.visible,
       duration: obj.duration,
-      clean_up_time: obj.cleanUp,
+      clean_up_time: obj.cleanUp
     });
 }

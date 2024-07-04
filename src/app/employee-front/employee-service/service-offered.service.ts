@@ -3,12 +3,12 @@ import { environment } from '@/environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpResponse,
+  HttpResponse
 } from '@angular/common/http';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import {
-  dummyServices,
-  ServiceOfferedDto,
+  DummyServices,
+  ServiceOfferedDto
 } from '@/app/employee-front/employee-service/employee-service.util';
 import {
   BehaviorSubject,
@@ -24,7 +24,7 @@ import {
   Subject,
   switchMap,
   tap,
-  timer,
+  timer
 } from 'rxjs';
 
 /**
@@ -32,7 +32,7 @@ import {
  * Handles the creation, update, and deletion of services, as well as the retrieval of all services offered.
  */
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ServiceOfferedService {
   private readonly domain = environment.domain;
@@ -54,7 +54,7 @@ export class ServiceOfferedService {
       const initial$ = of(bool);
       const delayed$ = timer(600).pipe(concatMap(() => of(false)));
       return concat(initial$, delayed$);
-    }),
+    })
   );
 
   /**
@@ -68,11 +68,12 @@ export class ServiceOfferedService {
             ServiceOfferedDto[]
           >(`${this.domain}employee/service-offered`, { withCredentials: true })
           .pipe(
+            tap((services) => this.serviceOfferedSubject.next(services)),
             catchError((e: HttpErrorResponse) =>
-              this.toastService.messageHandleIterateError<ServiceOfferedDto>(e),
-            ),
+              this.toastService.messageHandleIterateError<ServiceOfferedDto>(e)
+            )
           )
-      : of(dummyServices(15));
+      : of(DummyServices(15));
 
   /**
    * Observable that emits the list of services offered.
@@ -107,7 +108,7 @@ export class ServiceOfferedService {
    */
   readonly create = (dto: ServiceOfferedDto) =>
     this.createUpdateSubject.next(
-      this.createRequest(dto).pipe(startWith(true)),
+      this.createRequest(dto).pipe(startWith(true))
     );
 
   /**
@@ -116,7 +117,7 @@ export class ServiceOfferedService {
    */
   readonly update = (dto: ServiceOfferedDto) =>
     this.createUpdateSubject.next(
-      this.updateRequest(dto).pipe(startWith(true)),
+      this.updateRequest(dto).pipe(startWith(true))
     );
 
   /**
@@ -125,7 +126,7 @@ export class ServiceOfferedService {
    */
   readonly delete = (serviceId: string) =>
     this.deleteSubject.next(
-      this.deleteRequest(serviceId).pipe(startWith(true)),
+      this.deleteRequest(serviceId).pipe(startWith(true))
     );
 
   /**
@@ -158,10 +159,10 @@ export class ServiceOfferedService {
             switchMap(() =>
               this.allServicesRequest().pipe(
                 tap((arr) => this.serviceOfferedSubject.next(arr)),
-                map(() => false),
-              ),
+                map(() => false)
+              )
             ),
-            catchError((e) => this.toastService.messageErrorBool(e)),
+            catchError((e) => this.toastService.messageErrorBool(e))
           )
       : of(false).pipe(delay(5000));
 
@@ -180,10 +181,10 @@ export class ServiceOfferedService {
             switchMap(() =>
               this.allServicesRequest().pipe(
                 tap((arr) => this.serviceOfferedSubject.next(arr)),
-                map(() => false),
-              ),
+                map(() => false)
+              )
             ),
-            catchError((e) => this.toastService.messageErrorBool(e)),
+            catchError((e) => this.toastService.messageErrorBool(e))
           )
       : of(false).pipe(delay(5000));
 
@@ -202,10 +203,10 @@ export class ServiceOfferedService {
             switchMap(() =>
               this.allServicesRequest().pipe(
                 tap((arr) => this.serviceOfferedSubject.next(arr)),
-                map(() => false),
-              ),
+                map(() => false)
+              )
             ),
-            catchError((e) => this.toastService.messageErrorBool(e)),
+            catchError((e) => this.toastService.messageErrorBool(e))
           )
       : of(false).pipe(delay(5000));
 }

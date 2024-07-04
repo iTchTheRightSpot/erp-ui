@@ -3,15 +3,9 @@ import {
   Component,
   input,
   model,
-  output,
+  output
 } from '@angular/core';
-import {
-  EMPLOYEE_FRONT_APPOINTMENT,
-  EMPLOYEE_FRONT_DASHBOARD,
-  EMPLOYEE_FRONT_PROFILE,
-  EMPLOYEE_FRONT_SCHEDULE,
-  EMPLOYEE_FRONT_SERVICE,
-} from '@/app/employee-front/employee-front.util';
+import { EMPLOYEE_FRONT_DASHBOARD } from '@/app/employee-front/employee-front.util';
 import { RouterLink } from '@angular/router';
 import { SafeHtml } from '@angular/platform-browser';
 
@@ -20,7 +14,7 @@ import { SafeHtml } from '@angular/platform-browser';
   standalone: true,
   imports: [RouterLink],
   template: `
-    <div class="h-screen flex fixed top-0 right-0 bottom-0 left-0 z-40">
+    <div class="h-full flex fixed top-0 right-0 bottom-0 left-0 z-40">
       <aside id="logo-sidebar" class="h-full" aria-label="Sidebar">
         <div
           class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800"
@@ -103,7 +97,7 @@ import { SafeHtml } from '@angular/platform-browser';
       ></button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeMobileNavigationComponent {
   readonly toggle = model<boolean>(false);

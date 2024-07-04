@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import {
   BookServiceOfferedDto,
-  development,
+  development
 } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '@/environments/environment';
@@ -10,7 +10,7 @@ import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BookServiceOfferedService {
   private readonly domain: string | undefined = environment.domain;
@@ -44,8 +44,8 @@ export class BookServiceOfferedService {
             tap((arr) => (this.servicesOffered = arr)),
             catchError((e: HttpErrorResponse) =>
               this.toastService.messageHandleIterateError<BookServiceOfferedDto>(
-                e,
-              ),
-            ),
+                e
+              )
+            )
           );
 }

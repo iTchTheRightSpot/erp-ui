@@ -35,7 +35,7 @@ import { AuthenticationService } from '@/app/global-service/authentication.servi
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   private readonly authenticationService = inject(AuthenticationService);
@@ -45,6 +45,6 @@ export class AppComponent {
   protected readonly csrf$ = this.authenticationService.csrf().pipe(
     map(() => ({ state: 'LOADED' })),
     startWith({ state: 'LOADING' }),
-    catchError(() => of({ state: 'ERROR' })),
+    catchError(() => of({ state: 'ERROR' }))
   );
 }

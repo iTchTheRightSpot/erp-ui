@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpParams,
+  HttpParams
 } from '@angular/common/http';
 import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
 import { environment } from '@/environments/environment.ts';
@@ -13,7 +13,7 @@ import {
   Observable,
   of,
   switchMap,
-  tap,
+  tap
 } from 'rxjs';
 import { BookService } from '@/app/store-front/book/book.service';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
@@ -21,19 +21,29 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
 import { CacheService } from '@/app/global-service/cache.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BookAppointmentDatesService {
+  /**
+   * Cache to store fetched valid times.
+   */
+  private static readonly cacheService = new CacheService<
+    string,
+    ValidTime[]
+  >();
+
+  /**
+   * Cache to store fetched valid dates from {@link ValidTime}s.
+   * */
+  private static readonly datesToHighlightCache = new CacheService<
+    string,
+    Date[]
+  >();
+
   private readonly domain = environment.domain;
   private readonly http = inject(HttpClient);
   private readonly bookService = inject(BookService);
   private readonly toastService = inject(ToastService);
-
-  /**
-   * Cache to store fetched valid times.
-   */
-  private readonly cacheService: CacheService<string, ValidTime[]> =
-    inject(CacheService);
 
   readonly bookingInfoSignal = this.bookService.bookingInfo;
 
@@ -41,12 +51,6 @@ export class BookAppointmentDatesService {
    * BehaviorSubject used to emit selected dates.
    */
   private readonly subject = new BehaviorSubject<Date>(new Date());
-
-  /**
-   * Cache to store fetched valid dates from {@link ValidTime}s.
-   * */
-  private readonly datesToHighlightCache: CacheService<string, Date[]> =
-    inject(CacheService);
 
   /**
    * Signal for dates to be highlighted on the calendar.
@@ -83,7 +87,7 @@ export class BookAppointmentDatesService {
   private readonly buildCacheKey = (
     name: string,
     date: Date,
-    staffEmail: string,
+    staffEmail: string
   ) => `${name}_${1 + date.getMonth()}_${date.getFullYear()}_${staffEmail}`;
 
   /**
@@ -96,7 +100,7 @@ export class BookAppointmentDatesService {
     date.toLocaleDateString([], {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
+      year: 'numeric'
     });
 
   /**
@@ -108,8 +112,8 @@ export class BookAppointmentDatesService {
    */
   readonly deleteFromCache = (name: string, date: Date) => {
     const info = this.bookingInfoSignal();
-    this.cacheService.deleteItem(
-      this.buildCacheKey(name, date, info.staff ? info.staff.email : ''),
+    BookAppointmentDatesService.cacheService.deleteItem(
+      this.buildCacheKey(name, date, info.staff ? info.staff.email : '')
     );
   };
 
@@ -130,7 +134,7 @@ export class BookAppointmentDatesService {
 
         if (!services || !email) {
           this.toastService.message(
-            'please select a service or staff pre-book',
+            'please select a service or staff pre-book'
           );
           throw new Error();
         }
@@ -138,21 +142,23 @@ export class BookAppointmentDatesService {
         const name = services.map((s) => s.service_name).join('_');
         const key = this.buildCacheKey(name, selected, email);
 
-        return this.cacheService.getItem(key).pipe(
+        return BookAppointmentDatesService.cacheService.getItem(key).pipe(
           switchMap((objs) => {
             if (objs) {
               const found = objs.find(
                 (obj) =>
-                  this.format(selected) === this.format(new Date(obj.date)),
+                  this.format(selected) === this.format(new Date(obj.date))
               );
 
               return found
-                ? this.datesToHighlightCache.getItem(key).pipe(
-                    tap((dates) => {
-                      if (dates) this.datesToHighlightSignal.set(dates);
-                    }),
-                    map(() => found.times),
-                  )
+                ? BookAppointmentDatesService.datesToHighlightCache
+                    .getItem(key)
+                    .pipe(
+                      tap((dates) => {
+                        if (dates) this.datesToHighlightSignal.set(dates);
+                      }),
+                      map(() => found.times)
+                    )
                 : of<Date[]>([]);
             }
 
@@ -161,8 +167,8 @@ export class BookAppointmentDatesService {
               (service) =>
                 (params = params.append(
                   'service_name',
-                  service.service_name.trim(),
-                )),
+                  service.service_name.trim()
+                ))
             );
             params = params.append('employee_email', email);
             params = params.append('day', selected.getDate());
@@ -170,9 +176,9 @@ export class BookAppointmentDatesService {
             params = params.append('year', selected.getFullYear());
 
             return this.req$(params, key, selected);
-          }),
+          })
         );
-      }),
+      })
     );
 
   /**
@@ -196,7 +202,7 @@ export class BookAppointmentDatesService {
   private readonly req$ = (
     params: HttpParams,
     key: string,
-    selected: Date,
+    selected: Date
   ): Observable<Date[]> => {
     return this.http
       .get<
@@ -206,20 +212,20 @@ export class BookAppointmentDatesService {
         tap((validTimes) => {
           const value = validTimes.map((obj) => new Date(obj.date));
 
-          this.datesToHighlightCache.setItem(key, value);
+          BookAppointmentDatesService.datesToHighlightCache.setItem(key, value);
           this.datesToHighlightSignal.set(value);
 
-          this.cacheService.setItem(key, validTimes);
+          BookAppointmentDatesService.cacheService.setItem(key, validTimes);
         }),
         map((objs: ValidTime[]) => {
           const found = objs.find(
-            (obj) => this.format(selected) === this.format(new Date(obj.date)),
+            (obj) => this.format(selected) === this.format(new Date(obj.date))
           );
           return found ? found.times : [];
         }),
         catchError((e: HttpErrorResponse) =>
-          this.toastService.messageHandleIterateError<Date>(e),
-        ),
+          this.toastService.messageHandleIterateError<Date>(e)
+        )
       );
   };
 }

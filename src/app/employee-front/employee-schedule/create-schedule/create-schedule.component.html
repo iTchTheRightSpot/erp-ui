@@ -1,9 +1,9 @@
-<div class="flex flex-col gap-2">
+<div class="p-2 flex flex-col gap-2 text-gray-700 dark:text-gray-400">
   <div class="relative">
     <button
       (click)="toggle = !toggle"
       type="button"
-      class="flex gap-1.5 items-center text-base font-medium lg:text-xl font-base text-gray-900 underline underline-offset-4"
+      class="flex gap-1.5 items-center text-base font-medium lg:text-xl font-base underline underline-offset-4"
     >
       Create Schedule
       <svg
@@ -25,88 +25,147 @@
       [ngStyle]="{ display: toggle ? 'block' : 'none' }"
       class="flex gap-1.5 px-1 rounded-md shadow-lg bg-white absolute top-7 left-0 right-0"
     >
-      <div class="w-full py-2">
-        <!-- Dropdown menu -->
-        <select
+      <div class="w-full py-2 relative">
+        <div class="flex gap-2">
+          <!-- calendar toggle -->
+          <button type="button" (click)="toggleCalendar = !toggleCalendar">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+              />
+            </svg>
+          </button>
+          <!-- staff dropdown -->
+          <button
+            (click)="dropdownToggle = !dropdownToggle"
+            id="dropdownUsersButton"
+            data-dropdown-toggle="dropdownUsers"
+            data-dropdown-placement="bottom"
+            class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex justify-between items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button"
+          >
+            {{ staffEmail.length === 0 ? 'Select a staff' : staffEmail }}
+            <svg
+              class="w-2.5 h-2.5 ms-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+        </div>
+        @if (toggleCalendar) {
+          <div class="absolute top-10 bottom-0 left-0 z-40">
+            <mat-card class="w-80">
+              <mat-calendar
+                [minDate]="minimumDateOnCalendar"
+                [(selected)]="selectedDate"
+                (selectedChange)="onCalendarDateSelected($event)"
+              />
+            </mat-card>
+          </div>
+        }
+        <div
           id="dropdownUsers"
-          (change)="onSelectedStaff($event)"
-          class="bg-gray-50 cursor-pointer border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          class="w-full mt-2 z-10 hidden bg-white rounded-lg shadow dark:bg-gray-700"
+          [ngStyle]="{ display: dropdownToggle ? 'block' : 'none' }"
         >
-          <option value="" disabled [selected]="true">Select staff</option>
-          @for (staff of staffs$ | async; track staff.email) {
-            <option [value]="staff.email">
-              <span
-                class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                <img
-                  [src]="staff.picture"
-                  alt="{{ staff.picture }} image"
-                  class="w-6 h-6 me-2 rounded-full"
-                />
-                {{ staff.name }}
-              </span>
-            </option>
-          }
-        </select>
+          <ul
+            class="w-full overflow-y-auto text-gray-700 dark:text-gray-200"
+            aria-labelledby="dropdownUsersButton"
+          >
+            @for (staff of (staffs$ | async)?.data; track staff.user_id) {
+              <li class="w-full">
+                <button
+                  (click)="onSelectedStaffEmail(staff.email)"
+                  type="button"
+                  class="w-full flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                >
+                  <img
+                    class="w-6 h-6 me-2 rounded-full"
+                    [src]="staff.image_key"
+                    alt="staff image"
+                  />
+                  {{ staff.display_name }}
+                </button>
+              </li>
+            } @empty {
+              No staffs currently
+            }
+          </ul>
+        </div>
       </div>
 
       <app-time-picker
         [form]="form"
-        [selected]="selected()"
+        [selected]="selectedDate"
         (submitEmitter)="onDateTimePicker($event)"
       />
     </div>
   </div>
 
   <div class="max-h-96 max-w-lg flex flex-col gap-3 overflow-y-auto">
-    @for (key of keys$ | async; track key; let i = $index) {
+    @for (entry of entries$ | async; track entry[0]; let i = $index) {
       <div
         class="w-full px-2 py-1 grid grid-cols-3 gap-2 inline-flex items-center justify-center text-sm font-medium text-center border border-[var(--border-outline)] rounded-md shadow-lg"
       >
-        @if (value(key) | async; as val) {
-          <div class="h-full flex items-center">
-            {{ val.start | date: 'dd MMMM yyyy' }}
-          </div>
-          <div class="h-full flex gap-1.5 justify-center items-center">
-            <p>{{ toHrMins(val.start) }}</p>
-            -
-            <p>{{ toHrMins(val.end) }}</p>
-          </div>
-
-          <div class="h-full my-auto">
-            <button
-              (click)="onDeleteSchedule(key)"
-              type="button"
-              class="inline-flex items-center p-1.5 text-sm font-medium text-center text-red-500 hover:text-red-700"
+        <div class="h-full flex items-center">
+          {{ entry[1].start | date: 'dd MMMM yyyy' }}
+        </div>
+        <div class="h-full flex gap-1.5 justify-center items-center">
+          <p>{{ toHrMins(entry[1].start) }}</p>
+          -
+          <p>{{ toHrMins(entry[1].end) }}</p>
+        </div>
+        <div class="h-full my-auto">
+          <button
+            (click)="onDeleteSchedule(entry[0])"
+            type="button"
+            class="inline-flex items-center p-1.5 text-sm font-medium text-center text-red-500 hover:text-red-700"
+          >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
             >
-              <svg
-                class="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span class="sr-only">Delete</span>
-            </button>
-          </div>
-        }
+              <path
+                fill-rule="evenodd"
+                d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span class="sr-only">Delete</span>
+          </button>
+        </div>
       </div>
+    } @empty {
+      No schedule created
     }
   </div>
 
-  @if (keys$ | async; as ks) {
-    <div
-      class="w-full py-2"
-      [ngStyle]="{ display: ks.length > 0 ? 'block' : 'none' }"
-    >
+  @if (numberOfEntries > 0) {
+    <div class="w-full py-2">
       @if (onSubmit$ | async) {
         <div role="status">
           <svg
@@ -129,7 +188,7 @@
         </div>
       } @else {
         <button
-          type="button"
+          type="submit"
           (click)="onSubmit()"
           class="text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-blue-500 hover:bg-blue-600"
         >

@@ -26,6 +26,6 @@ export const dummyDetailBuilder = () => {
     address: '',
     created: new Date(),
     scheduledFor: new Date(),
-    expire: new Date(),
+    expire: new Date()
   } as AppointmentDetail;
 };

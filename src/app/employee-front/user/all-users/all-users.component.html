@@ -1,0 +1,51 @@
+@if (users$ | async; as page) {
+  <section
+    class="min-h-screen w-full text-center p-2 bg-white dark:bg-gray-900"
+  >
+    <div
+      class="mb-5 text-left underline underline-offset-4 decoration-1 max-w-screen-sm text-gray-900 dark:text-white"
+    >
+      <h2 class="text-4xl tracking-tight font-medium">Users</h2>
+    </div>
+
+    <div class="w-full mb-3">
+      <app-search-bar
+        [form]="form"
+        [loading]="false"
+        (searchEmitter)="searchEmitter($event)"
+      />
+    </div>
+
+    <!-- body -->
+    <div class="flex flex-wrap gap-2">
+      @for (user of page.data; track user.user_id) {
+        <app-user-card
+          [employeeId]="user.user_id"
+          [image]="user.image_key"
+          [name]="user.name"
+          [displayName]="user.display_name"
+          [roles]="user.roles"
+          [email]="user.email"
+          [bio]="user.bio"
+          [updateRoleStatus]="(updateRoleStatus$ | async) || false"
+          (onUpdateRoleEmitter)="onUpdateRoleEmitter($event)"
+        />
+      } @empty {
+        no staffs
+      }
+    </div>
+
+    <!-- pagination component -->
+    <div class="p-3">
+      <app-paginator
+        [currentPage]="page.page"
+        [totalPages]="page.total_pages"
+        (goTo)="onPageNumberClicked($event)"
+      />
+    </div>
+  </section>
+} @else {
+  <div class="h-full w-full flex justify-center items-center">
+    <h1 class="capitalize text-gray-900 dark:text-white">loading...</h1>
+  </div>
+}

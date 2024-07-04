@@ -3,24 +3,29 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   AppointmentResponse,
   AppointmentResponseMapper,
-  dummyAppointments,
+  dummyAppointments
 } from '@/app/employee-front/employee-front.util';
 import { environment } from '@/environments/environment';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
+import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EmployeeFrontService {
+  private static readonly cachedService = new CacheService<
+    string,
+    AppointmentResponse[]
+  >();
+
   private readonly domain = environment.domain;
   private readonly production = environment.production;
 
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
-  private readonly cachedService: CacheService<string, AppointmentResponse[]> =
-    inject(CacheService);
+  protected readonly authenticationService = inject(AuthenticationService);
 
   private readonly cacheKeyBuilder = (selected: Date) =>
     `${1 + selected.getMonth()}_${selected.getFullYear()}`;
@@ -35,9 +40,12 @@ export class EmployeeFrontService {
    * @return an Observable that emits an array of {@link AppointmentResponse}.
    * */
   readonly appointmentsOnSelectedMonth = (selected: Date) => {
+    if (!this.production)
+      return of<AppointmentResponse[]>(dummyAppointments(20));
+
     const key = this.cacheKeyBuilder(selected);
 
-    return this.cachedService.getItem(key).pipe(
+    return EmployeeFrontService.cachedService.getItem(key).pipe(
       switchMap((value) => {
         if (value) return of(value);
 
@@ -45,13 +53,13 @@ export class EmployeeFrontService {
         params = params.append('day_of_month', selected.getDate());
         params = params.append('month', 1 + selected.getMonth());
         params = params.append('year', selected.getFullYear());
+        const user = this.authenticationService.activeUser();
+        params = params.append('employee_id', user ? user.user_id : '');
 
-        return this.production
-          ? this.request(params).pipe(
-              tap((arr) => this.cachedService.setItem(key, arr)),
-            )
-          : of<AppointmentResponse[]>(dummyAppointments(20));
-      }),
+        return this.request(params).pipe(
+          tap((arr) => EmployeeFrontService.cachedService.setItem(key, arr))
+        );
+      })
     );
   };
 
@@ -67,12 +75,12 @@ export class EmployeeFrontService {
     this.http
       .get<AppointmentResponse[]>(`${this.domain}employee/appointment`, {
         withCredentials: true,
-        params: params,
+        params: params
       })
       .pipe(
         map((objs) => objs.map((obj) => AppointmentResponseMapper(obj))),
         catchError((err) =>
-          this.toastService.messageHandleIterateError<AppointmentResponse>(err),
-        ),
+          this.toastService.messageHandleIterateError<AppointmentResponse>(err)
+        )
       );
 }

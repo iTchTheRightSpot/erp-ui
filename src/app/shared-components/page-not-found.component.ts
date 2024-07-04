@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { STORE_FRONT_HOME } from '@/app/app.util';
 import { RouterLink } from '@angular/router';
+import { STORE_FRONT_HOME } from '@/app/app.util';
 
 @Component({
-  selector: 'app-unauthorized',
+  selector: 'app-page-not-found',
   standalone: true,
   imports: [RouterLink],
   template: `
@@ -13,15 +13,16 @@ import { RouterLink } from '@angular/router';
           <h1
             class="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-blue-600 dark:text-primary-500"
           >
-            Unauthorized
+            404
           </h1>
           <p
             class="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white"
           >
-            Something's wrong.
+            Something's missing.
           </p>
           <p class="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
-            Sorry, you cannot access this page. Please sign in.
+            Sorry, we can't find that page. You'll find lots to explore on the
+            home page.
           </p>
           <a
             [routerLink]="HOME"
@@ -32,8 +33,8 @@ import { RouterLink } from '@angular/router';
       </div>
     </section>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UnauthorizedComponent {
+export class PageNotFoundComponent {
   protected readonly HOME = STORE_FRONT_HOME;
 }

@@ -1,144 +1,116 @@
 import { Role } from '@/app/app.util';
-import { Observable, of } from 'rxjs';
 
-export interface StaffDto {
+export interface UserDto {
+  user_id: string;
   name: string;
   display_name: string;
   email: string;
-  picture: string;
+  image_key: string;
   bio: string;
-  role: Role;
+  roles: Role[];
 }
 
 export const staffs = () => {
-  const map = new Map<string, StaffDto[]>();
+  const map = new Map<string, UserDto[]>();
 
   const lorem =
     'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea impedit maxime officiis rem unde. Aperiam asperiores dolor expedita explicabo illo maiores nobis quasi sit suscipit vitae. Nemo nesciunt quos saepe!';
   const engin = './assets/images/staffs/engin-akyurt.jpg';
   map.set('power grooming', [
     {
+      user_id: '1',
       name: 'Ketut Subiyant',
       email: 'boom@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER]
     },
     {
+      user_id: '0',
       name: 'Tony',
       email: 'tony-benjamin@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER]
     },
     {
+      user_id: '2',
+
       name: 'benjamin',
       email: 'benjamin@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER]
     },
     {
+      user_id: '3',
+
       name: 'phil',
       email: 'phil-benjamin@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
-    },
+      roles: [Role.OWNER]
+    }
   ]);
   map.set('overgrown lawns', [
     {
+      user_id: '4',
+
       name: 'ashley',
       email: 'ashley@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
-    },
+      roles: [Role.OWNER]
+    }
   ]);
   map.set('utility cuts', [
     {
+      user_id: '5',
+
       name: 'fred',
       email: 'fred@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER]
     },
     {
-      name: 'letitia',
-      email: 'letitia@email.com',
-      picture: engin,
+      user_id: '6',
+
+      name: 'gang',
+      email: 'gang@email.com',
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
-    },
+      roles: [Role.OWNER]
+    }
   ]);
   map.set('weekly trim and mow', [
     {
+      user_id: '7',
       name: 'Lebron James',
       email: 'franklyn@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
+      roles: [Role.OWNER]
     },
     {
+      user_id: '8',
+
       name: 'cousins',
       email: 'cousins@email.com',
-      picture: engin,
+      image_key: engin,
       bio: lorem,
       display_name: '',
-      role: Role.OWNER,
-    },
+      roles: [Role.OWNER]
+    }
   ]);
 
   return map;
 };
-
-export const staffs$: Observable<StaffDto[]> = of([
-  {
-    name: 'Jese Leos',
-    email: 'Jese Leos',
-    picture: '/assets/images/staffs/engin-akyurt.jpg',
-    bio: '',
-    display_name: '',
-    role: Role.OWNER,
-  },
-  {
-    name: 'Frank Leos',
-    picture: 'assets/images/staffs/engin-akyurt.jpg',
-    email: 'Frank Leos',
-    display_name: '',
-    bio: '',
-    role: Role.OWNER,
-  },
-  {
-    name: 'Sam Leos',
-    picture: '/assets/images/staffs/engin-akyurt.jpg',
-    email: 'Sam Leos',
-    display_name: '',
-    bio: '',
-    role: Role.OWNER,
-  },
-  {
-    name: 'Ben Leos',
-    picture: '/assets/images/staffs/engin-akyurt.jpg',
-    email: 'Ben Leos',
-    display_name: '',
-    bio: '',
-    role: Role.OWNER,
-  },
-  {
-    name: 'Cheese Leos',
-    picture: '/assets/images/staffs/engin-akyurt.jpg',
-    email: 'Cheese Leos',
-    display_name: '',
-    bio: '',
-    role: Role.OWNER,
-  },
-]);

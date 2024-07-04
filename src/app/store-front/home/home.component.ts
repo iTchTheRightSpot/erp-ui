@@ -14,7 +14,7 @@ import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
         transition: all 2s ease;
         transition-delay: 1s, 250ms;
       }
-    `,
+    `
   ],
   template: `
     <div
@@ -38,7 +38,7 @@ import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
   private readonly service = inject(HomeService);

@@ -3,7 +3,7 @@ import {
   HttpHandlerFn,
   HttpInterceptorFn,
   HttpRequest,
-  HttpXsrfTokenExtractor,
+  HttpXsrfTokenExtractor
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -24,7 +24,7 @@ export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
 
 export function authenticationRedirectInterceptor(
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn,
+  next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> {
   const router = inject(Router);
   return next(req).pipe(
@@ -34,7 +34,7 @@ export function authenticationRedirectInterceptor(
       const obj = {
         message: message,
         redirect_url: redirect,
-        status: err.status,
+        status: err.status
       };
 
       if (obj.status === 401) {
@@ -45,6 +45,6 @@ export function authenticationRedirectInterceptor(
       }
 
       return throwError(() => obj);
-    }),
+    })
   );
 }

@@ -14,10 +14,10 @@
     <!-- calendar -->
     <div class="order-2 sm:order-1 flex flex-col gap-4 pb-2">
       <app-calendar
-        [minDate]="today"
-        [toHighlight]="toHighlight()"
-        (previousNextEmitter)="onPreviousOrNextBtn($event)"
-        (onDateSelectedEmitter)="onSelectedAppointmentDate($event)"
+        [minimumDateOnCalendar]="today"
+        [datesToHighlight]="toHighlight()"
+        (onCalendarDateSelectedEmitter)="onSelectedAppointmentDate($event)"
+        (onPreviousNextCalendarDateEmitter)="onPreviousOrNextBtn($event)"
       />
       <p>
         Available time slots on
@@ -49,7 +49,7 @@
       @if (details && details.servicesOffered && details.staff) {
         <div class="w-full p-1 flex gap-2">
           <img
-            [src]="details.staff.picture"
+            [src]="details.staff.image_key"
             alt="staff photo"
             class="max-h-[4.5rem] max-w-[4.5rem] rounded-full overflow-hidden object-cover object-center ring-2 ring-gray-400"
           />

@@ -1,19 +1,18 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { catchError, delay, map, merge, of, startWith, tap } from 'rxjs';
-import { ActiveUser, Role } from '@/app/app.util';
-import { Router } from '@angular/router';
+import { Role } from '@/app/app.util';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthenticationService {
   private readonly domain = environment.domain;
   private readonly production = environment.production;
   private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
 
   readonly csrf = () =>
@@ -25,36 +24,58 @@ export class AuthenticationService {
         }>(`${this.domain}csrf`, { withCredentials: true })
       : of({ token: 'token', parameterName: 'name', headerName: 'header' });
 
-  private readonly activeUserSignal = signal<ActiveUser | undefined>(undefined);
+  private readonly activeUserSignal = signal<UserDto | undefined>(undefined);
 
-  private readonly activeUser$ = () =>
+  readonly activeUser$ = () =>
     this.http
-      .get<ActiveUser>(`${this.domain}active`, { withCredentials: true })
+      .get<UserDto>(`${this.domain}active`, { withCredentials: true })
       .pipe(
+        map((staff) =>
+          staff && Object.keys(staff).length === 0 ? undefined : staff
+        ),
         tap((staff) => this.activeUserSignal.set(staff)),
-        catchError((err) => this.toastService.messageErrorNothing(err)),
+        catchError((err) => this.toastService.messageErrorNothing(err))
       );
 
   readonly isStaff = () => {
-    if (!this.production) return of(true);
+    if (!this.production) {
+      this.activeUserSignal.set({
+        user_id: '1000',
+        name: 'Landscape Developer',
+        display_name: 'Developer',
+        email: 'developer@landscape.com',
+        image_key:
+          'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
+        bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cupiditate, dignissimos dolores eos est ex harum impedit iste maxime minus, nesciunt odit, porro possimus repellat sapiente sed sint ullam velit.',
+        roles: [Role.DEVELOPER]
+      });
+      const user = this.activeUser();
+
+      return of(
+        user?.roles.includes(Role.DEVELOPER) ||
+          user?.roles.includes(Role.OWNER) ||
+          user?.roles.includes(Role.EMPLOYEE)
+      );
+    }
 
     const staff = this.activeUserSignal();
 
     if (staff) {
       return of(
-        staff.role === Role.EMPLOYEE ||
-          staff.role === Role.OWNER ||
-          staff.role === Role.DEVELOPER,
+        staff.roles.includes(Role.EMPLOYEE) ||
+          staff.roles.includes(Role.OWNER) ||
+          staff.roles.includes(Role.DEVELOPER)
       );
     }
 
     return this.activeUser$().pipe(
-      map(
-        (s) =>
-          s.role === Role.EMPLOYEE ||
-          s.role === Role.OWNER ||
-          s.role === Role.DEVELOPER,
-      ),
+      map((s) =>
+        s
+          ? s.roles.includes(Role.EMPLOYEE) ||
+            s.roles.includes(Role.OWNER) ||
+            s.roles.includes(Role.DEVELOPER)
+          : false
+      )
     );
   };
 
@@ -71,7 +92,7 @@ export class AuthenticationService {
             tap((res) => (window.location.href = res.redirect_url)),
             map(() => false),
             startWith(true),
-            catchError((e) => this.toastService.messageErrorBool(e)),
+            catchError((e) => this.toastService.messageErrorBool(e))
           )
       : merge(of(true), of(false).pipe(delay(3000)));
 }
