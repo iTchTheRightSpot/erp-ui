@@ -4,11 +4,11 @@ import {
   effect,
   input,
   output,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   MatCalendar,
-  MatCalendarCellClassFunction,
+  MatCalendarCellClassFunction
 } from '@angular/material/datepicker';
 import { MatCard } from '@angular/material/card';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -45,7 +45,7 @@ import { tap } from 'rxjs';
       </mat-card>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarComponent {
   constructor(private readonly calendarService: CalendarService) {
@@ -59,7 +59,7 @@ export class CalendarComponent {
         tap((date) => {
           if (date) this.onPreviousNextCalendarDateEmitter.emit(date);
         }),
-        takeUntilDestroyed(),
+        takeUntilDestroyed()
       )
       .subscribe();
   }
@@ -78,7 +78,7 @@ export class CalendarComponent {
     dates ? dates.length > 0 : false;
 
   protected readonly emitCalendarDateSelected = (
-    date: Date | undefined | null,
+    date: Date | undefined | null
   ) => {
     if (date) {
       this.onCalendarDateSelectedEmitter.emit(date);
@@ -88,14 +88,14 @@ export class CalendarComponent {
   // reference docs https://material.angular.io/components/datepicker/overview#highlighting-specific-dates
   protected readonly dateClass: MatCalendarCellClassFunction<Date> = (
     cellDate,
-    view,
+    view
   ) => {
     if (view === 'month') {
       return this.datesToHighlight()?.some(
         (d) =>
           d.getDate() === cellDate.getDate() &&
           d.getMonth() === cellDate.getMonth() &&
-          d.getFullYear() === cellDate.getFullYear(),
+          d.getFullYear() === cellDate.getFullYear()
       )
         ? 'mat-calendar-dates-to-highlight'
         : '';

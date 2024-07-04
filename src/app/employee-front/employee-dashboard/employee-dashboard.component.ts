@@ -16,15 +16,15 @@ import { CalendarComponent } from '@/app/shared-components/calendar/calendar.com
     TableComponent,
     AsyncPipe,
     AboutAppointmentComponent,
-    CalendarComponent,
+    CalendarComponent
   ],
   templateUrl: './employee-dashboard.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
   constructor(
     dashboardService: EmployeeDashboardService,
-    authenticationService: AuthenticationService,
+    authenticationService: AuthenticationService
   ) {
     super(dashboardService, authenticationService);
   }
@@ -34,7 +34,7 @@ export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
     'status',
     'client',
     'service',
-    'timeslot',
+    'timeslot'
   ];
 
   protected readonly apps$ = super.appointments$.pipe(
@@ -46,9 +46,9 @@ export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
             status: obj.status,
             service: obj.service,
             client: obj.client,
-            timeslot: obj.timeslot,
-          }) as AppointmentDeconstruct,
-      ),
-    ),
+            timeslot: obj.timeslot
+          }) as AppointmentDeconstruct
+      )
+    )
   );
 }

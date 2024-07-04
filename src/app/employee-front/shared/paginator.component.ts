@@ -4,7 +4,7 @@ import {
   inject,
   input,
   output,
-  Renderer2,
+  Renderer2
 } from '@angular/core';
 
 @Component({
@@ -34,7 +34,7 @@ import {
       ::-webkit-scrollbar-thumb:hover {
         background: #555;
       }
-    `,
+    `
   ],
   template: `
     <nav class="text-black w-full" aria-label="pagination">
@@ -109,7 +109,7 @@ import {
       }
     </nav>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaginatorComponent {
   private readonly render = inject(Renderer2);

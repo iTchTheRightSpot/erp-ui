@@ -2,23 +2,26 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output,
+  output
 } from '@angular/core';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { ConfirmationStatus } from '@/app/employee-front/employee-front.util';
 import { formatSeconds } from '@/app/app.util';
+import { DeleteObject } from '@/app/employee-front/shared/table.component.util';
 
 @Component({
   selector: 'app-table',
   standalone: true,
   imports: [NgClass, AsyncPipe],
   templateUrl: './table.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent<T extends { id: number | string }> {
   tHead = input.required<(keyof T)[]>();
   tBody = input.required<T[]>();
   loading = input<boolean>();
+
+  deleteLoading = input<DeleteObject>();
 
   protected toggle = false;
 
@@ -26,7 +29,7 @@ export class TableComponent<T extends { id: number | string }> {
     ConfirmationStatus.CONFIRMED,
     ConfirmationStatus.PENDING,
     ConfirmationStatus.EXPIRED,
-    ConfirmationStatus.CANCELLED,
+    ConfirmationStatus.CANCELLED
   ];
 
   readonly rowClickEmitter = output<T>();

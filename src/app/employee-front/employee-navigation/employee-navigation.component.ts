@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output,
+  output
 } from '@angular/core';
 import { EmployeeMobileNavigationComponent } from '@/app/employee-front/employee-navigation/employee-mobile-navigation.component';
 import { EMPLOYEE_FRONT_DASHBOARD } from '@/app/employee-front/employee-front.util';
@@ -125,7 +125,7 @@ import { SafeHtml } from '@angular/platform-browser';
       </div>
     </aside>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeNavigationComponent {
   logout = input.required<boolean>();

@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output,
+  output
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Role } from '@/app/app.util';
@@ -13,7 +13,7 @@ import { UpdateProfileDto } from '@/app/employee-front/employee-profile/employee
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './general-information-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GeneralInformationFormComponent {
   form = input.required<FormGroup>();
@@ -34,7 +34,7 @@ export class GeneralInformationFormComponent {
       user_id: this.employeeId(),
       name: fullname ? fullname : '',
       display_name: name ? name : '',
-      bio: bio ? bio : '',
+      bio: bio ? bio : ''
     } as UpdateProfileDto;
   };
 

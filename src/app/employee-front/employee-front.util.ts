@@ -9,7 +9,7 @@ export enum ConfirmationStatus {
   PENDING = 'PENDING',
   CONFIRMED = 'CONFIRMED',
   CANCELLED = 'CANCELLED',
-  EXPIRED = 'EXPIRED',
+  EXPIRED = 'EXPIRED'
 }
 
 export interface ServiceName {
@@ -53,7 +53,7 @@ export const AppointmentResponseMapper = (obj: AppointmentResponse) => {
     created_at: new Date(obj.created_at),
     scheduled_for: new Date(obj.scheduled_for),
     expire_at: new Date(obj.expire_at),
-    services: obj.services,
+    services: obj.services
   } as AppointmentResponse;
 };
 
@@ -83,18 +83,18 @@ export const dummyAppointments = (num: number) => {
       scheduled_for: new Date(
         today.getFullYear(),
         today.getMonth(),
-        today.getDate() + i,
+        today.getDate() + i
       ),
       expire_at: new Date(
         today.getFullYear(),
         today.getMonth(),
-        today.getDate() + i,
+        today.getDate() + i
       ),
       services: [
         { name: 'landscape' },
         { name: 'mowing' },
-        { name: 'grass cutting' },
-      ] as ServiceName[],
+        { name: 'grass cutting' }
+      ] as ServiceName[]
     });
   }
   return array;

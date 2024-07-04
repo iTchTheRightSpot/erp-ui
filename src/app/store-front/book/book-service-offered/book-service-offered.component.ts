@@ -74,7 +74,7 @@ import { formatSeconds } from '@/app/app.util';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookServiceOfferedComponent {
   private readonly service = inject(BookServiceOfferedService);
@@ -98,7 +98,7 @@ export class BookServiceOfferedComponent {
    * service selected.
    * */
   protected readonly toggleServiceOffered = (
-    service: BookServiceOfferedDto,
+    service: BookServiceOfferedDto
   ) => {
     const bool = this.services.has(service);
     if (bool) this.services.delete(service);

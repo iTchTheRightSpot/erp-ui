@@ -7,8 +7,6 @@ export const routes: Routes = [
     path: EMPLOYEE_ALL_USERS_ROUTE,
     canActivate: [ownerRoleGuard],
     loadComponent: () =>
-      import('./all-users/all-users.component').then(
-        (m) => m.AllUsersComponent,
-      ),
-  },
+      import('./all-users/all-users.component').then((m) => m.AllUsersComponent)
+  }
 ];

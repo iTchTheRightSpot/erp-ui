@@ -13,7 +13,7 @@ import { CalendarComponent } from '@/app/shared-components/calendar/calendar.com
   standalone: true,
   imports: [RouterLink, TableComponent, AsyncPipe, CalendarComponent],
   templateUrl: './all-schedule.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllScheduleComponent {
   private readonly service = inject(ScheduleService);
@@ -22,6 +22,7 @@ export class AllScheduleComponent {
 
   protected readonly EMPLOYEE_SCHEDULE_CREATE_ROUTE =
     EMPLOYEE_SCHEDULE_CREATE_ROUTE;
+
   protected toggleCalendar = false;
 
   private readonly selectedDateSubject = new BehaviorSubject<Date>(new Date());
@@ -38,7 +39,7 @@ export class AllScheduleComponent {
     'id',
     'startDate',
     'startTime',
-    'endTime',
+    'endTime'
   ];
 
   protected readonly shifts$ = this.selectedDateSubject.asObservable().pipe(
@@ -54,11 +55,11 @@ export class AllScheduleComponent {
                   id: shift.shift_id,
                   startDate: shift.start.toLocaleDateString(),
                   startTime: shift.start.toLocaleTimeString(),
-                  endTime: shift.end.toLocaleTimeString(),
-                }) as ScheduleTable,
-            ),
-          ),
-        ),
-    ),
+                  endTime: shift.end.toLocaleTimeString()
+                }) as ScheduleTable
+            )
+          )
+        )
+    )
   );
 }

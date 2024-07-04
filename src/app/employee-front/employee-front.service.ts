@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   AppointmentResponse,
   AppointmentResponseMapper,
-  dummyAppointments,
+  dummyAppointments
 } from '@/app/employee-front/employee-front.util';
 import { environment } from '@/environments/environment';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
@@ -12,7 +12,7 @@ import { CacheService } from '@/app/global-service/cache.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EmployeeFrontService {
   private static readonly cachedService = new CacheService<
@@ -57,9 +57,9 @@ export class EmployeeFrontService {
         params = params.append('employee_id', user ? user.user_id : '');
 
         return this.request(params).pipe(
-          tap((arr) => EmployeeFrontService.cachedService.setItem(key, arr)),
+          tap((arr) => EmployeeFrontService.cachedService.setItem(key, arr))
         );
-      }),
+      })
     );
   };
 
@@ -75,12 +75,12 @@ export class EmployeeFrontService {
     this.http
       .get<AppointmentResponse[]>(`${this.domain}employee/appointment`, {
         withCredentials: true,
-        params: params,
+        params: params
       })
       .pipe(
         map((objs) => objs.map((obj) => AppointmentResponseMapper(obj))),
         catchError((err) =>
-          this.toastService.messageHandleIterateError<AppointmentResponse>(err),
-        ),
+          this.toastService.messageHandleIterateError<AppointmentResponse>(err)
+        )
       );
 }

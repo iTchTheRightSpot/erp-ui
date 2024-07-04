@@ -3,7 +3,7 @@ import { EmployeeProfileService } from '@/app/employee-front/employee-profile/em
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import {
   EMPLOYEE_GENERAL_SERVICE_ROUTE,
-  EMPLOYEE_UPDATE_PROFILE_ROUTE,
+  EMPLOYEE_UPDATE_PROFILE_ROUTE
 } from '@/app/employee-front/employee-profile/employee-profile.util';
 import { NgClass } from '@angular/common';
 
@@ -106,7 +106,7 @@ import { NgClass } from '@angular/common';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeProfileComponent {
   private readonly router = inject(Router);

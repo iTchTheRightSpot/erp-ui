@@ -11,7 +11,7 @@ import {
   EMPLOYEE_FRONT_PROFILE,
   EMPLOYEE_FRONT_SCHEDULE,
   EMPLOYEE_FRONT_SERVICE,
-  EMPLOYEE_FRONT_USER,
+  EMPLOYEE_FRONT_USER
 } from '@/app/employee-front/employee-front.util';
 import { Role } from '@/app/app.util';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
@@ -35,7 +35,7 @@ import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeFrontComponent {
   private readonly authenticationService = inject(AuthenticationService);
@@ -52,7 +52,7 @@ export class EmployeeFrontComponent {
   protected readonly emit = () => this.subject.next();
 
   protected readonly routes = (
-    dto: UserDto | undefined,
+    dto: UserDto | undefined
   ): { link: string; html: SafeHtml }[] => {
     const user = dto;
     return user &&
@@ -78,8 +78,8 @@ export class EmployeeFrontComponent {
                 />
               </svg>
         <span class="ms-3">Dashboard</span>
-      `,
-      ),
+      `
+      )
     },
     {
       link: EMPLOYEE_FRONT_SCHEDULE,
@@ -100,8 +100,8 @@ export class EmployeeFrontComponent {
                 />
               </svg>
               <span class="flex-1 ms-3 whitespace-nowrap">Schedule</span>
-      `,
-      ),
+      `
+      )
     },
     {
       link: EMPLOYEE_FRONT_APPOINTMENT,
@@ -122,7 +122,7 @@ export class EmployeeFrontComponent {
                 class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300"
                 >3</span
               >
-      `),
+      `)
     },
     {
       link: EMPLOYEE_FRONT_SERVICE,
@@ -140,8 +140,8 @@ export class EmployeeFrontComponent {
                 />
               </svg>
               <span class="flex-1 ms-3 whitespace-nowrap">Services</span>
-      `,
-      ),
+      `
+      )
     },
     {
       link: EMPLOYEE_FRONT_PROFILE,
@@ -150,8 +150,8 @@ export class EmployeeFrontComponent {
           <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
         </svg>
         <span class="flex-1 ms-3 whitespace-nowrap">Profile</span>
-      `),
-    },
+      `)
+    }
   ];
 
   private readonly ownerRoutes = [
@@ -170,7 +170,7 @@ export class EmployeeFrontComponent {
                 />
             </svg>
             <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-      `),
-    },
+      `)
+    }
   ];
 }

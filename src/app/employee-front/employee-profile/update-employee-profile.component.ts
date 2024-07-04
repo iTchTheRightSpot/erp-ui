@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  WritableSignal,
+  WritableSignal
 } from '@angular/core';
 import { GeneralInformationFormComponent } from '@/app/employee-front/employee-profile/general-information-form.component';
 import { AsyncPipe } from '@angular/common';
@@ -9,7 +9,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { UpdateProfileDto } from '@/app/employee-front/employee-profile/employee-profile.util';
@@ -31,7 +31,7 @@ import { EmployeeProfileService } from '@/app/employee-front/employee-profile/em
       />
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpdateEmployeeProfileComponent {
   protected readonly form: FormGroup;
@@ -45,7 +45,7 @@ export class UpdateEmployeeProfileComponent {
 
   constructor(
     private readonly profileService: EmployeeProfileService,
-    private readonly fb: FormBuilder,
+    private readonly fb: FormBuilder
   ) {
     this.user = this.profileService.user;
     const user = this.user();
@@ -53,16 +53,16 @@ export class UpdateEmployeeProfileComponent {
     this.form = this.fb.group({
       fullname: new FormControl(user?.name, [
         Validators.required,
-        Validators.max(150),
+        Validators.max(150)
       ]),
       name: new FormControl(user?.display_name, [
         Validators.required,
-        Validators.max(50),
+        Validators.max(50)
       ]),
       bio: new FormControl(user?.bio, [
         Validators.required,
-        Validators.max(255),
-      ]),
+        Validators.max(255)
+      ])
     });
   }
 }

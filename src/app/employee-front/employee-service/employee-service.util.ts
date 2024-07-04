@@ -10,7 +10,7 @@ export interface ServiceOfferedDto {
   clean_up_time: number;
 }
 
-export const dummyServices = (num: number) => {
+export const DummyServices = (num: number) => {
   const arr: ServiceOfferedDto[] = [];
 
   for (let i = 0; i < num; i++) {
@@ -20,7 +20,7 @@ export const dummyServices = (num: number) => {
       price: (i + 1) * 100,
       is_visible: i % 2 === 0,
       duration: (i + 1) * 241,
-      clean_up_time: (i + 1) * 21,
+      clean_up_time: (i + 1) * 21
     });
   }
   return arr;

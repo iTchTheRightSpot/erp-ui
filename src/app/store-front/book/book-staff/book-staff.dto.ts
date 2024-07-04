@@ -24,7 +24,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
+      roles: [Role.OWNER]
     },
     {
       user_id: '0',
@@ -33,7 +33,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
+      roles: [Role.OWNER]
     },
     {
       user_id: '2',
@@ -43,7 +43,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
+      roles: [Role.OWNER]
     },
     {
       user_id: '3',
@@ -53,8 +53,8 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
-    },
+      roles: [Role.OWNER]
+    }
   ]);
   map.set('overgrown lawns', [
     {
@@ -65,8 +65,8 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
-    },
+      roles: [Role.OWNER]
+    }
   ]);
   map.set('utility cuts', [
     {
@@ -77,7 +77,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
+      roles: [Role.OWNER]
     },
     {
       user_id: '6',
@@ -87,8 +87,8 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
-    },
+      roles: [Role.OWNER]
+    }
   ]);
   map.set('weekly trim and mow', [
     {
@@ -98,7 +98,7 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
+      roles: [Role.OWNER]
     },
     {
       user_id: '8',
@@ -108,8 +108,8 @@ export const staffs = () => {
       image_key: engin,
       bio: lorem,
       display_name: '',
-      roles: [Role.OWNER],
-    },
+      roles: [Role.OWNER]
+    }
   ]);
 
   return map;

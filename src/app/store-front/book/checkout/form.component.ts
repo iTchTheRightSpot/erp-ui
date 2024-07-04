@@ -3,13 +3,13 @@ import {
   Component,
   inject,
   input,
-  output,
+  output
 } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { CheckoutDto } from '@/app/store-front/book/checkout/checkout.dto';
 import { NgClass } from '@angular/common';
@@ -20,7 +20,7 @@ import { NgClass } from '@angular/common';
   imports: [ReactiveFormsModule, NgClass],
   styleUrl: '../../../shared-components/number-input.component.css',
   templateUrl: 'form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormComponent {
   private readonly fb = inject(FormBuilder);
@@ -36,16 +36,13 @@ export class FormComponent {
     email: new FormControl('', [Validators.required, Validators.max(255)]),
     phone: new FormControl(null, [
       Validators.required,
-      Validators.pattern('^[0-9]{3}[0-9]{3}[0-9]{4}$'),
+      Validators.pattern('^[0-9]{3}[0-9]{3}[0-9]{4}$')
     ]),
     address: new FormControl('', [Validators.required]),
     city: new FormControl('', [Validators.required]),
     province: new FormControl('', [Validators.required]),
     postcode: new FormControl('', [Validators.required]),
-    description: new FormControl('', [
-      Validators.required,
-      Validators.max(255),
-    ]),
+    description: new FormControl('', [Validators.required, Validators.max(255)])
   });
 
   protected readonly provinces = [
@@ -57,7 +54,7 @@ export class FormComponent {
     { abbreviation: 'QC', country: 'Quebec' },
     { abbreviation: 'NB', country: 'New Brunswick' },
     { abbreviation: 'NS', country: 'Nova Scotia' },
-    { abbreviation: 'SK', country: 'Saskatchewan' },
+    { abbreviation: 'SK', country: 'Saskatchewan' }
   ];
 
   private readonly buildForm = () => {
@@ -79,7 +76,7 @@ export class FormComponent {
       province: province ? province : '',
       postcode: postcode ? postcode : '',
       country: 'Canada',
-      description: description ? description : '',
+      description: description ? description : ''
     };
   };
 
@@ -103,13 +100,13 @@ export class FormComponent {
       email: builder.email,
       phone: builder.phone,
       description: builder.description,
-      address: `${builder.address}, ${builder.city}, ${builder.province} ${builder.postcode}, ${builder.country}`,
+      address: `${builder.address}, ${builder.city}, ${builder.province} ${builder.postcode}, ${builder.country}`
     };
 
     const data = new FormData();
     data.append(
       'dto',
-      new Blob([JSON.stringify(dto)], { type: 'application/json' }),
+      new Blob([JSON.stringify(dto)], { type: 'application/json' })
     );
     data.append('files', this.file ? this.file : new Blob());
 

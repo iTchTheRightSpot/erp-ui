@@ -10,16 +10,16 @@ import {
   Observable,
   of,
   switchMap,
-  tap,
+  tap
 } from 'rxjs';
 import {
   AppointmentDetail,
-  dummyDetailBuilder,
+  dummyDetailBuilder
 } from '@/app/employee-front/shared/about-appointment.util';
 import { toHrMins } from '@/app/app.util';
 import {
   AppointmentDeconstruct,
-  AppointmentResponse,
+  AppointmentResponse
 } from '@/app/employee-front/employee-front.util';
 import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
@@ -32,10 +32,10 @@ import { CalendarComponent } from '@/app/shared-components/calendar/calendar.com
     AsyncPipe,
     TableComponent,
     AboutAppointmentComponent,
-    CalendarComponent,
+    CalendarComponent
   ],
   templateUrl: './employee-appointment.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeAppointmentComponent {
   protected selectedDate = new Date();
@@ -43,7 +43,7 @@ export class EmployeeAppointmentComponent {
 
   constructor(
     private readonly appointmentService: EmployeeAppointmentService,
-    private readonly authenticationService: AuthenticationService,
+    private readonly authenticationService: AuthenticationService
   ) {
     this.appointmentService.onUpdateCalendarMonth(this.selectedDate);
   }
@@ -54,7 +54,7 @@ export class EmployeeAppointmentComponent {
     'client',
     'service',
     'timeslot',
-    'action',
+    'action'
   ];
 
   /**
@@ -73,27 +73,27 @@ export class EmployeeAppointmentComponent {
 
   protected readonly daysToHighlight$ = this.appointmentService.subject$.pipe(
     tap((appointments) => this.daysToHighlightSubject.next(appointments)),
-    map((objs) => objs.map((obj) => obj.scheduled_for)),
+    map((objs) => objs.map((obj) => obj.scheduled_for))
   );
 
   protected readonly numberOfAppointmentsForMonth$ = this.daysToHighlightSubject
     .asObservable()
     .pipe(
       map((appointments) =>
-        appointments.map((appointment) => appointment.scheduled_for),
+        appointments.map((appointment) => appointment.scheduled_for)
       ),
       map((dates) =>
         dates.filter(
           (date) =>
             date.getMonth() === this.selectedDate.getMonth() &&
-            date.getFullYear() === this.selectedDate.getFullYear(),
-        ),
+            date.getFullYear() === this.selectedDate.getFullYear()
+        )
       ),
-      map((dates: Date[] | undefined) => dates?.length),
+      map((dates: Date[] | undefined) => dates?.length)
     );
 
   private readonly calendarDateSubject = new BehaviorSubject<Date>(
-    this.selectedDate,
+    this.selectedDate
   );
 
   protected get appointments$(): Observable<AppointmentDeconstruct[]> {
@@ -102,10 +102,10 @@ export class EmployeeAppointmentComponent {
         this.daysToHighlightSubject.pipe(
           map((objs) =>
             objs.filter(
-              (obj) => date.toDateString() === obj.scheduled_for.toDateString(),
-            ),
-          ),
-        ),
+              (obj) => date.toDateString() === obj.scheduled_for.toDateString()
+            )
+          )
+        )
       ),
       map((appointments) =>
         !appointments
@@ -118,10 +118,10 @@ export class EmployeeAppointmentComponent {
                   service: appointment.services[0].name,
                   client: appointment.customer_name,
                   timeslot: `${toHrMins(appointment.scheduled_for)} <---> ${toHrMins(appointment.expire_at)}`,
-                  action: 'edit',
-                }) as AppointmentDeconstruct,
-            ),
-      ),
+                  action: 'edit'
+                }) as AppointmentDeconstruct
+            )
+      )
     );
   }
 
@@ -134,7 +134,7 @@ export class EmployeeAppointmentComponent {
 
   protected readonly onPrevNextCalendarClick = (date: Date) =>
     this.appointmentService.updateParentOnChangeMonthYear(
-      (this.selectedDate = date),
+      (this.selectedDate = date)
     );
 
   protected toggleAboutAppointment = false;
@@ -148,7 +148,7 @@ export class EmployeeAppointmentComponent {
     .pipe(mergeMap((obs) => obs));
 
   protected readonly onAppointmentNameClick = (
-    event: AppointmentDeconstruct,
+    event: AppointmentDeconstruct
   ) => {
     const obs = this.appointmentService.subject$.pipe(
       map((objs) => objs.find((obj) => obj.appointment_id === event.id)),
@@ -165,10 +165,10 @@ export class EmployeeAppointmentComponent {
               address: obj.address,
               created: obj.created_at,
               scheduledFor: obj.scheduled_for,
-              expire: obj.expire_at,
+              expire: obj.expire_at
             } as AppointmentDetail)
-          : dummyDetailBuilder(),
-      ),
+          : dummyDetailBuilder()
+      )
     );
     this.toggleAboutAppointment = true;
     this.appointmentDetailsSubject.next(obs);
@@ -178,13 +178,13 @@ export class EmployeeAppointmentComponent {
     this.appointmentService.updateAppointment$;
 
   protected readonly updateAppointmentStatus = (
-    obj: AppointmentDeconstruct,
+    obj: AppointmentDeconstruct
   ) => {
     const user = this.authenticationService.activeUser();
     this.appointmentService.updateAppointmentStatus({
       appointment_id: obj.id,
       status: obj.status,
-      employee_id: user ? user.user_id : '',
+      employee_id: user ? user.user_id : ''
     } as UpdateAppointmentStatusDto);
   };
 }

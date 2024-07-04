@@ -14,7 +14,7 @@ export const ownerRoleGuard = async () => {
 
   if (!bool)
     await router.navigate([
-      `${EMPLOYEE_FRONT_HOME}/${EMPLOYEE_FRONT_SERVICE}/${EMPLOYEE_ALL_SERVICE_OFFERED_ROUTE}`,
+      `${EMPLOYEE_FRONT_HOME}/${EMPLOYEE_FRONT_SERVICE}/${EMPLOYEE_ALL_SERVICE_OFFERED_ROUTE}`
     ]);
 
   return bool;

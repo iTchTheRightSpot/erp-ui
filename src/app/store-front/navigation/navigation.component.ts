@@ -3,14 +3,14 @@ import {
   Component,
   HostListener,
   input,
-  output,
+  output
 } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
 import { MobileNavComponent } from '@/app/store-front/navigation/mobile-nav.component';
 import {
   ABOUT_ROUTE,
   BOOK_ROUTE,
-  SERVICE_ROUTE,
+  SERVICE_ROUTE
 } from '@/app/store-front/store-front.util';
 import { RouterLink } from '@angular/router';
 import { environment } from '@/environments/environment';
@@ -311,7 +311,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
       </div>
     </nav>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavigationComponent {
   isStaff = input.required<boolean>();
@@ -333,7 +333,7 @@ export class NavigationComponent {
       'background-color': 'var(--white)',
       'box-shadow': '4px 6px 12px rgba(0, 0, 0, 0.2)',
       'border-bottom-right-radius': '3px',
-      'border-bottom-left-radius': '3px',
+      'border-bottom-left-radius': '3px'
     };
 
     this.navBg = bool ? css : {};

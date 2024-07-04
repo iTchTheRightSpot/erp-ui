@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output,
+  output
 } from '@angular/core';
 import { Role } from '@/app/app.util';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -177,7 +177,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserCardComponent {
   // reference css https://flowbite.com/blocks/marketing/team/

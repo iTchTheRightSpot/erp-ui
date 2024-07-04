@@ -3,7 +3,7 @@ import { environment } from '@/environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpResponse,
+  HttpResponse
 } from '@angular/common/http';
 import { BookService } from '@/app/store-front/book/book.service';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
@@ -15,11 +15,11 @@ import {
   Observable,
   of,
   startWith,
-  Subject,
+  Subject
 } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CheckoutService {
   private readonly domain = environment.domain;
@@ -55,8 +55,8 @@ export class CheckoutService {
           .pipe(
             map(() => false),
             catchError((err: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(err),
-            ),
+              this.toastService.messageErrorBool(err)
+            )
           )
       : of(false).pipe(delay(2000));
 }

@@ -34,6 +34,7 @@ import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
               class="relative px-1.5 py-3 h-fit cursor-pointer flex gap-2 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
               <div class="flex-shrink-0">
+                hello {{ staff.image_key }}
                 <img
                   [src]="staff.image_key"
                   alt="staff profile picture"
@@ -61,7 +62,7 @@ import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookStaffComponent {
   private readonly router = inject(Router);

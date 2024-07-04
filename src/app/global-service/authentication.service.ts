@@ -7,7 +7,7 @@ import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthenticationService {
   private readonly domain = environment.domain;
@@ -31,10 +31,10 @@ export class AuthenticationService {
       .get<UserDto>(`${this.domain}active`, { withCredentials: true })
       .pipe(
         map((staff) =>
-          staff && Object.keys(staff).length === 0 ? undefined : staff,
+          staff && Object.keys(staff).length === 0 ? undefined : staff
         ),
         tap((staff) => this.activeUserSignal.set(staff)),
-        catchError((err) => this.toastService.messageErrorNothing(err)),
+        catchError((err) => this.toastService.messageErrorNothing(err))
       );
 
   readonly isStaff = () => {
@@ -47,14 +47,14 @@ export class AuthenticationService {
         image_key:
           'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
         bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cupiditate, dignissimos dolores eos est ex harum impedit iste maxime minus, nesciunt odit, porro possimus repellat sapiente sed sint ullam velit.',
-        roles: [Role.DEVELOPER],
+        roles: [Role.DEVELOPER]
       });
       const user = this.activeUser();
 
       return of(
         user?.roles.includes(Role.DEVELOPER) ||
           user?.roles.includes(Role.OWNER) ||
-          user?.roles.includes(Role.EMPLOYEE),
+          user?.roles.includes(Role.EMPLOYEE)
       );
     }
 
@@ -64,7 +64,7 @@ export class AuthenticationService {
       return of(
         staff.roles.includes(Role.EMPLOYEE) ||
           staff.roles.includes(Role.OWNER) ||
-          staff.roles.includes(Role.DEVELOPER),
+          staff.roles.includes(Role.DEVELOPER)
       );
     }
 
@@ -74,8 +74,8 @@ export class AuthenticationService {
           ? s.roles.includes(Role.EMPLOYEE) ||
             s.roles.includes(Role.OWNER) ||
             s.roles.includes(Role.DEVELOPER)
-          : false,
-      ),
+          : false
+      )
     );
   };
 
@@ -92,7 +92,7 @@ export class AuthenticationService {
             tap((res) => (window.location.href = res.redirect_url)),
             map(() => false),
             startWith(true),
-            catchError((e) => this.toastService.messageErrorBool(e)),
+            catchError((e) => this.toastService.messageErrorBool(e))
           )
       : merge(of(true), of(false).pipe(delay(3000)));
 }

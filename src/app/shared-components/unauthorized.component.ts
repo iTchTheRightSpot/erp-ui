@@ -32,7 +32,7 @@ import { RouterLink } from '@angular/router';
       </div>
     </section>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UnauthorizedComponent {
   protected readonly HOME = STORE_FRONT_HOME;

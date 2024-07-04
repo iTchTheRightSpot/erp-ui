@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpParams,
+  HttpParams
 } from '@angular/common/http';
 import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
 import { environment } from '@/environments/environment.ts';
@@ -13,7 +13,7 @@ import {
   Observable,
   of,
   switchMap,
-  tap,
+  tap
 } from 'rxjs';
 import { BookService } from '@/app/store-front/book/book.service';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
@@ -21,7 +21,7 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
 import { CacheService } from '@/app/global-service/cache.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BookAppointmentDatesService {
   /**
@@ -87,7 +87,7 @@ export class BookAppointmentDatesService {
   private readonly buildCacheKey = (
     name: string,
     date: Date,
-    staffEmail: string,
+    staffEmail: string
   ) => `${name}_${1 + date.getMonth()}_${date.getFullYear()}_${staffEmail}`;
 
   /**
@@ -100,7 +100,7 @@ export class BookAppointmentDatesService {
     date.toLocaleDateString([], {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
+      year: 'numeric'
     });
 
   /**
@@ -113,7 +113,7 @@ export class BookAppointmentDatesService {
   readonly deleteFromCache = (name: string, date: Date) => {
     const info = this.bookingInfoSignal();
     BookAppointmentDatesService.cacheService.deleteItem(
-      this.buildCacheKey(name, date, info.staff ? info.staff.email : ''),
+      this.buildCacheKey(name, date, info.staff ? info.staff.email : '')
     );
   };
 
@@ -134,7 +134,7 @@ export class BookAppointmentDatesService {
 
         if (!services || !email) {
           this.toastService.message(
-            'please select a service or staff pre-book',
+            'please select a service or staff pre-book'
           );
           throw new Error();
         }
@@ -147,7 +147,7 @@ export class BookAppointmentDatesService {
             if (objs) {
               const found = objs.find(
                 (obj) =>
-                  this.format(selected) === this.format(new Date(obj.date)),
+                  this.format(selected) === this.format(new Date(obj.date))
               );
 
               return found
@@ -157,7 +157,7 @@ export class BookAppointmentDatesService {
                       tap((dates) => {
                         if (dates) this.datesToHighlightSignal.set(dates);
                       }),
-                      map(() => found.times),
+                      map(() => found.times)
                     )
                 : of<Date[]>([]);
             }
@@ -167,8 +167,8 @@ export class BookAppointmentDatesService {
               (service) =>
                 (params = params.append(
                   'service_name',
-                  service.service_name.trim(),
-                )),
+                  service.service_name.trim()
+                ))
             );
             params = params.append('employee_email', email);
             params = params.append('day', selected.getDate());
@@ -176,9 +176,9 @@ export class BookAppointmentDatesService {
             params = params.append('year', selected.getFullYear());
 
             return this.req$(params, key, selected);
-          }),
+          })
         );
-      }),
+      })
     );
 
   /**
@@ -202,7 +202,7 @@ export class BookAppointmentDatesService {
   private readonly req$ = (
     params: HttpParams,
     key: string,
-    selected: Date,
+    selected: Date
   ): Observable<Date[]> => {
     return this.http
       .get<
@@ -219,13 +219,13 @@ export class BookAppointmentDatesService {
         }),
         map((objs: ValidTime[]) => {
           const found = objs.find(
-            (obj) => this.format(selected) === this.format(new Date(obj.date)),
+            (obj) => this.format(selected) === this.format(new Date(obj.date))
           );
           return found ? found.times : [];
         }),
         catchError((e: HttpErrorResponse) =>
-          this.toastService.messageHandleIterateError<Date>(e),
-        ),
+          this.toastService.messageHandleIterateError<Date>(e)
+        )
       );
   };
 }

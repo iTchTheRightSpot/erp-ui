@@ -3,7 +3,7 @@ import { concat, concatMap, Observable, of, Subject, timer } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ToastService {
   /**
@@ -25,7 +25,7 @@ export class ToastService {
       const delayed$ = timer(5000).pipe(concatMap(() => of('')));
       // concatenate the observables to ensure they are emitted sequentially
       return concat(initial$, delayed$);
-    }),
+    })
   );
 
   readonly message = (message: string) => this.subject.next(message);
@@ -41,7 +41,7 @@ export class ToastService {
   };
 
   readonly messageHandleIterateError = <T>(
-    e: HttpErrorResponse,
+    e: HttpErrorResponse
   ): Observable<T[]> => {
     this.subject.next(e.message);
     return of([] as T[]);

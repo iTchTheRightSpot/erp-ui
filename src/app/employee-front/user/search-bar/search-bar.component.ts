@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output,
+  output
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SearchProperties } from '@/app/employee-front/user/search-bar/search-bar.util';
@@ -58,7 +58,7 @@ import { ServiceOfferForm } from '@/app/employee-front/employee-service/service-
       </div>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchBarComponent {
   form = input.required<FormGroup>();
@@ -68,7 +68,7 @@ export class SearchBarComponent {
   private readonly formBuilder = () => {
     const search = this.form().controls['search'].value;
     return {
-      search: search ? search : '',
+      search: search ? search : ''
     } as SearchProperties;
   };
 

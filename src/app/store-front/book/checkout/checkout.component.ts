@@ -10,7 +10,7 @@ import { toHrMins } from '@/app/app.util';
   standalone: true,
   imports: [FormComponent, AsyncPipe],
   templateUrl: './checkout.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckoutComponent {
   private readonly service = inject(CheckoutService);

@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  signal,
+  signal
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
@@ -10,7 +10,7 @@ import { MatCalendar } from '@angular/material/datepicker';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MatDateFormats,
+  MatDateFormats
 } from '@angular/material/core';
 import { startWith } from 'rxjs/operators';
 import { CalendarService } from '@/app/shared-components/calendar/calendar.service';
@@ -39,7 +39,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       </button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarHeaderComponent<D> {
   protected readonly header = CalendarHeaderComponent;
@@ -51,7 +51,7 @@ export class CalendarHeaderComponent<D> {
     private readonly dateAdapter: DateAdapter<D>,
     @Inject(MAT_DATE_FORMATS)
     private readonly dateFormats: MatDateFormats,
-    private readonly calendarService: CalendarService,
+    private readonly calendarService: CalendarService
   ) {
     calendar.stateChanges
       .pipe(startWith(null), takeUntilDestroyed())
@@ -60,9 +60,9 @@ export class CalendarHeaderComponent<D> {
           this.dateAdapter
             .format(
               this.calendar.activeDate,
-              this.dateFormats.display.monthYearLabel,
+              this.dateFormats.display.monthYearLabel
             )
-            .toLocaleUpperCase(),
+            .toLocaleUpperCase()
         );
       });
   }
@@ -73,7 +73,7 @@ export class CalendarHeaderComponent<D> {
         ? this.dateAdapter.addCalendarMonths(this.calendar.activeDate, -1)
         : this.dateAdapter.addCalendarYears(this.calendar.activeDate, -1);
     this.calendarService.emitNextPreviousDates(
-      this.calendar.activeDate as Date,
+      this.calendar.activeDate as Date
     );
   };
 
@@ -83,7 +83,7 @@ export class CalendarHeaderComponent<D> {
         ? this.dateAdapter.addCalendarMonths(this.calendar.activeDate, 1)
         : this.dateAdapter.addCalendarYears(this.calendar.activeDate, 1);
     this.calendarService.emitNextPreviousDates(
-      this.calendar.activeDate as Date,
+      this.calendar.activeDate as Date
     );
   };
 }

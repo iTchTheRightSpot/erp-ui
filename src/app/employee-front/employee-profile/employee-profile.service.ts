@@ -13,13 +13,13 @@ import {
   startWith,
   Subject,
   switchMap,
-  timer,
+  timer
 } from 'rxjs';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 import { UpdateProfileDto } from '@/app/employee-front/employee-profile/employee-profile.util';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EmployeeProfileService {
   private readonly domain = environment.domain;
@@ -29,11 +29,11 @@ export class EmployeeProfileService {
   private readonly authenticationService = inject(AuthenticationService);
   private readonly toastService = inject(ToastService);
 
-  readonly user = this.authenticationService.activeUser;
-
   private readonly updateProfileStatusSubject = new Subject<
     Observable<boolean>
   >();
+
+  readonly user = this.authenticationService.activeUser;
 
   readonly updateProfileStatus$ = this.updateProfileStatusSubject
     .asObservable()
@@ -43,7 +43,7 @@ export class EmployeeProfileService {
     this.updateProfileStatusSubject.next(
       this.production
         ? this.updateUserProfileRequest(dto).pipe(startWith(true))
-        : concat(of(true), timer(5000).pipe(concatMap(() => of(false)))),
+        : concat(of(true), timer(5000).pipe(concatMap(() => of(false))))
     );
 
   private readonly updateUserProfileRequest = (dto: UpdateProfileDto) =>
@@ -53,8 +53,8 @@ export class EmployeeProfileService {
       >(`${this.domain}staff`, dto, { withCredentials: true })
       .pipe(
         switchMap(() =>
-          this.authenticationService.activeUser$().pipe(map(() => false)),
+          this.authenticationService.activeUser$().pipe(map(() => false))
         ),
-        catchError((e) => this.toastService.messageErrorNothing(e)),
+        catchError((e) => this.toastService.messageErrorNothing(e))
       );
 }

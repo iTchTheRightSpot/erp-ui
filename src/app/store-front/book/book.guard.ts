@@ -5,7 +5,7 @@ import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import {
   BOOK_APPOINTMENT_DATES_ROUTE,
   BOOK_SERVICE_OFFERED_ROUTE,
-  BOOK_STAFF_ROUTE,
+  BOOK_STAFF_ROUTE
 } from '@/app/store-front/book/book.util';
 
 export const bookStaffGuard = async () => {

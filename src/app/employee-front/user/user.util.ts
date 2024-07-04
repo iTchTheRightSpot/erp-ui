@@ -20,7 +20,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png',
       bio: lorem,
       display_name: 'Bonnie',
-      roles: [Role.OWNER, Role.DEVELOPER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.DEVELOPER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '1',
@@ -30,7 +30,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png',
       bio: lorem,
       display_name: 'Helene',
-      roles: [Role.EMPLOYEE],
+      roles: [Role.EMPLOYEE]
     },
     {
       user_id: '2',
@@ -40,7 +40,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png',
       bio: lorem,
       display_name: 'Jese',
-      roles: [Role.OWNER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.EMPLOYEE]
     },
     {
       user_id: '3',
@@ -50,7 +50,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/joseph-mcfall.png',
       bio: lorem,
       display_name: 'Joseph',
-      roles: [Role.USER, Role.EMPLOYEE],
+      roles: [Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '4',
@@ -60,7 +60,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png',
       bio: lorem,
       display_name: 'Lana',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '5',
@@ -70,7 +70,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '50',
@@ -80,7 +80,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '200',
@@ -90,7 +90,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '6',
@@ -100,7 +100,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '7',
@@ -110,7 +110,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '8',
@@ -120,7 +120,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '9',
@@ -130,7 +130,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '10',
@@ -140,7 +140,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '11',
@@ -150,7 +150,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '12',
@@ -160,7 +160,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '13',
@@ -170,7 +170,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '14',
@@ -180,7 +180,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '15',
@@ -190,7 +190,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '16',
@@ -200,7 +200,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '17',
@@ -210,7 +210,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '170',
@@ -220,7 +220,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '18',
@@ -230,7 +230,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '19',
@@ -240,7 +240,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '20',
@@ -250,7 +250,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '21',
@@ -260,7 +260,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '22',
@@ -270,7 +270,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '23',
@@ -280,7 +280,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '24',
@@ -290,7 +290,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '25',
@@ -300,7 +300,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '26',
@@ -310,7 +310,7 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
     },
     {
       user_id: '27',
@@ -320,8 +320,8 @@ export const dummyUsers$ = () => {
         'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
       bio: lorem,
       display_name: 'Neil',
-      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE],
-    },
+      roles: [Role.OWNER, Role.USER, Role.EMPLOYEE]
+    }
   ];
 
   return of<Page<UserDto>>({
@@ -333,6 +333,6 @@ export const dummyUsers$ = () => {
     has_previous_page: false,
     has_next_page: false,
     data: users,
-    is_empty: false,
+    is_empty: false
   });
 };

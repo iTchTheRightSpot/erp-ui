@@ -4,7 +4,7 @@ import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offer
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BookService {
   /**
@@ -16,7 +16,7 @@ export class BookService {
     servicesOffered: undefined,
     staff: undefined,
     selectedDate: new Date(),
-    time: undefined,
+    time: undefined
   });
 
   readonly bookingInfo = this.bookingInfoSignal;
@@ -31,7 +31,7 @@ export class BookService {
       servicesOffered: services,
       staff: this.bookingInfoSignal().staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
-      time: this.bookingInfoSignal().time,
+      time: this.bookingInfoSignal().time
     });
 
   /**
@@ -44,7 +44,7 @@ export class BookService {
       servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
-      time: this.bookingInfoSignal().time,
+      time: this.bookingInfoSignal().time
     });
 
   /**
@@ -57,7 +57,7 @@ export class BookService {
       servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: this.bookingInfoSignal().staff,
       selectedDate: date,
-      time: this.bookingInfoSignal().time,
+      time: this.bookingInfoSignal().time
     });
 
   /**
@@ -70,6 +70,6 @@ export class BookService {
       servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: this.bookingInfoSignal().staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
-      time: time,
+      time: time
     });
 }

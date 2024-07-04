@@ -33,7 +33,7 @@ import { STORE_FRONT_HOME } from '@/app/app.util';
       </div>
     </section>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageNotFoundComponent {
   protected readonly HOME = STORE_FRONT_HOME;

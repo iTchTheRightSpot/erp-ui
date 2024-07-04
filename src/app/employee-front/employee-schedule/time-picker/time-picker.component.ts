@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output,
+  output
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, NgClass, NgStyle } from '@angular/common';
@@ -13,7 +13,7 @@ import { DatePipe, NgClass, NgStyle } from '@angular/common';
   imports: [ReactiveFormsModule, NgClass, DatePipe, NgStyle],
   styleUrl: '../../../shared-components/number-input.component.css',
   templateUrl: './time-picker.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimePickerComponent {
   form = input.required<FormGroup>();
@@ -36,15 +36,15 @@ export class TimePickerComponent {
         date.getMonth(),
         date.getDate(),
         startHrs,
-        startMins,
+        startMins
       ),
       end: new Date(
         date.getFullYear(),
         date.getMonth(),
         date.getDate(),
         endHrs,
-        endMins,
-      ),
+        endMins
+      )
     };
   };
 

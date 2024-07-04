@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  output,
+  output
 } from '@angular/core';
 import { keyOfRole, Role } from '@/app/app.util';
 import { TrackRole } from '@/app/employee-front/user/user.util';
@@ -152,7 +152,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDetailsComponent {
   employeeId = input.required<string>();
@@ -168,7 +168,7 @@ export class UserDetailsComponent {
 
   protected readonly filterRoles = (roles: Role[]) =>
     [Role.DEVELOPER, Role.OWNER, Role.EMPLOYEE, Role.USER].filter(
-      (role) => !roles.includes(role),
+      (role) => !roles.includes(role)
     );
 
   protected readonly trackRole = (roles: Role[]) => TrackRole(roles);
@@ -176,12 +176,12 @@ export class UserDetailsComponent {
   private selectedRoleToUpdateTo: Role | null = null;
   protected readonly onUpdateRoleStatus = (event: Event) =>
     (this.selectedRoleToUpdateTo = keyOfRole(
-      (event.target as HTMLSelectElement).value,
+      (event.target as HTMLSelectElement).value
     ));
 
   protected readonly onClickUpdateRole = (
     employeeId: string,
-    roles: Role[],
+    roles: Role[]
   ) => {
     const role = this.selectedRoleToUpdateTo;
     if (role === null || roles.includes(role)) return;

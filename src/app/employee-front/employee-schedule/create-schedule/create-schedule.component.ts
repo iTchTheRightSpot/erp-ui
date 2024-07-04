@@ -22,10 +22,10 @@ import { MatCard } from '@angular/material/card';
     NgStyle,
     AsyncPipe,
     MatCard,
-    MatCalendar,
+    MatCalendar
   ],
   templateUrl: './create-schedule.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateScheduleComponent {
   private static readonly scheduleCache = new CacheService<
@@ -65,10 +65,10 @@ export class CreateScheduleComponent {
             value.start !== undefined &&
             value.start !== null &&
             value.end !== undefined &&
-            value.end !== null,
-        ),
+            value.end !== null
+        )
       ),
-      tap((entries) => (this.numberOfEntries = entries.length)),
+      tap((entries) => (this.numberOfEntries = entries.length))
     );
 
   /**
@@ -77,7 +77,7 @@ export class CreateScheduleComponent {
    */
   protected readonly form = this.fb.group({
     start: new FormControl('', [Validators.required]),
-    end: new FormControl('', [Validators.required]),
+    end: new FormControl('', [Validators.required])
   });
 
   /**
@@ -90,7 +90,7 @@ export class CreateScheduleComponent {
     CreateScheduleComponent.scheduleCache.setItem(obj.start.toString(), {
       start: obj.start,
       end: obj.end,
-      duration: seconds,
+      duration: seconds
     });
     this.toggle = !this.toggle;
   };
@@ -129,12 +129,12 @@ export class CreateScheduleComponent {
               (obj) =>
                 ({
                   start: obj.start.toISOString(),
-                  duration: obj.duration,
-                }) as DesiredTimeDto,
-            ),
+                  duration: obj.duration
+                }) as DesiredTimeDto
+            )
           )
-          .pipe(startWith(false)),
-    ),
+          .pipe(startWith(false))
+    )
   );
 
   /**

@@ -10,13 +10,13 @@ import {
   of,
   switchMap,
   tap,
-  timer,
+  timer
 } from 'rxjs';
 import {
   HttpClient,
   HttpErrorResponse,
   HttpParams,
-  HttpResponse,
+  HttpResponse
 } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
@@ -25,7 +25,7 @@ import { dummyUsers$ } from '@/app/employee-front/user/user.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UserService {
   private static readonly cacheService = new CacheService<
@@ -44,14 +44,14 @@ export class UserService {
     page: number,
     size: number,
     role: Role | null,
-    name: string,
+    name: string
   ) => `${page}_${size}_${role}_${name}`;
 
   readonly users = (
     pageNumber: number = 0,
     size: number = 30,
     role: Role | null = null,
-    name: string = '',
+    name: string = ''
   ) =>
     this.production
       ? UserService.cacheService
@@ -65,7 +65,7 @@ export class UserService {
               params = params.append('username', name);
               if (role) params = params.append('role', role);
               return this.allUsersRequest$(params);
-            }),
+            })
           )
       : dummyUsers$();
 
@@ -86,14 +86,14 @@ export class UserService {
                 Number(pageNumber),
                 Number(size),
                 keyOfRole(params.get('role')),
-                name,
+                name
               ),
-              page,
+              page
             );
         }),
         catchError((e: HttpErrorResponse) =>
-          this.toastService.messageErrorNothing(e),
-        ),
+          this.toastService.messageErrorNothing(e)
+        )
       );
 
   readonly updateUserRole = (
@@ -101,7 +101,7 @@ export class UserService {
     pageNumber: number = 0,
     size: number = 30,
     role: Role | null = null,
-    name: string = '',
+    name: string = ''
   ) => {
     if (!this.production)
       return concat(of(true), timer(5000).pipe(concatMap(() => of(false))));
@@ -121,7 +121,7 @@ export class UserService {
 
   private readonly updateUserRoleRequest = (
     params: HttpParams,
-    allUsersParams: HttpParams,
+    allUsersParams: HttpParams
   ) =>
     this.http
       .patch<
@@ -140,13 +140,13 @@ export class UserService {
           ) {
             return combineLatest([
               request$,
-              this.authenticationService.activeUser$(),
+              this.authenticationService.activeUser$()
             ]);
           }
 
           return request$;
         }),
         map(() => false),
-        catchError((e) => this.toastService.messageErrorBool(e)),
+        catchError((e) => this.toastService.messageErrorBool(e))
       );
 }

@@ -27,7 +27,7 @@ import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
       <router-outlet></router-outlet>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StoreFrontComponent {
   private readonly authenticationService = inject(AuthenticationService);

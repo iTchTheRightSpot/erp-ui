@@ -20,7 +20,7 @@ import { Role } from '@/app/app.util';
     AsyncPipe,
     RouterLink,
     ServiceOfferedFormComponent,
-    NgStyle,
+    NgStyle
   ],
   template: `
     <div class="w-full p-2 text-gray-700 dark:text-gray-400">
@@ -109,7 +109,7 @@ import { Role } from '@/app/app.util';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllServiceOfferedComponent {
   private readonly service = inject(ServiceOfferedService);
@@ -128,7 +128,7 @@ export class AllServiceOfferedComponent {
     'name',
     'price',
     'duration',
-    'clean_up_time',
+    'clean_up_time'
   ];
 
   protected readonly tBody$ = this.service.servicesOffered$.pipe(
@@ -141,10 +141,10 @@ export class AllServiceOfferedComponent {
             price: dto.price,
             visibility: dto.is_visible,
             duration: dto.duration,
-            clean_up_time: dto.clean_up_time,
-          }) as AllServicesOffered,
-      ),
-    ),
+            clean_up_time: dto.clean_up_time
+          }) as AllServicesOffered
+      )
+    )
   );
 
   protected readonly update$ = this.service.onCreateUpdate$;
@@ -156,11 +156,11 @@ export class AllServiceOfferedComponent {
     price: new FormControl(0, [Validators.required]),
     visible: new FormControl(true, [Validators.required]),
     duration: new FormControl(0, [Validators.required]),
-    cleanUp: new FormControl(0, [Validators.required]),
+    cleanUp: new FormControl(0, [Validators.required])
   });
 
   protected readonly onServiceOfferedNameClick = (
-    event: AllServicesOffered,
+    event: AllServicesOffered
   ) => {
     this.toggleForm = true;
     this.form.controls['serviceId'].setValue(event.id);
@@ -178,7 +178,7 @@ export class AllServiceOfferedComponent {
       price: obj.price,
       is_visible: obj.visible,
       duration: obj.duration,
-      clean_up_time: obj.cleanUp,
+      clean_up_time: obj.cleanUp
     });
 
   protected readonly delete = (serviceId: string) =>

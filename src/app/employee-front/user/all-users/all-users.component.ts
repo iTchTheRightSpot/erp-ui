@@ -12,7 +12,7 @@ import {
   Observable,
   startWith,
   Subject,
-  switchMap,
+  switchMap
 } from 'rxjs';
 import { Role } from '@/app/app.util';
 
@@ -23,10 +23,10 @@ import { Role } from '@/app/app.util';
     PaginatorComponent,
     AsyncPipe,
     UserCardComponent,
-    SearchBarComponent,
+    SearchBarComponent
   ],
   templateUrl: './all-users.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllUsersComponent {
   private readonly service = inject(UserService);
@@ -45,8 +45,8 @@ export class AllUsersComponent {
     .asObservable()
     .pipe(
       switchMap((obj) =>
-        this.service.users(obj.page, obj.size, obj.role, obj.name),
-      ),
+        this.service.users(obj.page, obj.size, obj.role, obj.name)
+      )
     );
 
   private currentPageNumber = 0;
@@ -55,7 +55,7 @@ export class AllUsersComponent {
       page: (this.currentPageNumber = page),
       size: 30,
       role: null,
-      name: this.search,
+      name: this.search
     });
 
   private search = '';
@@ -64,7 +64,7 @@ export class AllUsersComponent {
       page: this.currentPageNumber,
       size: 30,
       role: null,
-      name: (this.search = obj.search),
+      name: (this.search = obj.search)
     });
 
   private readonly updateRoleSubject = new Subject<Observable<boolean>>();
@@ -79,6 +79,6 @@ export class AllUsersComponent {
     this.updateRoleSubject.next(
       this.service
         .updateUserRole(obj, this.currentPageNumber, 30, null, this.search)
-        .pipe(startWith(true)),
+        .pipe(startWith(true))
     );
 }

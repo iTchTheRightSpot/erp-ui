@@ -206,7 +206,7 @@ import { AppointmentDetail } from '@/app/employee-front/shared/about-appointment
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AboutAppointmentComponent {
   detail = input.required<AppointmentDetail>();

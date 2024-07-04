@@ -3,7 +3,7 @@ import {
   Component,
   input,
   model,
-  output,
+  output
 } from '@angular/core';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { RouterLink } from '@angular/router';
@@ -145,7 +145,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
       </ul>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MobileNavComponent {
   isStaff = input<boolean>();

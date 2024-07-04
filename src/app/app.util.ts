@@ -8,14 +8,14 @@ export const UNAUTHORIZED = 'unauthorized';
 export const toHrMins = (time: Date) =>
   new Date(time).toLocaleTimeString([], {
     hour: '2-digit',
-    minute: '2-digit',
+    minute: '2-digit'
   });
 
 export enum Role {
   EMPLOYEE = 'EMPLOYEE',
   OWNER = 'OWNER',
   DEVELOPER = 'DEVELOPER',
-  USER = 'USER',
+  USER = 'USER'
 }
 
 export const keyOfRole = (role: string | null): Role | null => {
@@ -23,7 +23,7 @@ export const keyOfRole = (role: string | null): Role | null => {
     [Role.EMPLOYEE]: Role.EMPLOYEE,
     [Role.OWNER]: Role.OWNER,
     [Role.DEVELOPER]: Role.DEVELOPER,
-    [Role.USER]: Role.USER,
+    [Role.USER]: Role.USER
   };
 
   return role ? roleMap[role] || null : null;

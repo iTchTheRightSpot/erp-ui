@@ -3,7 +3,7 @@ import {
   Component,
   input,
   model,
-  output,
+  output
 } from '@angular/core';
 import { EMPLOYEE_FRONT_DASHBOARD } from '@/app/employee-front/employee-front.util';
 import { RouterLink } from '@angular/router';
@@ -97,7 +97,7 @@ import { SafeHtml } from '@angular/platform-browser';
       ></button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeMobileNavigationComponent {
   readonly toggle = model<boolean>(false);

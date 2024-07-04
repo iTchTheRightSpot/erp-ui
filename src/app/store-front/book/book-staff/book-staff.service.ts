@@ -3,20 +3,20 @@ import { environment } from '@/environments/environment';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpParams,
+  HttpParams
 } from '@angular/common/http';
 import { catchError, of, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import {
   UserDto,
-  staffs,
+  staffs
 } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { BookService } from '@/app/store-front/book/book.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 import { CacheService } from '@/app/global-service/cache.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BookStaffService {
   private static readonly cacheService = new CacheService<string, UserDto[]>();
@@ -53,11 +53,11 @@ export class BookStaffService {
               (service) =>
                 (params = params.append(
                   'service_name',
-                  service.service_name.trim(),
-                )),
+                  service.service_name.trim()
+                ))
             );
             return this.request$(params, key);
-          }),
+          })
         )
       : of(staffs().get(key));
   };
@@ -68,17 +68,9 @@ export class BookStaffService {
         UserDto[]
       >(`${this.domain}service-offered/staffs`, { withCredentials: true, params: params })
       .pipe(
-        tap((staffs) => {
-          const img = './assets/images/staffs/engin-akyurt.jpg';
-          staffs.forEach(
-            (obj) =>
-              (obj.image_key =
-                obj.image_key.length === 0 ? img : obj.image_key),
-          );
-          BookStaffService.cacheService.setItem(key, staffs);
-        }),
+        tap((staffs) => BookStaffService.cacheService.setItem(key, staffs)),
         catchError((e: HttpErrorResponse) =>
-          this.toastService.messageHandleIterateError<UserDto>(e),
-        ),
+          this.toastService.messageHandleIterateError<UserDto>(e)
+        )
       );
 }

@@ -2,12 +2,12 @@ import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '@/environments/environment';
 import {
   DesiredTimeDto,
-  ShiftDto,
+  ShiftDto
 } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpResponse,
+  HttpResponse
 } from '@angular/common/http';
 import { catchError, delay, map, of, startWith, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
@@ -17,7 +17,7 @@ import { CacheService } from '@/app/global-service/cache.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ScheduleService {
   private static readonly shiftsCache = new CacheService<string, Schedule[]>();
@@ -41,10 +41,8 @@ export class ScheduleService {
       .getItem(this.shiftsCacheKey(month, year))
       .pipe(
         switchMap((value) =>
-          value
-            ? of(value)
-            : this.shiftsByMonthRequest(dayOfMonth, month, year),
-        ),
+          value ? of(value) : this.shiftsByMonthRequest(dayOfMonth, month, year)
+        )
       );
 
   // Method to update the selected date
@@ -57,7 +55,7 @@ export class ScheduleService {
   // Method to create a schedule for an employee
   readonly createSchedule = (email: string, objs: DesiredTimeDto[]) =>
     this.createRequest({ employee_email: email, times: objs }).pipe(
-      startWith(true),
+      startWith(true)
     );
 
   // Private method to handle the create schedule request
@@ -73,19 +71,19 @@ export class ScheduleService {
               this.shiftsByMonthRequest(
                 date.getDate(),
                 date.getMonth(),
-                date.getFullYear(),
-              ).pipe(map(() => false)),
+                date.getFullYear()
+              ).pipe(map(() => false))
             ),
             catchError((e: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(e),
-            ),
+              this.toastService.messageErrorBool(e)
+            )
           )
       : of(false).pipe(delay(5000));
 
   private readonly shiftsByMonthRequest = (
     dayOfMonth: number,
     month: number,
-    year: number,
+    year: number
   ) =>
     this.http
       .get<
@@ -98,18 +96,18 @@ export class ScheduleService {
               ({
                 shift_id: obj.shift_id,
                 start: new Date(obj.start),
-                end: new Date(obj.end),
-              }) as Schedule,
-          ),
+                end: new Date(obj.end)
+              }) as Schedule
+          )
         ),
         tap((res) =>
           ScheduleService.shiftsCache.setItem(
             this.shiftsCacheKey(month, year),
-            res,
-          ),
+            res
+          )
         ),
         catchError((e) =>
-          this.toastService.messageHandleIterateError<Schedule>(e),
-        ),
+          this.toastService.messageHandleIterateError<Schedule>(e)
+        )
       );
 }
