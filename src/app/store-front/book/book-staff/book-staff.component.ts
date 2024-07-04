@@ -44,7 +44,7 @@ import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
                 <h3
                   class="capitalize underline-offset-4 font-medium pb-1 text-xs sm:text-sm md:text-base lg:text-lg"
                 >
-                  {{ staff.name }}
+                  {{ staff.display_name }}
                 </h3>
                 <p class="text-xs sm:text-sm whitespace-wrap">
                   {{ staff.bio }}
