@@ -30,8 +30,7 @@
 
 button.mat-calendar-dates-to-highlight {
   border-radius: 100% !important;
-  box-shadow: 0 0 0 var(--mat-calendar-highlight-border-thickness)
-    var(--mat-calendar-highlight-default-colour) inset !important;
+  box-shadow: 0 0 0 var(--mat-calendar-highlight-border-thickness) black inset !important;
 }
 
 html,
