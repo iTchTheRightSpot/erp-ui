@@ -268,7 +268,7 @@
       </button>
     } @else {
       <button
-        (click)="submit()"
+        (click)="submit(epochSeconds())"
         [disabled]="form.invalid"
         type="submit"
         class="py-3 px-5 text-sm font-medium text-center text-white rounded-md sm:w-fit bg-[var(--app-theme)]"

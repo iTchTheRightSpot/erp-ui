@@ -1,8 +1,8 @@
 export interface CheckoutDto {
   services: { service_name: string }[];
   name: string;
-  employee_email: string;
-  start: Date;
+  employee_id: string;
+  start: number;
   email: string;
   phone: string;
   description: string;

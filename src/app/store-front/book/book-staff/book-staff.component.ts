@@ -13,15 +13,12 @@ import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
   imports: [AsyncPipe],
   template: `
     <div class="lg-scr mg-top px-1.5 xl:px-0">
-      <div class="mb-2 flex flex-col gap-2">
+      <div class="mb-4 flex flex-col gap-2">
         <h1
           class="h-fit font-normal underline underline-offset-4 decoration-1 text-base sm:text-xl md:text-2xl lg:text-4xl"
         >
-          Book a staff
+          Select a staff
         </h1>
-        <h4 class="h-fit text-sm sm:text-base md:text-lg">
-          Select a staff you wish to book with
-        </h4>
       </div>
 
       <div class="w-full">

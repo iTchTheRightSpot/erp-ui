@@ -10,5 +10,5 @@ export interface BookDto {
   servicesOffered: BookServiceOfferedDto[] | undefined;
   staff: UserDto | undefined;
   selectedDate: Date | undefined;
-  time: Date | undefined;
+  time: number | undefined;
 }

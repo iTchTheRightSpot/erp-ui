@@ -7,6 +7,6 @@ export interface DesiredTimeDto {
 }
 
 export interface ShiftDto {
-  employee_email: string;
+  employee_id: string;
   times: DesiredTimeDto[];
 }

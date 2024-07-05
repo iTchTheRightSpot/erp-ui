@@ -53,7 +53,7 @@
             class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex justify-between items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             type="button"
           >
-            {{ staffEmail.length === 0 ? 'Select a staff' : staffEmail }}
+            {{ staffId.length === 0 ? 'Select a staff' : staffDisplayName }}
             <svg
               class="w-2.5 h-2.5 ms-3"
               aria-hidden="true"
@@ -94,7 +94,7 @@
             @for (staff of (staffs$ | async)?.data; track staff.user_id) {
               <li class="w-full">
                 <button
-                  (click)="onSelectedStaffEmail(staff.email)"
+                  (click)="onSelectedStaff(staff.user_id, staff.display_name)"
                   type="button"
                   class="w-full flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 >

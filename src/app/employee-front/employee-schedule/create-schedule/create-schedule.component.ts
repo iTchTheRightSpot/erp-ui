@@ -104,9 +104,14 @@ export class CreateScheduleComponent {
 
   private readonly submitSubject = new Subject<void>();
 
-  protected staffEmail = '';
-  protected readonly onSelectedStaffEmail = (email: string) => {
-    this.staffEmail = email;
+  protected staffId = '';
+  protected staffDisplayName = '';
+  protected readonly onSelectedStaff = (
+    staffId: string,
+    staffDisplayName: string
+  ) => {
+    this.staffId = staffId;
+    this.staffDisplayName = staffDisplayName;
     this.dropdownToggle = false;
   };
 
@@ -124,7 +129,7 @@ export class CreateScheduleComponent {
       ([_, objs]: [void, { start: Date; end: Date; duration: number }[]]) =>
         this.service
           .createSchedule(
-            this.staffEmail,
+            this.staffId,
             objs.map(
               (obj) =>
                 ({

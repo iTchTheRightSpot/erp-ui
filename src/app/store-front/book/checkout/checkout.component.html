@@ -3,7 +3,7 @@
     <h1
       class="h-fit font-normal underline underline-offset-4 decoration-1 text-xl md:text-2xl lg:text-4xl"
     >
-      Pre-schedule an appointment
+      Pre-book an appointment
     </h1>
   </div>
 
@@ -18,9 +18,9 @@
       <!-- form -->
       <div class="order-2 sm:order-1 pb-2">
         <app-form
-          [empEmail]="bookingInfo.staff.email"
+          [staffId]="bookingInfo.staff.user_id"
           [services]="transform(bookingInfo.servicesOffered)"
-          [dateTime]="bookingInfo.time"
+          [epochSeconds]="bookingInfo.time"
           [buttonLoading]="(loadingBtn | async) || false"
           (formEmitter)="onSubmit($event)"
         />
@@ -97,7 +97,7 @@
             </div>
             <div class="flex-1 min-w-0 pl-2 lg:pl-3 border-l border-gray-300">
               <p class="text-xs lg:text-base font-medium">
-                {{ bookingInfo.staff.name }}
+                {{ bookingInfo.staff.display_name }}
               </p>
             </div>
           </div>

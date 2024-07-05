@@ -6,15 +6,7 @@ import {
 } from '@angular/common/http';
 import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
 import { environment } from '@/environments/environment.ts';
-import {
-  BehaviorSubject,
-  catchError,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap
-} from 'rxjs';
+import { BehaviorSubject, catchError, map, of, switchMap, tap } from 'rxjs';
 import { BookService } from '@/app/store-front/book/book.service';
 import { ToastService } from '@/app/shared-components/toast/toast.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
@@ -71,24 +63,24 @@ export class BookAppointmentDatesService {
   /**
    * Updates the selected appointment time and notifies subscribers.
    *
-   * @param time The time of the selected appointment.
+   * @param seconds The time of the selected appointment.
    */
-  readonly selectedAppointmentTime = (time: Date) =>
-    this.bookService.setTimeSelected(time);
+  readonly selectedAppointmentTime = (seconds: number) =>
+    this.bookService.setTimeSelected(seconds);
 
   /**
    * Constructs the key for the cache based on the date and staff email.
    *
    * @param name The name of the {@link BookServiceOfferedDto}
    * @param date The date used to construct the key.
-   * @param staffEmail The email of the staff member.
+   * @param staffId The id of the staff member.
    * @returns The constructed cache key.
    */
   private readonly buildCacheKey = (
     name: string,
     date: Date,
-    staffEmail: string
-  ) => `${name}_${1 + date.getMonth()}_${date.getFullYear()}_${staffEmail}`;
+    staffId: string
+  ) => `${name}_${1 + date.getMonth()}_${date.getFullYear()}_${staffId}`;
 
   /**
    * Formats the date in the "dd-mm-yyyy" format.
@@ -125,14 +117,14 @@ export class BookAppointmentDatesService {
    * @returns An observable that emits an array of available booking {@link Date}
    * for the specified day. The dates are contained in the {@link ValidTime} property.
    */
-  readonly dates$ = () =>
+  readonly epochSeconds$ = () =>
     this.subject.asObservable().pipe(
       switchMap((selected) => {
         const info = this.bookingInfoSignal();
         const services = info.servicesOffered;
-        const email = info.staff?.email;
+        const staffId = info.staff?.user_id;
 
-        if (!services || !email) {
+        if (!services || !staffId) {
           this.toastService.message(
             'please select a service or staff pre-book'
           );
@@ -140,7 +132,7 @@ export class BookAppointmentDatesService {
         }
 
         const name = services.map((s) => s.service_name).join('_');
-        const key = this.buildCacheKey(name, selected, email);
+        const key = this.buildCacheKey(name, selected, staffId);
 
         return BookAppointmentDatesService.cacheService.getItem(key).pipe(
           switchMap((objs) => {
@@ -159,7 +151,7 @@ export class BookAppointmentDatesService {
                       }),
                       map(() => found.times)
                     )
-                : of<Date[]>([]);
+                : of<number[]>([]);
             }
 
             let params = new HttpParams();
@@ -170,7 +162,7 @@ export class BookAppointmentDatesService {
                   service.service_name.trim()
                 ))
             );
-            params = params.append('employee_email', email);
+            params = params.append('employee_id', staffId);
             params = params.append('day', selected.getDate());
             params = params.append('month', 1 + selected.getMonth());
             params = params.append('year', selected.getFullYear());
@@ -199,33 +191,37 @@ export class BookAppointmentDatesService {
    *          the specified day. The times are contained in the {@link ValidTime}
    *          property.
    */
-  private readonly req$ = (
-    params: HttpParams,
-    key: string,
-    selected: Date
-  ): Observable<Date[]> => {
-    return this.http
+  private readonly req$ = (params: HttpParams, key: string, selected: Date) =>
+    this.http
       .get<
-        ValidTime[]
+        { date: string; times: number[] }[]
       >(`${this.domain}appointment`, { withCredentials: true, params })
       .pipe(
-        tap((validTimes) => {
-          const value = validTimes.map((obj) => new Date(obj.date));
+        tap((objs: { date: string; times: number[] }[]) => {
+          const value = objs.map((obj) => new Date(obj.date));
 
           BookAppointmentDatesService.datesToHighlightCache.setItem(key, value);
           this.datesToHighlightSignal.set(value);
 
+          const validTimes: ValidTime[] = objs.map(
+            (validTime) =>
+              ({
+                date: new Date(validTime.date),
+                times: validTime.times
+              }) as ValidTime
+          );
+
           BookAppointmentDatesService.cacheService.setItem(key, validTimes);
         }),
-        map((objs: ValidTime[]) => {
+        map((objs: { date: string; times: number[] }[]) => {
           const found = objs.find(
             (obj) => this.format(selected) === this.format(new Date(obj.date))
           );
-          return found ? found.times : [];
+
+          return found ? found.times : ([] as number[]);
         }),
         catchError((e: HttpErrorResponse) =>
-          this.toastService.messageHandleIterateError<Date>(e)
+          this.toastService.messageHandleIterateError<number>(e)
         )
       );
-  };
 }

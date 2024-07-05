@@ -31,6 +31,7 @@ import { tap } from 'rxjs';
           [(selected)]="onSelectedDate"
           [dateClass]="dateClass"
           [headerComponent]="header"
+          [dateFilter]="myFilter"
           (selectedChange)="emitCalendarDateSelected($event)"
         />
       </mat-card>
@@ -40,6 +41,7 @@ import { tap } from 'rxjs';
           [minDate]="minimumDateOnCalendar() || null"
           [(selected)]="onSelectedDate"
           [headerComponent]="header"
+          [dateFilter]="myFilter"
           (selectedChange)="emitCalendarDateSelected($event)"
         />
       </mat-card>
@@ -101,5 +103,24 @@ export class CalendarComponent {
         : '';
     }
     return '';
+  };
+
+  protected readonly myFilter = (cellDate: Date | null) => {
+    if (!cellDate) {
+      return false;
+    }
+
+    const datesToHighlight = this.datesToHighlight();
+
+    if (datesToHighlight && datesToHighlight.length > 0) {
+      return datesToHighlight.some(
+        (d) =>
+          d.getDate() === cellDate.getDate() &&
+          d.getMonth() === cellDate.getMonth() &&
+          d.getFullYear() === cellDate.getFullYear()
+      );
+    }
+
+    return true;
   };
 }

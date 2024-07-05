@@ -7,7 +7,7 @@ import {
   BOOK_STAFF_ROUTE
 } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
-import { formatSeconds, toHrMins } from '@/app/app.util';
+import { EPOCH_SECONDS_TO_DATE, formatSeconds, toHrMins } from '@/app/app.util';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 
 @Component({
@@ -24,15 +24,21 @@ export class BookAppointmentDatesComponent {
   protected readonly today = new Date();
   protected selected = new Date();
 
+  protected readonly timezone =
+    Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   protected readonly details = this.service.bookingInfoSignal();
-  protected readonly dates$ = this.service.dates$();
+  protected readonly epocSeconds$ = this.service.epochSeconds$();
   protected readonly toHighlight = this.service.datesToHighlight;
+
+  protected readonly epochSecondsToDate = (seconds: number) =>
+    EPOCH_SECONDS_TO_DATE(seconds);
 
   protected readonly formatSeconds = (seconds: number) =>
     formatSeconds(seconds);
 
-  protected readonly selectedAppointmentTime = async (time: Date) => {
-    this.service.selectedAppointmentTime(new Date(time));
+  protected readonly selectedAppointmentTime = async (seconds: number) => {
+    this.service.selectedAppointmentTime(seconds);
     await this.router.navigate([`${BOOK_ROUTE}/${BOOK_CHECKOUT_ROUTE}`]);
   };
 

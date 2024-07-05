@@ -53,8 +53,8 @@ export class ScheduleService {
   readonly staffs$ = this.userService.users();
 
   // Method to create a schedule for an employee
-  readonly createSchedule = (email: string, objs: DesiredTimeDto[]) =>
-    this.createRequest({ employee_email: email, times: objs }).pipe(
+  readonly createSchedule = (staffId: string, objs: DesiredTimeDto[]) =>
+    this.createRequest({ employee_id: staffId, times: objs }).pipe(
       startWith(true)
     );
 

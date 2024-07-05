@@ -25,9 +25,9 @@ import { NgClass } from '@angular/common';
 export class FormComponent {
   private readonly fb = inject(FormBuilder);
 
-  empEmail = input.required<string>();
+  staffId = input.required<string>();
   services = input.required<{ service_name: string }[]>();
-  dateTime = input.required<Date>();
+  epochSeconds = input.required<number>();
   buttonLoading = input.required<boolean>();
   readonly formEmitter = output<FormData>();
 
@@ -89,14 +89,14 @@ export class FormComponent {
     this.file = files.item(0);
   };
 
-  protected readonly submit = () => {
+  protected readonly submit = (epochSeconds: number) => {
     const builder = this.buildForm();
 
     const dto: CheckoutDto = {
       services: this.services(),
       name: builder.name,
-      employee_email: this.empEmail(),
-      start: this.dateTime(),
+      employee_id: this.staffId(),
+      start: epochSeconds,
       email: builder.email,
       phone: builder.phone,
       description: builder.description,
@@ -108,7 +108,8 @@ export class FormComponent {
       'dto',
       new Blob([JSON.stringify(dto)], { type: 'application/json' })
     );
-    data.append('files', this.file ? this.file : new Blob());
+
+    if (this.file !== null) data.append('files', this.file);
 
     this.formEmitter.emit(data);
   };

@@ -13,15 +13,12 @@ import { formatSeconds } from '@/app/app.util';
   imports: [AsyncPipe, RouterLink, NgClass],
   template: `
     <div class="lg-scr mg-top px-1.5 xl:px-0">
-      <div class="mb-2 flex flex-col gap-2">
+      <div class="mb-4 flex flex-col gap-2">
         <h1
           class="h-fit font-normal underline underline-offset-4 decoration-1 text-base sm:text-xl md:text-2xl lg:text-4xl"
         >
-          Schedule an appointment
+          Select a service
         </h1>
-        <h4 class="h-fit text-sm sm:text-base md:text-lg">
-          Select a service that you wish to book a schedule for
-        </h4>
       </div>
 
       <div class="w-full">
@@ -50,9 +47,11 @@ import { formatSeconds } from '@/app/app.util';
                 }
               </div>
               <p class="text-xs sm:text-sm whitespace-nowrap">
-                Price varies but starts at: {{ '$' + service.obj.price }}
-                <strong>|</strong>
-                Duration: {{ formatSeconds(service.obj.duration) }}
+                Starts at: {{ '$' + service.obj.price }}
+                <strong
+                  class="inline-block w-2 h-2 rounded-full bg-[var(--calendar-background)] mx-1"
+                ></strong>
+                {{ formatSeconds(service.obj.duration) }}
               </p>
             </li>
           } @empty {
