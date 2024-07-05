@@ -5,7 +5,7 @@ import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule
 import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { AsyncPipe } from '@angular/common';
 import { ScheduleTable } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
-import { BehaviorSubject, debounceTime, map, switchMap } from 'rxjs';
+import {BehaviorSubject, debounceTime, map, Observable, startWith, switchMap} from 'rxjs';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 
 @Component({
@@ -42,7 +42,9 @@ export class AllScheduleComponent {
     'endTime'
   ];
 
-  protected readonly shifts$ = this.selectedDateSubject.asObservable().pipe(
+  protected readonly scheduleTableToDate = (objs: ScheduleTable[] | undefined) => objs?.map(obj => new Date(obj.startDate))
+
+  protected readonly shifts$: Observable<{ state: string, data?: ScheduleTable[] }> = this.selectedDateSubject.asObservable().pipe(
     debounceTime(400),
     switchMap((date) =>
       this.service
@@ -60,6 +62,8 @@ export class AllScheduleComponent {
             )
           )
         )
-    )
+    ),
+    map((arr: ScheduleTable[]) => ({ state: 'LOADED', data: arr })),
+    startWith({ state: 'LOADING' })
   );
 }

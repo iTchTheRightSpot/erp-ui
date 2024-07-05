@@ -59,6 +59,7 @@ export class CalendarComponent {
     calendarService.onPreviousNextEmitterDate$
       .pipe(
         tap((date) => {
+          console.log('service ', date)
           if (date) this.onPreviousNextCalendarDateEmitter.emit(date);
         }),
         takeUntilDestroyed()
@@ -112,7 +113,8 @@ export class CalendarComponent {
 
     const datesToHighlight = this.datesToHighlight();
 
-    if (datesToHighlight && datesToHighlight.length > 0) {
+    if (datesToHighlight) {
+      // console.log('dates to highlight ', datesToHighlight)
       return datesToHighlight.some(
         (d) =>
           d.getDate() === cellDate.getDate() &&
