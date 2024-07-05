@@ -1,8 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   input,
+  model,
   output,
   ViewEncapsulation
 } from '@angular/core';
@@ -24,42 +24,24 @@ import { tap } from 'rxjs';
   providers: [provideNativeDateAdapter()],
   imports: [MatCalendar, MatCard],
   template: `
-    @if (datesToHighlightImpl(datesToHighlight())) {
-      <mat-card class="w-full text-black">
-        <mat-calendar
-          [minDate]="minimumDateOnCalendar() || null"
-          [(selected)]="onSelectedDate"
-          [dateClass]="dateClass"
-          [headerComponent]="header"
-          [dateFilter]="myFilter"
-          (selectedChange)="emitCalendarDateSelected($event)"
-        />
-      </mat-card>
-    } @else {
-      <mat-card class="w-full text-black">
-        <mat-calendar
-          [minDate]="minimumDateOnCalendar() || null"
-          [(selected)]="onSelectedDate"
-          [headerComponent]="header"
-          [dateFilter]="myFilter"
-          (selectedChange)="emitCalendarDateSelected($event)"
-        />
-      </mat-card>
-    }
+    <mat-card class="w-full text-black">
+      <mat-calendar
+        [minDate]="minimumDateOnCalendar() || null"
+        [(selected)]="selectedDate"
+        [dateClass]="dateClass"
+        [dateFilter]="myFilter"
+        [headerComponent]="header"
+        (selectedChange)="emitCalendarDateSelected($event)"
+      />
+    </mat-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarComponent {
-  constructor(private readonly calendarService: CalendarService) {
-    effect(() => {
-      const date = this.selectedDate();
-      if (date) this.onSelectedDate = date;
-    });
-
+  constructor(calendarService: CalendarService) {
     calendarService.onPreviousNextEmitterDate$
       .pipe(
         tap((date) => {
-          console.log('service ', date)
           if (date) this.onPreviousNextCalendarDateEmitter.emit(date);
         }),
         takeUntilDestroyed()
@@ -68,17 +50,13 @@ export class CalendarComponent {
   }
 
   protected readonly header = CalendarHeaderComponent;
-  protected onSelectedDate: Date | null = null;
 
   minimumDateOnCalendar = input<Date>();
-  selectedDate = input<Date>();
+  selectedDate = model<Date | null>(null);
   datesToHighlight = input<Date[]>();
 
   readonly onCalendarDateSelectedEmitter = output<Date>();
   readonly onPreviousNextCalendarDateEmitter = output<Date>();
-
-  protected readonly datesToHighlightImpl = (dates: Date[] | undefined) =>
-    dates ? dates.length > 0 : false;
 
   protected readonly emitCalendarDateSelected = (
     date: Date | undefined | null
@@ -94,14 +72,13 @@ export class CalendarComponent {
     view
   ) => {
     if (view === 'month') {
-      return this.datesToHighlight()?.some(
+      const bool = this.datesToHighlight()?.some(
         (d) =>
           d.getDate() === cellDate.getDate() &&
           d.getMonth() === cellDate.getMonth() &&
           d.getFullYear() === cellDate.getFullYear()
-      )
-        ? 'mat-calendar-dates-to-highlight'
-        : '';
+      );
+      return bool ? 'mat-calendar-dates-to-highlight' : '';
     }
     return '';
   };
@@ -114,7 +91,6 @@ export class CalendarComponent {
     const datesToHighlight = this.datesToHighlight();
 
     if (datesToHighlight) {
-      // console.log('dates to highlight ', datesToHighlight)
       return datesToHighlight.some(
         (d) =>
           d.getDate() === cellDate.getDate() &&

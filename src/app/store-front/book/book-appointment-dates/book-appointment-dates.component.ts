@@ -9,6 +9,7 @@ import {
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { EPOCH_SECONDS_TO_DATE, formatSeconds, toHrMins } from '@/app/app.util';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-book-appointment-dates',

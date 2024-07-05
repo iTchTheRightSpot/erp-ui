@@ -42,7 +42,7 @@
       class="w-full max-w-lg rounded-lg absolute top-20 bottom-0 left-0 right-20 z-40 bg-red-500"
     >
       <app-calendar
-        [selectedDate]="selectedDate"
+        [(selectedDate)]="selectedDate"
         [datesToHighlight]="(daysToHighlight$ | async) || []"
         (onCalendarDateSelectedEmitter)="onCalendarDateClick($event)"
         (onPreviousNextCalendarDateEmitter)="onPrevNextCalendarClick($event)"

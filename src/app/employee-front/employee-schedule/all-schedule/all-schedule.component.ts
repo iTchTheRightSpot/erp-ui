@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EMPLOYEE_SCHEDULE_CREATE_ROUTE } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { AsyncPipe } from '@angular/common';
 import { ScheduleTable } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
-import {BehaviorSubject, debounceTime, map, Observable, startWith, switchMap} from 'rxjs';
+import { BehaviorSubject, debounceTime, map, switchMap, tap } from 'rxjs';
 import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
 
 @Component({
@@ -18,7 +23,7 @@ import { CalendarComponent } from '@/app/shared-components/calendar/calendar.com
 export class AllScheduleComponent {
   private readonly service = inject(ScheduleService);
 
-  protected readonly currentDate = new Date();
+  protected selectedDate = new Date();
 
   protected readonly EMPLOYEE_SCHEDULE_CREATE_ROUTE =
     EMPLOYEE_SCHEDULE_CREATE_ROUTE;
@@ -42,9 +47,12 @@ export class AllScheduleComponent {
     'endTime'
   ];
 
-  protected readonly scheduleTableToDate = (objs: ScheduleTable[] | undefined) => objs?.map(obj => new Date(obj.startDate))
+  protected readonly scheduleTableToDate = (objs: ScheduleTable[]) =>
+    objs?.map((obj) => new Date(obj.startDate));
 
-  protected readonly shifts$: Observable<{ state: string, data?: ScheduleTable[] }> = this.selectedDateSubject.asObservable().pipe(
+  protected readonly scheduleTable = signal<ScheduleTable[]>([]);
+
+  protected readonly shifts$ = this.selectedDateSubject.asObservable().pipe(
     debounceTime(400),
     switchMap((date) =>
       this.service
@@ -60,10 +68,9 @@ export class AllScheduleComponent {
                   endTime: shift.end.toLocaleTimeString()
                 }) as ScheduleTable
             )
-          )
+          ),
+          tap((arr) => this.scheduleTable.set(arr))
         )
-    ),
-    map((arr: ScheduleTable[]) => ({ state: 'LOADED', data: arr })),
-    startWith({ state: 'LOADING' })
+    )
   );
 }
