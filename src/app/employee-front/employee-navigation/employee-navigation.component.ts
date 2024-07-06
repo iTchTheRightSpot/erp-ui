@@ -1,26 +1,26 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostListener,
   input,
   output
 } from '@angular/core';
 import { EmployeeMobileNavigationComponent } from '@/app/employee-front/employee-navigation/employee-mobile-navigation.component';
 import { EMPLOYEE_FRONT_DASHBOARD } from '@/app/employee-front/employee-front.util';
 import { RouterLink } from '@angular/router';
-import { DragDropModule } from 'primeng/dragdrop';
 import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-employee-navigation',
   standalone: true,
-  imports: [EmployeeMobileNavigationComponent, RouterLink, DragDropModule],
+  imports: [EmployeeMobileNavigationComponent, RouterLink],
   template: `
     <button
-      pDraggable
-      (click)="toggle = !toggle"
-      data-drawer-target="logo-sidebar"
-      data-drawer-toggle="logo-sidebar"
-      aria-controls="logo-sidebar"
+      (click)="this.toggle = !this.toggle"
+      (mousedown)="onMouseDown($event)"
+      data-drawer-target="toggle-sidebar-btn"
+      data-drawer-toggle="toggle-sidebar-btn"
+      aria-controls="toggle-sidebar-btn"
       type="button"
       class="draggable-button lg:hidden inline-flex items-center p-2 mt-2 ms-3 text-sm bg-gray-600 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 fixed top-0 left-0 z-80"
     >
@@ -51,7 +51,6 @@ import { SafeHtml } from '@angular/platform-browser';
     </div>
 
     <aside
-      pDroppable
       id="logo-sidebar"
       class="hidden lg:block w-fit h-full"
       aria-label="Sidebar"
@@ -129,12 +128,42 @@ import { SafeHtml } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeNavigationComponent {
-  logout = input.required<boolean>();
-  routes = input.required<{ link: string; html: SafeHtml }[]>();
+  private isDragging = false;
+  private startX = 0;
+  private startY = 0;
   protected readonly logo = './assets/images/logo.jpeg';
   protected toggle = false;
   protected readonly DASHBOARD_ROUTE = EMPLOYEE_FRONT_DASHBOARD;
 
+  logout = input.required<boolean>();
+  routes = input.required<{ link: string; html: SafeHtml }[]>();
+
   protected readonly logoutEmitter = output<void>();
+
   protected readonly logoutClick = () => this.logoutEmitter.emit();
+
+  @HostListener('document:mousemove', ['$event'])
+  protected readonly onMouseMove = (event: MouseEvent) => {
+    const selector = document.querySelector(`.draggable-button`);
+    if (this.isDragging && selector) {
+      const element = selector as HTMLElement;
+      element.style.left = `${event.clientX - this.startX}px`;
+      element.style.top = `${event.clientY - this.startY}px`;
+    }
+  };
+
+  protected readonly onMouseDown = (event: MouseEvent) => {
+    event.preventDefault();
+    const element = document.querySelector(`.draggable-button`);
+    if (element) {
+      this.isDragging = true;
+      this.startX = event.clientX - element.getBoundingClientRect().left;
+      this.startY = event.clientY - element.getBoundingClientRect().top;
+    }
+  };
+
+  @HostListener('document:mouseup')
+  protected readonly onMouseUp = () => {
+    this.isDragging = false;
+  };
 }

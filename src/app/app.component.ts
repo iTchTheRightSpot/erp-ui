@@ -73,6 +73,7 @@ export class AppComponent {
         });
     })
   );
+
   protected readonly csrf$ = this.authenticationService.csrf().pipe(
     map(() => ({ state: 'LOADED' })),
     startWith({ state: 'LOADING' }),

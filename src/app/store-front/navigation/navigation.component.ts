@@ -318,6 +318,8 @@ export class NavigationComponent {
   isSignedIn = input.required<boolean>();
   logout = input.required<boolean>();
 
+  protected readonly logoutEmitter = output<void>();
+
   protected navBg: any;
   protected readonly logo = './assets/images/logo.jpeg';
   protected readonly BOOK_ROUTE = BOOK_ROUTE;
@@ -326,7 +328,8 @@ export class NavigationComponent {
   protected readonly EMPLOYEE_FRONT_HOME = EMPLOYEE_FRONT_HOME;
   toggle = false;
 
-  @HostListener('document:scroll') scroll(): void {
+  @HostListener('document:scroll')
+  protected readonly scroll = () => {
     const bool =
       document.body.scrollTop > 0 || document.documentElement.scrollTop > 0;
     const css = {
@@ -337,11 +340,10 @@ export class NavigationComponent {
     };
 
     this.navBg = bool ? css : {};
-  }
+  };
 
   protected readonly redirect = () =>
     (window.location.href = `${environment.domain}authentication/authenticate`);
 
-  protected readonly logoutEmitter = output<void>();
   protected readonly logoutClick = () => this.logoutEmitter.emit();
 }
