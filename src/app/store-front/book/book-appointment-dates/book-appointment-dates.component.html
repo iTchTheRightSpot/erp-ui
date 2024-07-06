@@ -10,13 +10,36 @@
   <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- calendar -->
     <div class="order-2 sm:order-1 flex flex-col gap-4 pb-2">
-      <app-calendar
-        [minimumDateOnCalendar]="today"
-        [selectedDate]="selected"
-        [datesToHighlight]="toHighlight()"
-        (onCalendarDateSelectedEmitter)="onSelectedAppointmentDate($event)"
-        (onPreviousNextCalendarDateEmitter)="onPreviousOrNextBtn($event)"
-      />
+      <p-calendar
+        class="max-w-full"
+        [(ngModel)]="date"
+        [inline]="true"
+        [minDate]="today"
+        (onSelect)="onSelectedAppointmentDate($event)"
+        (onMonthChange)="onMonth($event)"
+        (onYearChange)="onYear($event)"
+        [disabledDates]="datesToDisable(toHighlight())"
+        [showWeek]="false"
+      >
+        <ng-template pTemplate="date" let-date>
+          <span
+            [ngClass]="{
+              'font-medium text-black': contains(
+                toHighlight(),
+                date.day,
+                date.month
+              ),
+              'line-through pointer-events-none opacity-50': !contains(
+                toHighlight(),
+                date.day,
+                date.month
+              )
+            }"
+          >
+            {{ date.day }}
+          </span>
+        </ng-template>
+      </p-calendar>
       <p class="w-full text-center font-light text-sm">
         Times are shown in <strong>{{ timezone }}</strong>
       </p>

@@ -7,7 +7,7 @@ import {
 } from '@/app/employee-front/employee-front.util';
 import { environment } from '@/environments/environment';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 

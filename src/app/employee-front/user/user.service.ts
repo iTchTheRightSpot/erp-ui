@@ -19,7 +19,7 @@ import {
   HttpResponse
 } from '@angular/common/http';
 import { environment } from '@/environments/environment';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
 import { dummyUsers$ } from '@/app/employee-front/user/user.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';

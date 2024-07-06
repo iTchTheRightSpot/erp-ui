@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { catchError, map, of, startWith } from 'rxjs';
-import { ToastComponent } from '@/app/shared-components/toast/toast.component';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastComponent } from '@/app/toast.component';
+import { ToastService } from '@/app/global-service/toast.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Component({

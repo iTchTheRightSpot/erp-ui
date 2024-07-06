@@ -73,13 +73,16 @@
         </div>
         @if (toggleCalendar) {
           <div class="absolute top-10 bottom-0 left-0 z-40">
-            <mat-card class="w-80">
-              <mat-calendar
-                [minDate]="minimumDateOnCalendar"
-                [(selected)]="selectedDate"
-                (selectedChange)="onCalendarDateSelected($event)"
-              />
-            </mat-card>
+            <p-calendar
+              class="max-w-full"
+              [(ngModel)]="date"
+              [inline]="true"
+              [minDate]="minimumDateOnCalendar"
+              (onSelect)="onCalendarDateSelected($event)"
+              (onMonthChange)="onMonth($event)"
+              (onYearChange)="onYear($event)"
+              [showWeek]="false"
+            />
           </div>
         }
         <div

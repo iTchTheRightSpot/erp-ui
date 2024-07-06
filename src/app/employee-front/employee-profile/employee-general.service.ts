@@ -19,7 +19,7 @@ import {
   DummyServices,
   ServiceOfferedDto
 } from '@/app/employee-front/employee-service/employee-service.util';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({

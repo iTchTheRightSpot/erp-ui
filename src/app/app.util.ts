@@ -16,6 +16,25 @@ export interface Page<T> {
 
 export const EPOCH_SECONDS_TO_DATE = (secs: number) => new Date(secs * 1000);
 
+export const DATES_TO_DISABLE = (dates: Date[]) =>
+  dates && dates.length > 0
+    ? [
+        ...Array(
+          new Date(dates[0].getFullYear(), dates[0].getMonth(), 0).getDate()
+        ).keys()
+      ]
+        .map((i) => new Date(dates[0].getFullYear(), dates[0].getMonth(), i))
+        .filter(
+          (d) =>
+            !dates.some(
+              (date) =>
+                d.getDate() === date.getDate() &&
+                d.getMonth() === date.getMonth() &&
+                d.getFullYear() === date.getFullYear()
+            )
+        )
+    : [];
+
 /**
  * Converts date time to hrs and mins
  * */

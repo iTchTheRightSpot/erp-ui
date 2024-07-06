@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TableComponent } from '@/app/employee-front/shared/table.component';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
 import { EmployeeAppointmentComponent } from '@/app/employee-front/employee-appointment/employee-appointment.component';
 import { map } from 'rxjs';
 import { AppointmentDeconstruct } from '@/app/employee-front/employee-front.util';
 import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboard/employee-dashboard.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
-import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
+import { CalendarModule } from 'primeng/calendar';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-dashboard',
@@ -16,7 +17,9 @@ import { CalendarComponent } from '@/app/shared-components/calendar/calendar.com
     TableComponent,
     AsyncPipe,
     AboutAppointmentComponent,
-    CalendarComponent
+    CalendarModule,
+    FormsModule,
+    NgClass
   ],
   templateUrl: './employee-dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

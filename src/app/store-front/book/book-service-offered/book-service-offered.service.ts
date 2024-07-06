@@ -6,7 +6,7 @@ import {
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { catchError, of, tap } from 'rxjs';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { BookStaffService } from '@/app/store-front/book/book-staff/book-staff.service';
 
 @Injectable({

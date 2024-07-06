@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
@@ -16,14 +16,19 @@ import {
   AppointmentDetail,
   dummyDetailBuilder
 } from '@/app/employee-front/shared/about-appointment.util';
-import { toHrMins } from '@/app/app.util';
+import { DATES_TO_DISABLE, toHrMins } from '@/app/app.util';
 import {
   AppointmentDeconstruct,
   AppointmentResponse
 } from '@/app/employee-front/employee-front.util';
 import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
-import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
+import {
+  CalendarModule,
+  CalendarMonthChangeEvent,
+  CalendarYearChangeEvent
+} from 'primeng/calendar';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-appointment',
@@ -32,12 +37,15 @@ import { CalendarComponent } from '@/app/shared-components/calendar/calendar.com
     AsyncPipe,
     TableComponent,
     AboutAppointmentComponent,
-    CalendarComponent
+    CalendarModule,
+    FormsModule,
+    NgClass
   ],
   templateUrl: './employee-appointment.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeAppointmentComponent {
+  protected date: Date[] | undefined;
   protected selectedDate = new Date();
   protected toggleMobileCalendar = false;
 
@@ -132,10 +140,37 @@ export class EmployeeAppointmentComponent {
     if (selected) this.calendarDateSubject.next((this.selectedDate = selected));
   };
 
-  protected readonly onPrevNextCalendarClick = (date: Date) =>
-    this.appointmentService.updateParentOnChangeMonthYear(
-      (this.selectedDate = date)
-    );
+  protected readonly onMonth = (event: CalendarMonthChangeEvent) => {
+    const year = event.year;
+    const month = event.month;
+    if (year && month)
+      this.appointmentService.updateParentOnChangeMonthYear(
+        (this.selectedDate = new Date(
+          year,
+          month - 1,
+          this.selectedDate.getDate()
+        ))
+      );
+  };
+
+  protected readonly onYear = (event: CalendarYearChangeEvent) => {
+    const year = event.year;
+    const month = event.month;
+    if (year && month)
+      this.appointmentService.updateParentOnChangeMonthYear(
+        (this.selectedDate = new Date(
+          year,
+          month - 1,
+          this.selectedDate.getDate()
+        ))
+      );
+  };
+
+  protected readonly contains = (dates: Date[], date: number, month: number) =>
+    dates.some((d) => d.getDate() === date && d.getMonth() === month);
+
+  protected readonly datesToDisable = (validDates: Date[]) =>
+    DATES_TO_DISABLE(validDates);
 
   protected toggleAboutAppointment = false;
 

@@ -7,16 +7,16 @@ import {
 import { EmployeeMobileNavigationComponent } from '@/app/employee-front/employee-navigation/employee-mobile-navigation.component';
 import { EMPLOYEE_FRONT_DASHBOARD } from '@/app/employee-front/employee-front.util';
 import { RouterLink } from '@angular/router';
-import { CdkDrag } from '@angular/cdk/drag-drop';
+import { DragDropModule } from 'primeng/dragdrop';
 import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-employee-navigation',
   standalone: true,
-  imports: [EmployeeMobileNavigationComponent, RouterLink, CdkDrag],
+  imports: [EmployeeMobileNavigationComponent, RouterLink, DragDropModule],
   template: `
     <button
-      cdkDrag
+      pDraggable
       (click)="toggle = !toggle"
       data-drawer-target="logo-sidebar"
       data-drawer-toggle="logo-sidebar"

@@ -43,12 +43,46 @@
       [style]="{ display: toggleCalendar ? 'block' : 'none' }"
     >
       @if (shifts$ | async; as shift) {
-        <app-calendar
-          [selectedDate]="selectedDate"
-          [datesToHighlight]="scheduleTableToDate(shift)"
-          (onCalendarDateSelectedEmitter)="onDateSelected($event)"
-          (onPreviousNextCalendarDateEmitter)="onPrevNextCalendar($event)"
-        />
+        <p-calendar
+          class="max-w-full"
+          [(ngModel)]="date"
+          [inline]="true"
+          (onSelect)="onDateSelected($event)"
+          (onMonthChange)="onMonth($event)"
+          (onYearChange)="onYear($event)"
+          [disabledDates]="datesToDisable(scheduleTableToDate(shift))"
+          [showWeek]="false"
+        >
+          <ng-template pTemplate="date" let-date>
+            <span
+              [ngClass]="{
+                'font-medium text-black': contains(
+                  scheduleTableToDate(shift),
+                  date.day,
+                  date.month
+                ),
+                'line-through pointer-events-none opacity-50': !contains(
+                  scheduleTableToDate(shift),
+                  date.day,
+                  date.month
+                )
+              }"
+            >
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </p-calendar>
+      } @else {
+        <p-calendar
+          class="max-w-full"
+          [(ngModel)]="date"
+          [inline]="true"
+          (onSelect)="onDateSelected($event)"
+          (onMonthChange)="onMonth($event)"
+          (onYearChange)="onYear($event)"
+          [showWeek]="false"
+        >
+        </p-calendar>
       }
     </div>
   </div>

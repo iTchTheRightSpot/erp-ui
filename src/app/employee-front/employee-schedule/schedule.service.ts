@@ -10,7 +10,7 @@ import {
   HttpResponse
 } from '@angular/common/http';
 import { catchError, delay, map, of, startWith, switchMap, tap } from 'rxjs';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { UserService } from '@/app/employee-front/user/user.service';
 import { Schedule } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
 import { CacheService } from '@/app/global-service/cache.service';
@@ -37,13 +37,17 @@ export class ScheduleService {
     `${month}_${year}`;
 
   readonly shiftsByMonth = (dayOfMonth: number, month: number, year: number) =>
-    ScheduleService.shiftsCache
-      .getItem(this.shiftsCacheKey(month, year))
-      .pipe(
-        switchMap((value) =>
-          value ? of(value) : this.shiftsByMonthRequest(dayOfMonth, month, year)
-        )
-      );
+    this.production
+      ? ScheduleService.shiftsCache
+          .getItem(this.shiftsCacheKey(month, year))
+          .pipe(
+            switchMap((value) =>
+              value
+                ? of(value)
+                : this.shiftsByMonthRequest(dayOfMonth, month, year)
+            )
+          )
+      : of<Schedule[]>([]);
 
   // Method to update the selected date
   readonly updateSelectedDate = (selected: Date) =>

@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AsyncPipe, DatePipe, NgStyle } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass, NgStyle } from '@angular/common';
 import { TimePickerComponent } from '@/app/employee-front/employee-schedule/time-picker/time-picker.component';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  Validators
+} from '@angular/forms';
 import { toHrMins } from '@/app/app.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { CacheService } from '@/app/global-service/cache.service';
@@ -9,8 +14,11 @@ import { filter, startWith, Subject, switchMap, tap } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { DesiredTimeDto } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatCalendar } from '@angular/material/datepicker';
-import { MatCard } from '@angular/material/card';
+import {
+  CalendarModule,
+  CalendarMonthChangeEvent,
+  CalendarYearChangeEvent
+} from 'primeng/calendar';
 
 @Component({
   selector: 'app-create-schedule',
@@ -21,13 +29,16 @@ import { MatCard } from '@angular/material/card';
     TimePickerComponent,
     NgStyle,
     AsyncPipe,
-    MatCard,
-    MatCalendar
+    CalendarModule,
+    FormsModule,
+    NgClass
   ],
   templateUrl: './create-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateScheduleComponent {
+  protected date: Date[] | undefined;
+
   private static readonly scheduleCache = new CacheService<
     string,
     { start: Date; end: Date; duration: number }
@@ -44,9 +55,33 @@ export class CreateScheduleComponent {
 
   protected readonly staffs$ = this.service.staffs$;
 
-  protected readonly onCalendarDateSelected = (selected: Date | null) => {
-    if (selected)
-      this.service.updateSelectedDate((this.selectedDate = selected));
+  protected readonly onCalendarDateSelected = (selected: Date) =>
+    this.service.updateSelectedDate((this.selectedDate = selected));
+
+  protected readonly onMonth = (event: CalendarMonthChangeEvent) => {
+    const year = event.year;
+    const month = event.month;
+    if (year && month)
+      this.service.updateSelectedDate(
+        (this.selectedDate = new Date(
+          year,
+          month - 1,
+          this.selectedDate.getDate()
+        ))
+      );
+  };
+
+  protected readonly onYear = (event: CalendarYearChangeEvent) => {
+    const year = event.year;
+    const month = event.month;
+    if (year && month)
+      this.service.updateSelectedDate(
+        (this.selectedDate = new Date(
+          year,
+          month - 1,
+          this.selectedDate.getDate()
+        ))
+      );
   };
 
   /**

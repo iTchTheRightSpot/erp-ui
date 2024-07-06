@@ -6,7 +6,7 @@ import {
   HttpResponse
 } from '@angular/common/http';
 import { BookService } from '@/app/store-front/book/book.service';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import {
   catchError,
   delay,

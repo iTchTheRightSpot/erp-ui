@@ -39,14 +39,49 @@
 
     <div
       [style]="{ display: toggleMobileCalendar ? 'block' : 'none' }"
-      class="w-full max-w-lg rounded-lg absolute top-20 bottom-0 left-0 right-20 z-40 bg-red-500"
+      class="w-full max-w-lg rounded-lg absolute top-20 bottom-0 left-0 right-20 z-40"
     >
-      <app-calendar
-        [selectedDate]="selectedDate"
-        [datesToHighlight]="(daysToHighlight$ | async) || []"
-        (onCalendarDateSelectedEmitter)="onCalendarDateClick($event)"
-        (onPreviousNextCalendarDateEmitter)="onPrevNextCalendarClick($event)"
-      />
+      @if (daysToHighlight$ | async; as highlight) {
+        <p-calendar
+          class="max-w-full"
+          [(ngModel)]="date"
+          [inline]="true"
+          (onSelect)="onCalendarDateClick($event)"
+          (onMonthChange)="onMonth($event)"
+          (onYearChange)="onYear($event)"
+          [disabledDates]="datesToDisable(highlight)"
+          [showWeek]="false"
+        >
+          <ng-template pTemplate="date" let-date>
+            <span
+              [ngClass]="{
+                'font-medium text-black': contains(
+                  highlight,
+                  date.day,
+                  date.month
+                ),
+                'line-through pointer-events-none opacity-50': !contains(
+                  highlight,
+                  date.day,
+                  date.month
+                )
+              }"
+            >
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </p-calendar>
+      } @else {
+        <p-calendar
+          class="max-w-full"
+          [(ngModel)]="date"
+          [inline]="true"
+          (onSelect)="onCalendarDateClick($event)"
+          (onMonthChange)="onMonth($event)"
+          (onYearChange)="onYear($event)"
+          [showWeek]="false"
+        />
+      }
     </div>
   </div>
 

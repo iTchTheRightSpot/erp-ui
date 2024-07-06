@@ -8,19 +8,34 @@ import { RouterLink } from '@angular/router';
 import { EMPLOYEE_SCHEDULE_CREATE_ROUTE } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { TableComponent } from '@/app/employee-front/shared/table.component';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ScheduleTable } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
 import { BehaviorSubject, debounceTime, map, switchMap, tap } from 'rxjs';
-import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
+import {
+  CalendarModule,
+  CalendarMonthChangeEvent,
+  CalendarYearChangeEvent
+} from 'primeng/calendar';
+import { FormsModule } from '@angular/forms';
+import { DATES_TO_DISABLE } from '@/app/app.util';
 
 @Component({
   selector: 'app-all-schedule',
   standalone: true,
-  imports: [RouterLink, TableComponent, AsyncPipe, CalendarComponent],
+  imports: [
+    RouterLink,
+    TableComponent,
+    AsyncPipe,
+    CalendarModule,
+    FormsModule,
+    NgClass
+  ],
   templateUrl: './all-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllScheduleComponent {
+  protected date: Date[] | undefined;
+
   private readonly service = inject(ScheduleService);
 
   protected selectedDate = new Date();
@@ -37,8 +52,37 @@ export class AllScheduleComponent {
     this.service.updateSelectedDate(selected);
   };
 
-  protected readonly onPrevNextCalendar = (selected: Date) =>
-    this.selectedDateSubject.next(selected);
+  protected readonly onMonth = (event: CalendarMonthChangeEvent) => {
+    const year = event.year;
+    const month = event.month;
+    if (year && month)
+      this.selectedDateSubject.next(
+        (this.selectedDate = new Date(
+          year,
+          month - 1,
+          this.selectedDate.getDate()
+        ))
+      );
+  };
+
+  protected readonly onYear = (event: CalendarYearChangeEvent) => {
+    const year = event.year;
+    const month = event.month;
+    if (year && month)
+      this.selectedDateSubject.next(
+        (this.selectedDate = new Date(
+          year,
+          month - 1,
+          this.selectedDate.getDate()
+        ))
+      );
+  };
+
+  protected readonly contains = (dates: Date[], date: number, month: number) =>
+    dates.some((d) => d.getDate() === date && d.getMonth() === month);
+
+  protected readonly datesToDisable = (validDates: Date[]) =>
+    DATES_TO_DISABLE(validDates);
 
   protected readonly tHead: Array<keyof ScheduleTable> = [
     'id',
