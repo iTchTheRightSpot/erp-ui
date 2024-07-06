@@ -42,7 +42,7 @@ export const DATES_TO_DISABLE = (dates: Date[], selected: Date) =>
 /**
  * Converts date time to hrs and mins
  * */
-export const toHrMins = (time: Date) =>
+export const TO_HR_MINS = (time: Date) =>
   new Date(time).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit'
@@ -69,7 +69,7 @@ export const keyOfRole = (role: string | null): Role | null => {
 /**
  * Converts seconds to string format.
  * */
-export const formatSeconds = (seconds: number) => {
+export const FORMAT_SECONDS = (seconds: number) => {
   const hr = Math.floor(seconds / 3600);
 
   // calculated from the remainder after extracting hours, divided by 60 (number of seconds in a minute).

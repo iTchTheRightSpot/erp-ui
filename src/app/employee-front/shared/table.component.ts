@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { ConfirmationStatus } from '@/app/employee-front/employee-front.util';
-import { formatSeconds } from '@/app/app.util';
+import { FORMAT_SECONDS } from '@/app/app.util';
 import { DeleteObject } from '@/app/employee-front/shared/table.component.util';
 
 @Component({
@@ -36,7 +36,7 @@ export class TableComponent<T extends { id: number | string }> {
   readonly actionClickEmitter = output<T>();
 
   protected readonly formatSeconds = (seconds: unknown) =>
-    formatSeconds(seconds as number);
+    FORMAT_SECONDS(seconds as number);
 
   protected readonly onUpdateStatus = (head: keyof T, body: T, event: Event) =>
     (body[head] = (event.target as HTMLSelectElement)

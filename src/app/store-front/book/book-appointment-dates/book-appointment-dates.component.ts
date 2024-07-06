@@ -1,32 +1,17 @@
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal
-} from '@angular/core';
-import { BookAppointmentDatesService } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
-import { AsyncPipe, NgClass } from '@angular/common';
-import { Router } from '@angular/router';
-import { SkeletonModule } from 'primeng/skeleton';
-import {
-  BOOK_CHECKOUT_ROUTE,
-  BOOK_STAFF_ROUTE
-} from '@/app/store-front/book/book.util';
-import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
-import {
-  DATES_TO_DISABLE,
-  EPOCH_SECONDS_TO_DATE,
-  formatSeconds,
-  toHrMins
-} from '@/app/app.util';
-import {
-  CalendarModule,
-  CalendarMonthChangeEvent,
-  CalendarYearChangeEvent
-} from 'primeng/calendar';
-import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
-import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
+  BookAppointmentDatesService
+} from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
+import {AsyncPipe, NgClass} from '@angular/common';
+import {Router} from '@angular/router';
+import {SkeletonModule} from 'primeng/skeleton';
+import {BOOK_CHECKOUT_ROUTE, BOOK_STAFF_ROUTE} from '@/app/store-front/book/book.util';
+import {BOOK_ROUTE} from '@/app/store-front/store-front.util';
+import {DATES_TO_DISABLE, EPOCH_SECONDS_TO_DATE, FORMAT_SECONDS} from '@/app/app.util';
+import {CalendarModule, CalendarMonthChangeEvent, CalendarYearChangeEvent} from 'primeng/calendar';
+import {FormsModule} from '@angular/forms';
+import {BehaviorSubject, debounceTime, switchMap, tap} from 'rxjs';
+import {ValidTime} from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
 
 @Component({
   selector: 'app-book-appointment-dates',
@@ -100,14 +85,12 @@ export class BookAppointmentDatesComponent {
     DATES_TO_DISABLE(validDates, this.onCalendarPreviousNextBtn);
 
   protected readonly formatSeconds = (seconds: number) =>
-    formatSeconds(seconds);
+    FORMAT_SECONDS(seconds);
 
   protected readonly selectedAppointmentTime = async (seconds: number) => {
     this.service.selectedAppointmentTime(seconds);
     await this.router.navigate([`${BOOK_ROUTE}/${BOOK_CHECKOUT_ROUTE}`]);
   };
-
-  protected readonly toHrMins = (time: Date) => toHrMins(time);
 
   protected readonly route = async () => {
     await this.router.navigate([`${BOOK_ROUTE}/${BOOK_STAFF_ROUTE}`]);
@@ -140,7 +123,6 @@ export class BookAppointmentDatesComponent {
         this.onCalendarPreviousNextBtn.getDate()
       );
       this.onCalendarDateClickSubject.next(this.onCalendarPreviousNextBtn);
-      // this.service.selectedAppointmentDate(this.selected);
 
       this.clearOutValidAppointmentTimesInEpochSeconds();
     }

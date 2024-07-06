@@ -7,7 +7,7 @@ import {
   FormsModule,
   Validators
 } from '@angular/forms';
-import { toHrMins } from '@/app/app.util';
+import { TO_HR_MINS } from '@/app/app.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { CacheService } from '@/app/global-service/cache.service';
 import { filter, startWith, Subject, switchMap, tap } from 'rxjs';
@@ -87,7 +87,7 @@ export class CreateScheduleComponent {
    * @param selected - The selected date.
    * @returns The string representation of the selected time in hours and minutes.
    */
-  protected readonly toHrMins = (selected: Date) => toHrMins(selected);
+  protected readonly toHrMins = (selected: Date) => TO_HR_MINS(selected);
 
   protected numberOfEntries = 0;
   protected readonly entries$ =

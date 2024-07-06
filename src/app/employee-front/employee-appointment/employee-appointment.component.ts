@@ -16,7 +16,7 @@ import {
   AppointmentDetail,
   dummyDetailBuilder
 } from '@/app/employee-front/shared/about-appointment.util';
-import { DATES_TO_DISABLE, toHrMins } from '@/app/app.util';
+import { DATES_TO_DISABLE, TO_HR_MINS } from '@/app/app.util';
 import {
   AppointmentDeconstruct,
   AppointmentResponse
@@ -125,7 +125,7 @@ export class EmployeeAppointmentComponent {
                   status: appointment.status,
                   service: appointment.services[0].name,
                   client: appointment.customer_name,
-                  timeslot: `${toHrMins(appointment.scheduled_for)} <---> ${toHrMins(appointment.expire_at)}`,
+                  timeslot: `${TO_HR_MINS(appointment.scheduled_for)} <---> ${TO_HR_MINS(appointment.expire_at)}`,
                   action: 'edit'
                 }) as AppointmentDeconstruct
             )

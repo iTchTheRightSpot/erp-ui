@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { ConfirmationStatus } from '@/app/employee-front/employee-front.util';
-import { toHrMins } from '@/app/app.util';
+import { TO_HR_MINS } from '@/app/app.util';
 import { AppointmentDetail } from '@/app/employee-front/shared/about-appointment.util';
 
 @Component({
@@ -210,6 +210,6 @@ import { AppointmentDetail } from '@/app/employee-front/shared/about-appointment
 })
 export class AboutAppointmentComponent {
   detail = input.required<AppointmentDetail>();
-  protected readonly toHrsMins = (date: Date) => toHrMins(date);
+  protected readonly toHrsMins = (date: Date) => TO_HR_MINS(date);
   protected readonly ConfirmationStatus = ConfirmationStatus;
 }

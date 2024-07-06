@@ -1,7 +1,7 @@
 <div class="lg-scr mg-top px-1.5">
   <div class="mb-4 flex flex-col gap-2">
     <h1
-      class="h-fit font-normal underline underline-offset-4 decoration-1 text-base sm:text-xl md:text-2xl lg:text-4xl"
+      class="h-fit font-light underline underline-offset-4 decoration-1 text-xl md:text-2xl lg:text-4xl"
     >
       Select a day and time
     </h1>
@@ -69,9 +69,9 @@
             <button
               type="button"
               (click)="selectedAppointmentTime(seconds)"
-              class="p-3 py-2 w-fit h-fit border rounded text-center inline-flex items-center text-xs font-medium bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
+              class="p-3 py-2 w-fit h-fit border text-black rounded text-center inline-flex items-center text-xs font-medium bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
-              {{ toHrMins(epochSecondsToDate(seconds)) }}
+              {{ epochSecondsToDate(seconds).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) }}
             </button>
           } @empty {
             <p class="h-fit font-light text-sm">No booking times available</p>
@@ -103,9 +103,9 @@
     <!-- appointment summary -->
     <div class="flex flex-col gap-2 order-1 sm:order-2">
       <div class="mb-1.5">
-        <h3 class="font-medium text-xs sm:text-sm md:text-base lg:text-lg">
+        <h1 class="font-light underline underline-offset-4 decoration-1 text-base lg:text-lg">
           Appointment summary
-        </h3>
+        </h1>
       </div>
 
       @if (selected && details && details.servicesOffered && details.staff) {

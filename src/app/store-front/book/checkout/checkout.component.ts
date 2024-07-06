@@ -3,7 +3,7 @@ import { CheckoutService } from '@/app/store-front/book/checkout/checkout.servic
 import { FormComponent } from '@/app/store-front/book/checkout/form.component';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 import { AsyncPipe } from '@angular/common';
-import { EPOCH_SECONDS_TO_DATE, toHrMins } from '@/app/app.util';
+import { EPOCH_SECONDS_TO_DATE, TO_HR_MINS } from '@/app/app.util';
 
 @Component({
   selector: 'app-checkout',
@@ -19,7 +19,7 @@ export class CheckoutComponent {
   protected readonly loadingBtn = this.service.submit$;
 
   protected readonly toHrMins = (epochSeconds: number) =>
-    toHrMins(EPOCH_SECONDS_TO_DATE(epochSeconds));
+    TO_HR_MINS(EPOCH_SECONDS_TO_DATE(epochSeconds));
 
   protected readonly transform = (objs: BookServiceOfferedDto[]) =>
     objs.map((obj) => ({ service_name: obj.service_name }));
