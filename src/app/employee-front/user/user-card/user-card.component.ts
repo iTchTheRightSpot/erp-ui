@@ -5,6 +5,7 @@ import {
   output
 } from '@angular/core';
 import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
 import { Role } from '@/app/app.util';
 import { UserDetailsComponent } from '@/app/employee-front/user/user-details/user-details.component';
 import { TrackRole } from '@/app/employee-front/user/user.util';
@@ -12,7 +13,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
 @Component({
   selector: 'app-user-card',
   standalone: true,
-  imports: [TooltipModule, UserDetailsComponent],
+  imports: [TooltipModule, ButtonModule, UserDetailsComponent],
   template: `
     <div class="text-center text-gray-500 dark:text-gray-400">
       <img
@@ -37,6 +38,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
                 <button
                   type="button"
                   pTooltip="{{ obj.role }}"
+                  tooltipPosition="top"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -61,6 +63,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
                 <button
                   type="button"
                   pTooltip="{{ obj.role }}"
+                  tooltipPosition="top"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -85,6 +88,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
                 <button
                   type="button"
                   pTooltip="{{ obj.role }}"
+                  tooltipPosition="top"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -107,6 +111,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
                 <button
                   type="button"
                   pTooltip="{{ obj.role }}"
+                  tooltipPosition="top"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg

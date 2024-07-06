@@ -14,10 +14,9 @@ export class ToastService {
   /**
    * Emits error messages.
    *
-   * @returns An Observable that resolves to the error message displayed
-   * in {@link ToastComponent}.
+   * @returns An Observable that resolves to the error message to be displayed.
    */
-  readonly message$ = this.subject.pipe(
+  readonly message$: Observable<string> = this.subject.pipe(
     concatMap((message) => {
       // emit the initial value immediately
       const initial$ = of(message);

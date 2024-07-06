@@ -22,7 +22,7 @@ import { SafeHtml } from '@angular/platform-browser';
       data-drawer-toggle="logo-sidebar"
       aria-controls="logo-sidebar"
       type="button"
-      class="lg:hidden inline-flex items-center p-2 mt-2 ms-3 text-sm bg-gray-600 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 fixed top-0 left-0 z-40"
+      class="draggable-button lg:hidden inline-flex items-center p-2 mt-2 ms-3 text-sm bg-gray-600 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 fixed top-0 left-0 z-80"
     >
       <span class="sr-only">Open sidebar</span>
       <svg
@@ -51,6 +51,7 @@ import { SafeHtml } from '@angular/platform-browser';
     </div>
 
     <aside
+      pDroppable
       id="logo-sidebar"
       class="hidden lg:block w-fit h-full"
       aria-label="Sidebar"
