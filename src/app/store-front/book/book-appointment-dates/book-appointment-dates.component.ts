@@ -1,17 +1,31 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {
-  BookAppointmentDatesService
-} from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
-import {AsyncPipe, NgClass} from '@angular/common';
-import {Router} from '@angular/router';
-import {SkeletonModule} from 'primeng/skeleton';
-import {BOOK_CHECKOUT_ROUTE, BOOK_STAFF_ROUTE} from '@/app/store-front/book/book.util';
-import {BOOK_ROUTE} from '@/app/store-front/store-front.util';
-import {DATES_TO_DISABLE, EPOCH_SECONDS_TO_DATE, FORMAT_SECONDS} from '@/app/app.util';
-import {CalendarModule, CalendarMonthChangeEvent, CalendarYearChangeEvent} from 'primeng/calendar';
-import {FormsModule} from '@angular/forms';
-import {BehaviorSubject, debounceTime, switchMap, tap} from 'rxjs';
-import {ValidTime} from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal
+} from '@angular/core';
+import { BookAppointmentDatesService } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
+import { AsyncPipe, NgClass } from '@angular/common';
+import { Router } from '@angular/router';
+import { SkeletonModule } from 'primeng/skeleton';
+import {
+  BOOK_CHECKOUT_ROUTE,
+  BOOK_STAFF_ROUTE
+} from '@/app/store-front/book/book.util';
+import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
+import {
+  DATES_TO_DISABLE,
+  EPOCH_SECONDS_TO_DATE,
+  FORMAT_SECONDS
+} from '@/app/app.util';
+import {
+  CalendarModule,
+  CalendarMonthChangeEvent,
+  CalendarYearChangeEvent
+} from 'primeng/calendar';
+import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
+import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
 
 @Component({
   selector: 'app-book-appointment-dates',

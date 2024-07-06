@@ -71,7 +71,12 @@
               (click)="selectedAppointmentTime(seconds)"
               class="p-3 py-2 w-fit h-fit border text-black rounded text-center inline-flex items-center text-xs font-medium bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
-              {{ epochSecondsToDate(seconds).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) }}
+              {{
+                epochSecondsToDate(seconds).toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              }}
             </button>
           } @empty {
             <p class="h-fit font-light text-sm">No booking times available</p>
@@ -103,7 +108,9 @@
     <!-- appointment summary -->
     <div class="flex flex-col gap-2 order-1 sm:order-2">
       <div class="mb-1.5">
-        <h1 class="font-light underline underline-offset-4 decoration-1 text-base lg:text-lg">
+        <h1
+          class="font-light underline underline-offset-4 decoration-1 text-base lg:text-lg"
+        >
           Appointment summary
         </h1>
       </div>

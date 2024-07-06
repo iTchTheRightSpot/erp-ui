@@ -6,7 +6,7 @@ import { BOOK_APPOINTMENT_DATES_ROUTE } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
 import { BookService } from '@/app/store-front/book/book.service';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
-import {SkeletonModule} from "primeng/skeleton";
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-book-staff',

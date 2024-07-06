@@ -6,7 +6,7 @@ import { BOOK_STAFF_ROUTE } from '@/app/store-front/book/book.util';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 import { map } from 'rxjs';
 import { FORMAT_SECONDS } from '@/app/app.util';
-import {SkeletonModule} from "primeng/skeleton";
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-service-offered',
@@ -25,12 +25,16 @@ import {SkeletonModule} from "primeng/skeleton";
       <div class="w-full">
         @if (services$ | async; as services) {
           <ul class="flex flex-col gap-2">
-            @for (service of services; track service.obj.service_name; let i = $index) {
+            @for (
+              service of services;
+              track service.obj.service_name;
+              let i = $index
+            ) {
               <li
                 (click)="service.toggle = toggleServiceOffered(service.obj)"
                 (keydown.enter)="
-                service.toggle = toggleServiceOffered(service.obj)
-              "
+                  service.toggle = toggleServiceOffered(service.obj)
+                "
                 tabIndex="0"
                 class="relative cursor-pointer px-1.5 py-3 border rounded text-left bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
               >
@@ -69,7 +73,8 @@ import {SkeletonModule} from "primeng/skeleton";
                 </a>
               </li>
             } @empty {
-              No services available to pre-book, please check back some other time
+              No services available to pre-book, please check back some other
+              time
             }
           </ul>
         } @else {
