@@ -13,7 +13,6 @@ import { CacheService } from '@/app/global-service/cache.service';
 import { filter, startWith, Subject, switchMap, tap } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { DesiredTimeDto } from '@/app/employee-front/employee-schedule/employee-schedule.util';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import {
   CalendarModule,
   CalendarMonthChangeEvent,
@@ -23,7 +22,6 @@ import {
 @Component({
   selector: 'app-create-schedule',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
   imports: [
     DatePipe,
     TimePickerComponent,

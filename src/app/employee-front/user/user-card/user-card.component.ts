@@ -4,15 +4,15 @@ import {
   input,
   output
 } from '@angular/core';
+import { TooltipModule } from 'primeng/tooltip';
 import { Role } from '@/app/app.util';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserDetailsComponent } from '@/app/employee-front/user/user-details/user-details.component';
 import { TrackRole } from '@/app/employee-front/user/user.util';
 
 @Component({
   selector: 'app-user-card',
   standalone: true,
-  imports: [MatTooltipModule, UserDetailsComponent],
+  imports: [TooltipModule, UserDetailsComponent],
   template: `
     <div class="text-center text-gray-500 dark:text-gray-400">
       <img
@@ -36,7 +36,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
               >
                 <button
                   type="button"
-                  matTooltip="{{ obj.role }}"
+                  pTooltip="{{ obj.role }}"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -60,7 +60,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
               >
                 <button
                   type="button"
-                  matTooltip="{{ obj.role }}"
+                  pTooltip="{{ obj.role }}"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -84,7 +84,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
               >
                 <button
                   type="button"
-                  matTooltip="{{ obj.role }}"
+                  pTooltip="{{ obj.role }}"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
@@ -106,7 +106,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
               <li>
                 <button
                   type="button"
-                  matTooltip="{{ obj.role }}"
+                  pTooltip="{{ obj.role }}"
                   aria-label="Button that displays a tooltip when focused or hovered over"
                 >
                   <svg
