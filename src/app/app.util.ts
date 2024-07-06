@@ -16,7 +16,7 @@ export interface Page<T> {
 
 export const EPOCH_SECONDS_TO_DATE = (secs: number) => new Date(secs * 1000);
 
-export const DATES_TO_DISABLE = (dates: Date[]) =>
+export const DATES_TO_DISABLE = (dates: Date[], selected: Date) =>
   dates && dates.length > 0
     ? [
         ...Array(
@@ -33,7 +33,11 @@ export const DATES_TO_DISABLE = (dates: Date[]) =>
                 d.getFullYear() === date.getFullYear()
             )
         )
-    : [];
+    : [
+        ...Array(
+          new Date(selected.getFullYear(), selected.getMonth(), 0).getDate()
+        ).keys()
+      ].map((i) => new Date(selected.getFullYear(), selected.getMonth(), i));
 
 /**
  * Converts date time to hrs and mins

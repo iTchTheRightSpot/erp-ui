@@ -82,7 +82,7 @@ export class AllScheduleComponent {
     dates.some((d) => d.getDate() === date && d.getMonth() === month);
 
   protected readonly datesToDisable = (validDates: Date[]) =>
-    DATES_TO_DISABLE(validDates);
+    DATES_TO_DISABLE(validDates, this.selectedDate);
 
   protected readonly tHead: Array<keyof ScheduleTable> = [
     'id',

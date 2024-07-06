@@ -24,7 +24,7 @@ import {
   CalendarYearChangeEvent
 } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
 import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.dto';
 
 @Component({
@@ -47,6 +47,7 @@ export class BookAppointmentDatesComponent {
     Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   protected readonly details = this.service.bookingInfoSignal();
+  protected readonly validAppointmentTimesSignal = signal<ValidTime[]>([]);
   protected readonly validAppointmentTimesInEpochSeconds = signal<number[]>([]);
 
   // on load of page, check if key contains in cache else call the server.
@@ -57,11 +58,12 @@ export class BookAppointmentDatesComponent {
   protected readonly validAppointmentDays$ = this.onCalendarDateClickSubject
     .asObservable()
     .pipe(
+      debounceTime(500),
       switchMap((selected) =>
         this.service.validAppointmentTimes(selected).pipe(
           tap((validTimes) => {
+            this.validAppointmentTimesSignal.set(validTimes);
             if (validTimes && validTimes.length > 0) {
-              this.selected = validTimes[0].date;
               const d = selected;
               const find = validTimes.find((validTime) => {
                 const date = validTime.date;
@@ -72,8 +74,12 @@ export class BookAppointmentDatesComponent {
                 );
               });
 
-              if (find)
+              if (find) {
+                this.selected = validTimes[0].date;
                 this.validAppointmentTimesInEpochSeconds.set(find.times);
+              } else {
+                this.validAppointmentTimesInEpochSeconds.set([]);
+              }
             }
           })
         )
@@ -90,7 +96,7 @@ export class BookAppointmentDatesComponent {
     dates.some((d) => d.getDate() === date && d.getMonth() === month);
 
   protected readonly datesToDisable = (validDates: Date[]) =>
-    DATES_TO_DISABLE(validDates);
+    DATES_TO_DISABLE(validDates, this.selected);
 
   protected readonly formatSeconds = (seconds: number) =>
     formatSeconds(seconds);
@@ -110,6 +116,7 @@ export class BookAppointmentDatesComponent {
     this.selected = selected;
     this.onCalendarDateClickSubject.next(selected);
     this.service.selectedAppointmentDate(selected);
+    this.clearOutValidAppointmentTimesInEpochSeconds();
   };
 
   protected readonly onSelectedCalendarMonth = (
@@ -128,6 +135,26 @@ export class BookAppointmentDatesComponent {
       this.selected = new Date(year, month - 1, this.selected.getDate());
       this.onCalendarDateClickSubject.next(this.selected);
       this.service.selectedAppointmentDate(this.selected);
+
+      this.clearOutValidAppointmentTimesInEpochSeconds();
+    }
+  };
+
+  private readonly clearOutValidAppointmentTimesInEpochSeconds = () => {
+    const validTimes = this.validAppointmentTimesSignal();
+    const find = validTimes.find((validTime) => {
+      const date = validTime.date;
+      return (
+        this.selected.getDate() === date.getDate() &&
+        this.selected.getMonth() === date.getMonth() &&
+        this.selected.getFullYear() === date.getFullYear()
+      );
+    });
+
+    if (find) {
+      this.validAppointmentTimesInEpochSeconds.set(find.times);
+    } else {
+      this.validAppointmentTimesInEpochSeconds.set([]);
     }
   };
 }
