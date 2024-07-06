@@ -7,6 +7,7 @@ import {
 import { BookAppointmentDatesService } from '@/app/store-front/book/book-appointment-dates/book-appointment-dates.service';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { Router } from '@angular/router';
+import { SkeletonModule } from 'primeng/skeleton';
 import {
   BOOK_CHECKOUT_ROUTE,
   BOOK_STAFF_ROUTE
@@ -30,7 +31,7 @@ import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-ap
 @Component({
   selector: 'app-book-appointment-dates',
   standalone: true,
-  imports: [AsyncPipe, CalendarModule, FormsModule, NgClass],
+  imports: [AsyncPipe, CalendarModule, FormsModule, NgClass, SkeletonModule],
   templateUrl: './book-appointment-dates.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -41,7 +42,8 @@ export class BookAppointmentDatesComponent {
   private readonly service = inject(BookAppointmentDatesService);
 
   protected readonly today = new Date();
-  protected selected = new Date();
+  protected selected: Date | undefined;
+  protected onCalendarPreviousNextBtn = new Date();
 
   protected readonly timezone =
     Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -75,7 +77,6 @@ export class BookAppointmentDatesComponent {
               });
 
               if (find) {
-                this.selected = validTimes[0].date;
                 this.validAppointmentTimesInEpochSeconds.set(find.times);
               } else {
                 this.validAppointmentTimesInEpochSeconds.set([]);
@@ -96,7 +97,7 @@ export class BookAppointmentDatesComponent {
     dates.some((d) => d.getDate() === date && d.getMonth() === month);
 
   protected readonly datesToDisable = (validDates: Date[]) =>
-    DATES_TO_DISABLE(validDates, this.selected);
+    DATES_TO_DISABLE(validDates, this.onCalendarPreviousNextBtn);
 
   protected readonly formatSeconds = (seconds: number) =>
     formatSeconds(seconds);
@@ -114,6 +115,7 @@ export class BookAppointmentDatesComponent {
 
   protected readonly onSelectedCalendarDay = (selected: Date) => {
     this.selected = selected;
+    this.onCalendarPreviousNextBtn = selected;
     this.onCalendarDateClickSubject.next(selected);
     this.service.selectedAppointmentDate(selected);
     this.clearOutValidAppointmentTimesInEpochSeconds();
@@ -132,9 +134,13 @@ export class BookAppointmentDatesComponent {
     year: number | undefined
   ) => {
     if (month && year) {
-      this.selected = new Date(year, month - 1, this.selected.getDate());
-      this.onCalendarDateClickSubject.next(this.selected);
-      this.service.selectedAppointmentDate(this.selected);
+      this.onCalendarPreviousNextBtn = new Date(
+        year,
+        month - 1,
+        this.onCalendarPreviousNextBtn.getDate()
+      );
+      this.onCalendarDateClickSubject.next(this.onCalendarPreviousNextBtn);
+      // this.service.selectedAppointmentDate(this.selected);
 
       this.clearOutValidAppointmentTimesInEpochSeconds();
     }
@@ -145,9 +151,9 @@ export class BookAppointmentDatesComponent {
     const find = validTimes.find((validTime) => {
       const date = validTime.date;
       return (
-        this.selected.getDate() === date.getDate() &&
-        this.selected.getMonth() === date.getMonth() &&
-        this.selected.getFullYear() === date.getFullYear()
+        this.selected?.getDate() === date.getDate() &&
+        this.selected?.getMonth() === date.getMonth() &&
+        this.selected?.getFullYear() === date.getFullYear()
       );
     });
 
