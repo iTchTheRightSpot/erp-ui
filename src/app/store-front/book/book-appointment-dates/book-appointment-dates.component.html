@@ -10,63 +10,90 @@
   <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- calendar -->
     <div class="order-2 sm:order-1 flex flex-col gap-4 pb-2">
-      <p-calendar
-        class="max-w-full"
-        [(ngModel)]="date"
-        [inline]="true"
-        [minDate]="today"
-        (onSelect)="onSelectedAppointmentDate($event)"
-        (onMonthChange)="onMonth($event)"
-        (onYearChange)="onYear($event)"
-        [disabledDates]="datesToDisable(toHighlight())"
-        [showWeek]="false"
-      >
-        <ng-template pTemplate="date" let-date>
-          <span
-            [ngClass]="{
-              'font-medium text-black': contains(
-                toHighlight(),
-                date.day,
-                date.month
-              ),
-              'line-through pointer-events-none opacity-50': !contains(
-                toHighlight(),
-                date.day,
-                date.month
-              )
-            }"
-          >
-            {{ date.day }}
-          </span>
-        </ng-template>
-      </p-calendar>
-      <p class="w-full text-center font-light text-sm">
-        Times are shown in <strong>{{ timezone }}</strong>
-      </p>
-      <p class="w-full text-left font-medium text-medium">
-        Selected:
-        <span class="">{{
-          selected.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })
-        }}</span>
-      </p>
-      <div class="w-full flex flex-wrap gap-2">
-        @for (seconds of epocSeconds$ | async; track seconds) {
-          <button
-            type="button"
-            (click)="selectedAppointmentTime(seconds)"
-            class="p-3 py-2 w-fit h-fit border rounded text-center inline-flex items-center text-xs font-medium bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
-          >
-            {{ toHrMins(epochSecondsToDate(seconds)) }}
-          </button>
-        } @empty {
-          <h4 class="h-fit text-sm sm:text-base md:text-lg">No bookings</h4>
-        }
-      </div>
+      @if (validAppointmentDays$ | async; as validTimesObject) {
+        <p-calendar
+          [style]="{ width: '100%' }"
+          class="rounded-lg shadow-xl"
+          [(ngModel)]="date"
+          [inline]="true"
+          [minDate]="today"
+          (onSelect)="onSelectedCalendarDay($event)"
+          (onMonthChange)="onSelectedCalendarMonth($event)"
+          (onYearChange)="onSelectedCalendarYear($event)"
+          [disabledDates]="
+            datesToDisable(validTimeObjectsToDates(validTimesObject))
+          "
+          [showWeek]="false"
+        >
+          <ng-template pTemplate="date" let-date>
+            <span
+              [ngClass]="{
+                'font-medium text-black': contains(
+                  validTimeObjectsToDates(validTimesObject),
+                  date.day,
+                  date.month
+                ),
+                'line-through pointer-events-none opacity-50': !contains(
+                  validTimeObjectsToDates(validTimesObject),
+                  date.day,
+                  date.month
+                )
+              }"
+            >
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </p-calendar>
+        <p class="w-full text-center font-light text-sm">
+          Times are shown in <strong>{{ timezone }}</strong>
+        </p>
+        <p class="w-full text-left font-medium text-medium">
+          Selected:
+          <span>{{
+            selected.toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })
+          }}</span>
+        </p>
+        <div class="w-full flex flex-wrap gap-2">
+          @for (
+            seconds of validAppointmentTimesInEpochSeconds();
+            track seconds
+          ) {
+            <button
+              type="button"
+              (click)="selectedAppointmentTime(seconds)"
+              class="p-3 py-2 w-fit h-fit border rounded text-center inline-flex items-center text-xs font-medium bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
+            >
+              {{ toHrMins(epochSecondsToDate(seconds)) }}
+            </button>
+          } @empty {
+            <h4 class="h-fit text-sm sm:text-base md:text-lg">No bookings</h4>
+          }
+        </div>
+      } @else {
+        <p-calendar
+          class="max-w-full"
+          [(ngModel)]="date"
+          [inline]="true"
+          [minDate]="today"
+          (onSelect)="onSelectedCalendarDay($event)"
+          (onMonthChange)="onSelectedCalendarMonth($event)"
+          (onYearChange)="onSelectedCalendarYear($event)"
+          [readonlyInput]="true"
+          [showWeek]="false"
+        >
+          <ng-template pTemplate="date" let-date>
+            <span class="line-through pointer-events-none opacity-50">
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </p-calendar>
+        <p class="w-full text-left font-light text-sm">No bookings available</p>
+      }
     </div>
 
     <!-- appointment summary -->
