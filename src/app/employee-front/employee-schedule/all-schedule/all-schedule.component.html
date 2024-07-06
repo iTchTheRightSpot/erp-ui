@@ -44,7 +44,7 @@
     >
       @if (shifts$ | async; as shift) {
         <app-calendar
-          [(selectedDate)]="selectedDate"
+          [selectedDate]="selectedDate"
           [datesToHighlight]="scheduleTableToDate(shift)"
           (onCalendarDateSelectedEmitter)="onDateSelected($event)"
           (onPreviousNextCalendarDateEmitter)="onPrevNextCalendar($event)"

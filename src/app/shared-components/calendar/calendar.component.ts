@@ -2,103 +2,96 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  model,
-  output,
-  ViewEncapsulation
+  output
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
-  MatCalendar,
-  MatCalendarCellClassFunction
-} from '@angular/material/datepicker';
-import { MatCard } from '@angular/material/card';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { CalendarHeaderComponent } from '@/app/shared-components/calendar/calendar-header.component';
-import { CalendarService } from '@/app/shared-components/calendar/calendar.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { tap } from 'rxjs';
+  CalendarModule,
+  CalendarMonthChangeEvent,
+  CalendarYearChangeEvent
+} from 'primeng/calendar';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  encapsulation: ViewEncapsulation.None,
-  providers: [provideNativeDateAdapter()],
-  imports: [MatCalendar, MatCard],
+  imports: [CalendarModule, FormsModule, NgClass],
   template: `
-    <mat-card class="w-full text-black">
-      <mat-calendar
-        [minDate]="minimumDateOnCalendar() || null"
-        [(selected)]="selectedDate"
-        [dateClass]="dateClass"
-        [dateFilter]="myFilter"
-        [headerComponent]="header"
-        (selectedChange)="emitCalendarDateSelected($event)"
-      />
-    </mat-card>
+    <div class="w-full">
+      <p-calendar
+        class="max-w-full"
+        [(ngModel)]="date"
+        [inline]="true"
+        [minDate]="minimumDateOnCalendar()"
+        (onSelect)="onDateSelect($event)"
+        (onMonthChange)="onMonth($event, selectedDate())"
+        (onYearChange)="onYear($event, selectedDate())"
+        [disabledDates]="[]"
+        [showWeek]="false"
+      >
+        <ng-template pTemplate="date" let-date>
+          <span
+            [ngClass]="{
+              'font-medium text-black': contains(
+                datesToHighlight(),
+                date.day,
+                date.month
+              ),
+              'line-through pointer-events-none opacity-50': !contains(
+                datesToHighlight(),
+                date.day,
+                date.month
+              )
+            }"
+          >
+            {{ date.day }}
+          </span>
+        </ng-template>
+      </p-calendar>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarComponent {
-  constructor(calendarService: CalendarService) {
-    calendarService.onPreviousNextEmitterDate$
-      .pipe(
-        tap((date) => {
-          if (date) this.onPreviousNextCalendarDateEmitter.emit(date);
-        }),
-        takeUntilDestroyed()
-      )
-      .subscribe();
-  }
-
-  protected readonly header = CalendarHeaderComponent;
+  protected date: Date[] | undefined;
 
   minimumDateOnCalendar = input<Date>();
-  selectedDate = model<Date | null>(null);
+  selectedDate = input<Date>();
   datesToHighlight = input<Date[]>();
 
   readonly onCalendarDateSelectedEmitter = output<Date>();
   readonly onPreviousNextCalendarDateEmitter = output<Date>();
 
-  protected readonly emitCalendarDateSelected = (
-    date: Date | undefined | null
+  protected readonly contains = (
+    dates: Date[] | undefined,
+    date: number,
+    month: number
+  ) => dates?.some((d) => d.getDate() === date && d.getMonth() === month);
+
+  protected readonly onDateSelect = (date: Date) =>
+    this.onCalendarDateSelectedEmitter.emit(date);
+
+  protected readonly onMonth = (
+    event: CalendarMonthChangeEvent,
+    currentDate: Date | undefined
   ) => {
-    if (date) {
-      this.onCalendarDateSelectedEmitter.emit(date);
-    }
+    const year = event.year;
+    const month = event.month;
+    if (year && month && currentDate)
+      this.onPreviousNextCalendarDateEmitter.emit(
+        new Date(year, month - 1, currentDate.getDate())
+      );
   };
 
-  // reference docs https://material.angular.io/components/datepicker/overview#highlighting-specific-dates
-  protected readonly dateClass: MatCalendarCellClassFunction<Date> = (
-    cellDate,
-    view
+  protected readonly onYear = (
+    event: CalendarYearChangeEvent,
+    currentDate: Date | undefined
   ) => {
-    if (view === 'month') {
-      const bool = this.datesToHighlight()?.some(
-        (d) =>
-          d.getDate() === cellDate.getDate() &&
-          d.getMonth() === cellDate.getMonth() &&
-          d.getFullYear() === cellDate.getFullYear()
+    const year = event.year;
+    const month = event.month;
+    if (year && month && currentDate)
+      this.onPreviousNextCalendarDateEmitter.emit(
+        new Date(year, month - 1, currentDate.getDate())
       );
-      return bool ? 'mat-calendar-dates-to-highlight' : '';
-    }
-    return '';
-  };
-
-  protected readonly myFilter = (cellDate: Date | null) => {
-    if (!cellDate) {
-      return false;
-    }
-
-    const datesToHighlight = this.datesToHighlight();
-
-    if (datesToHighlight) {
-      return datesToHighlight.some(
-        (d) =>
-          d.getDate() === cellDate.getDate() &&
-          d.getMonth() === cellDate.getMonth() &&
-          d.getFullYear() === cellDate.getFullYear()
-      );
-    }
-
-    return true;
   };
 }
