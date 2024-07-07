@@ -60,22 +60,22 @@ import { SkeletonModule } from 'primeng/skeleton';
                   {{ formatSeconds(service.obj.duration) }}
                 </p>
               </li>
-              <li
-                class="px-1.5 py-3 text-right"
-                [ngClass]="{ hidden: servicesSet.size < 1 }"
-              >
-                <a
-                  [routerLink]="BOOK_STAFF_ROUTE"
-                  (click)="addServicesOffered()"
-                  class="py-2 px-5 rounded text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
-                >
-                  Next
-                </a>
-              </li>
             } @empty {
               No services available to pre-book, please check back some other
               time
             }
+            <li
+              class="px-1.5 py-3 text-right"
+              [ngClass]="{ hidden: servicesSet.size < 1 }"
+            >
+              <a
+                [routerLink]="BOOK_STAFF_ROUTE"
+                (click)="addServicesOffered()"
+                class="py-2 px-5 rounded text-white bg-[var(--app-theme)] hover:bg-[var(--app-theme-hover)]"
+              >
+                Next
+              </a>
+            </li>
           </ul>
         } @else {
           <div class="border-round border-1 surface-border p-4 surface-card">
