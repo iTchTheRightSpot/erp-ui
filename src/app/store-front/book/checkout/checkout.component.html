@@ -20,8 +20,9 @@
         <app-form
           [staffId]="bookingInfo.staff.user_id"
           [services]="transform(bookingInfo.servicesOffered)"
+          [form]="form"
           [epochSeconds]="bookingInfo.time"
-          [buttonLoading]="(loadingBtn | async) || false"
+          [buttonLoading]="(loadingBtn | async) || ApiStatus.LOADED"
           (formEmitter)="onSubmit($event)"
         />
       </div>

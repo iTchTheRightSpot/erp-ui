@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ImageModule } from 'primeng/image';
-import { ToastService } from '@/app/global-service/toast.service';
+import { Toast, ToastService } from '@/app/global-service/toast.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Component({
@@ -35,7 +35,7 @@ import { AuthenticationService } from '@/app/global-service/authentication.servi
               <div
                 class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-2/4 text-xl md:text-2xl flex flex-col justify-center items-center text-center font-extralight text-[var(--app-theme-hover)]"
               >
-                <p-image [src]="logo" alt="logo" width="120" />
+                <p-image [src]="logo" alt="logo" width="120"/>
                 <span class="mt-2">Saturday Mowing Company</span>
               </div>
             </div>
@@ -48,7 +48,7 @@ import { AuthenticationService } from '@/app/global-service/authentication.servi
         }
         @case ('LOADED') {
           <p-toast></p-toast>
-          @if (message$ | async) {}
+          @if (taost$ | async) {}
           <router-outlet></router-outlet>
         }
       }
@@ -63,14 +63,23 @@ export class AppComponent {
 
   protected readonly logo = './assets/images/logo.jpeg';
 
-  protected readonly message$ = this.toastService.message$.pipe(
-    tap((message) => {
-      if (message && message.length > 0)
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: message
-        });
+  protected readonly taost$ = this.toastService.toast$.pipe(
+    tap((obj) => {
+      if (obj) {
+        if (obj.key === Toast.ERROR) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: obj.message
+          });
+        } else if (obj.key === Toast.SUCCESS) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: obj.message
+          });
+        }
+      }
     })
   );
 

@@ -6,17 +6,20 @@ import {
   HttpResponse
 } from '@angular/common/http';
 import { BookService } from '@/app/store-front/book/book.service';
-import { ToastService } from '@/app/global-service/toast.service';
+import { Toast, ToastService } from '@/app/global-service/toast.service';
 import {
   catchError,
-  delay,
+  concat,
+  concatMap,
   map,
   mergeMap,
   Observable,
   of,
   startWith,
-  Subject
+  Subject,
+  timer
 } from 'rxjs';
+import { ApiStatus } from '@/app/app.util';
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +33,9 @@ export class CheckoutService {
 
   readonly bookingInfoSignal = this.bookService.bookingInfo;
 
-  private readonly submitSubject = new Subject<Observable<boolean>>();
+  private readonly submitSubject = new Subject<Observable<ApiStatus>>();
 
-  readonly submit$: Observable<boolean> = this.submitSubject
+  readonly submit$ = this.submitSubject
     .asObservable()
     .pipe(mergeMap((obs) => obs));
 
@@ -41,7 +44,7 @@ export class CheckoutService {
    * in other to show a loading button in form component.
    * */
   readonly prebook = (data: FormData) =>
-    this.submitSubject.next(this.request(data).pipe(startWith(true)));
+    this.submitSubject.next(this.request(data));
 
   /**
    * Submits request to server to pre-book
@@ -53,10 +56,20 @@ export class CheckoutService {
             HttpResponse<any>
           >(`${this.domain}appointment`, data, { observe: 'response', withCredentials: true })
           .pipe(
-            map(() => false),
-            catchError((err: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(err)
+            map(() => {
+              this.toastService.message({
+                key: Toast.SUCCESS,
+                message: 'appointment pre-booked!'
+              });
+              return ApiStatus.LOADED;
+            }),
+            startWith(ApiStatus.LOADING),
+            catchError((e: HttpErrorResponse) =>
+              this.toastService.messageErrorApiStatus(e)
             )
           )
-      : of(false).pipe(delay(2000));
+      : concat(
+          of(ApiStatus.LOADING),
+          timer(5000).pipe(concatMap(() => of(ApiStatus.LOADED)))
+        );
 }

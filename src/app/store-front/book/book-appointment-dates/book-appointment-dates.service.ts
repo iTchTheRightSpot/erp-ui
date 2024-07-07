@@ -8,7 +8,7 @@ import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-ap
 import { environment } from '@/environments/environment.ts';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { BookService } from '@/app/store-front/book/book.service';
-import { ToastService } from '@/app/global-service/toast.service';
+import { Toast, ToastService } from '@/app/global-service/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
 
 @Injectable({
@@ -58,7 +58,10 @@ export class BookAppointmentDatesService {
     const staffId = coreBookingInfo.staff?.user_id;
 
     if (!services || !staffId) {
-      this.toastService.message('please select a service and or staff.');
+      this.toastService.message({
+        key: Toast.ERROR,
+        message: 'please select a service and or staff.'
+      });
       throw new Error();
     }
 

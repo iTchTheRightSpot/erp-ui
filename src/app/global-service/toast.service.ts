@@ -1,6 +1,18 @@
 import { Injectable } from '@angular/core';
 import { concat, concatMap, Observable, of, Subject, timer } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ApiStatus } from '@/app/app.util';
+
+export enum Toast {
+  NONE = 'NONE',
+  ERROR = 'ERROR',
+  SUCCESS = 'SUCCESS'
+}
+
+export interface IToast {
+  key: Toast;
+  message: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,40 +21,45 @@ export class ToastService {
   /**
    * Manages the display of error messages in the UI.
    * */
-  private readonly subject = new Subject<string>();
+  private readonly subject = new Subject<IToast>();
 
   /**
    * Emits error messages.
    *
    * @returns An Observable that resolves to the error message to be displayed.
    */
-  readonly message$: Observable<string> = this.subject.pipe(
-    concatMap((message) => {
-      // emit the initial value immediately
-      const initial$ = of(message);
-      // emit a different value after 5 seconds
-      const delayed$ = timer(5000).pipe(concatMap(() => of('')));
-      // concatenate the observables to ensure they are emitted sequentially
-      return concat(initial$, delayed$);
-    })
+  readonly toast$: Observable<IToast> = this.subject.pipe(
+    concatMap((obj) =>
+      concat(
+        of(obj),
+        timer(5000).pipe(
+          concatMap(() => of({ key: Toast.NONE, message: '' } as IToast))
+        )
+      )
+    )
   );
 
-  readonly message = (message: string) => this.subject.next(message);
+  readonly message = (obj: IToast) => this.subject.next(obj);
 
   readonly messageErrorNothing = (e: HttpErrorResponse) => {
-    this.subject.next(e.message);
+    this.subject.next({ key: Toast.ERROR, message: e.message });
     return of();
   };
 
   readonly messageErrorBool = (e: HttpErrorResponse) => {
-    this.subject.next(e.message);
+    this.subject.next({ key: Toast.ERROR, message: e.message });
     return of(false);
+  };
+
+  readonly messageErrorApiStatus = (e: HttpErrorResponse) => {
+    this.subject.next({ key: Toast.ERROR, message: e.message });
+    return of(ApiStatus.ERROR);
   };
 
   readonly messageHandleIterateError = <T>(
     e: HttpErrorResponse
   ): Observable<T[]> => {
-    this.subject.next(e.message);
+    this.subject.next({ key: Toast.ERROR, message: e.message });
     return of([] as T[]);
   };
 }

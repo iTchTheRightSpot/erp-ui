@@ -6,10 +6,10 @@ import {
   HttpParams
 } from '@angular/common/http';
 import { catchError, of, switchMap, tap } from 'rxjs';
-import { ToastService } from '@/app/global-service/toast.service';
+import { Toast, ToastService } from '@/app/global-service/toast.service';
 import {
-  UserDto,
-  staffs
+  staffs,
+  UserDto
 } from '@/app/store-front/book/book-staff/book-staff.dto';
 import { BookService } from '@/app/store-front/book/book.service';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
@@ -37,7 +37,10 @@ export class BookStaffService {
     const services = this.bookService.bookingInfo().servicesOffered;
 
     if (!services) {
-      this.toastService.message('please select a service pre-book');
+      this.toastService.message({
+        key: Toast.ERROR,
+        message: 'please select a service pre-book'
+      });
       throw new Error();
     }
 

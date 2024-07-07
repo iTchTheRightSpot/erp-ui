@@ -14,6 +14,19 @@ export interface Page<T> {
   is_empty: boolean;
 }
 
+export enum Role {
+  EMPLOYEE = 'EMPLOYEE',
+  OWNER = 'OWNER',
+  DEVELOPER = 'DEVELOPER',
+  USER = 'USER'
+}
+
+export enum ApiStatus {
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
+  ERROR = 'ERROR'
+}
+
 export const EPOCH_SECONDS_TO_DATE = (secs: number) => new Date(secs * 1000);
 
 export const DATES_TO_DISABLE = (dates: Date[], selected: Date) =>
@@ -47,13 +60,6 @@ export const TO_HR_MINS = (time: Date) =>
     hour: '2-digit',
     minute: '2-digit'
   });
-
-export enum Role {
-  EMPLOYEE = 'EMPLOYEE',
-  OWNER = 'OWNER',
-  DEVELOPER = 'DEVELOPER',
-  USER = 'USER'
-}
 
 export const keyOfRole = (role: string | null): Role | null => {
   const roleMap: { [key: string]: Role } = {
