@@ -8,7 +8,10 @@ import { AppointmentDeconstruct } from '@/app/employee-front/employee-front.util
 import { EmployeeDashboardService } from '@/app/employee-front/employee-dashboard/employee-dashboard.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 import { CalendarModule } from 'primeng/calendar';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
+import { ApiStatus } from '@/app/app.util';
 
 @Component({
   selector: 'app-employee-dashboard',
@@ -19,26 +22,23 @@ import { FormsModule } from '@angular/forms';
     AboutAppointmentComponent,
     CalendarModule,
     FormsModule,
-    NgClass
+    NgClass,
+    SkeletonModule,
+    TableModule
   ],
   templateUrl: './employee-dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeDashboardComponent extends EmployeeAppointmentComponent {
+  protected override readonly ApiStatus = ApiStatus;
+
   constructor(
     dashboardService: EmployeeDashboardService,
-    authenticationService: AuthenticationService
+    authenticationService: AuthenticationService,
+    fb: FormBuilder
   ) {
-    super(dashboardService, authenticationService);
+    super(dashboardService, authenticationService, fb);
   }
-
-  protected override thead: Array<keyof AppointmentDeconstruct> = [
-    'id',
-    'status',
-    'client',
-    'service',
-    'timeslot'
-  ];
 
   protected readonly apps$ = super.appointments$.pipe(
     map((objs) =>

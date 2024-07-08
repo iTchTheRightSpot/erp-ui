@@ -22,6 +22,7 @@ import {
 } from 'rxjs';
 import { ToastService } from '@/app/global-service/toast.service';
 import { AppointmentResponse } from '@/app/employee-front/employee-front.util';
+import { ApiStatus } from '@/app/app.util';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class EmployeeAppointmentService {
   >(of([]));
 
   private readonly updateAppointmentStatusSubject = new Subject<
-    Observable<boolean>
+    Observable<ApiStatus>
   >();
 
   readonly subject$ = this.subject.asObservable().pipe(
@@ -74,11 +75,11 @@ export class EmployeeAppointmentService {
             HttpResponse<any>
           >(`${this.domain}employee/appointment`, dto, { withCredentials: true })
           .pipe(
-            map(() => false),
+            map(() => ApiStatus.LOADED),
+            startWith(ApiStatus.LOADING),
             catchError((e: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(e)
-            ),
-            startWith(true)
+              this.toastService.messageErrorApiStatus(e)
+            )
           )
-      : merge(of(true), of(false).pipe(delay(5000)));
+      : merge(of(ApiStatus.LOADING), of(ApiStatus.LOADED).pipe(delay(5000)));
 }

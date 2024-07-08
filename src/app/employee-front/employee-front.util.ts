@@ -1,3 +1,5 @@
+import { Role } from '@/app/app.util';
+
 export const EMPLOYEE_FRONT_DASHBOARD = 'dashboard';
 export const EMPLOYEE_FRONT_SCHEDULE = 'schedule';
 export const EMPLOYEE_FRONT_APPOINTMENT = 'appointment';
@@ -11,6 +13,18 @@ export enum ConfirmationStatus {
   CANCELLED = 'CANCELLED',
   EXPIRED = 'EXPIRED'
 }
+
+export const KEY_OF_CONFIRMATION_STATUS = (
+  status: string
+): ConfirmationStatus => {
+  const statusMap: { [key: string]: ConfirmationStatus } = {
+    [ConfirmationStatus.PENDING]: ConfirmationStatus.PENDING,
+    [ConfirmationStatus.CONFIRMED]: ConfirmationStatus.CONFIRMED,
+    [ConfirmationStatus.CANCELLED]: ConfirmationStatus.CANCELLED,
+    [ConfirmationStatus.EXPIRED]: ConfirmationStatus.EXPIRED
+  };
+  return statusMap[status];
+};
 
 export interface ServiceName {
   name: string;
@@ -27,7 +41,7 @@ export interface AppointmentResponse {
   status: ConfirmationStatus;
   created_at: Date;
   scheduled_for: Date;
-  expire_at: Date;
+  expired_at: Date;
   services: ServiceName[];
 }
 
@@ -52,7 +66,7 @@ export const AppointmentResponseMapper = (obj: AppointmentResponse) => {
     status: obj.status,
     created_at: new Date(obj.created_at),
     scheduled_for: new Date(obj.scheduled_for),
-    expire_at: new Date(obj.expire_at),
+    expired_at: new Date(obj.expired_at),
     services: obj.services
   } as AppointmentResponse;
 };
@@ -85,7 +99,7 @@ export const dummyAppointments = (num: number) => {
         today.getMonth(),
         today.getDate() + i
       ),
-      expire_at: new Date(
+      expired_at: new Date(
         today.getFullYear(),
         today.getMonth(),
         today.getDate() + i

@@ -23,6 +23,8 @@
             <option [value]="service.service_name">
               {{ service.service_name }}
             </option>
+          } @empty {
+            <option disabled selected>All services offered</option>
           }
         </select>
       </div>

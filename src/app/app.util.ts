@@ -61,7 +61,7 @@ export const TO_HR_MINS = (time: Date) =>
     minute: '2-digit'
   });
 
-export const keyOfRole = (role: string | null): Role | null => {
+export const KEY_OF_ROLE = (role: string | null): Role | null => {
   const roleMap: { [key: string]: Role } = {
     [Role.EMPLOYEE]: Role.EMPLOYEE,
     [Role.OWNER]: Role.OWNER,

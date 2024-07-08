@@ -49,11 +49,68 @@
       </h1>
 
       <div class="">
-        <app-table
-          [tHead]="thead"
-          [tBody]="(apps$ | async) || []"
-          (rowClickEmitter)="onAppointmentNameClick($event)"
-        />
+        @if (apps$ | async; as appointments) {
+          <p-table
+            [value]="appointments"
+            [tableStyle]="{ 'min-width': '50rem' }"
+          >
+            <ng-template pTemplate="header">
+              <tr
+                class="text-xs text-gray-900 uppercase bg-gray-50 dark:bg-gray-700 dark:text-white"
+              >
+                <th>status</th>
+                <th>client</th>
+                <th>service</th>
+                <th>scheduled for</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-deconstruct>
+              <tr>
+                <td
+                  [ngClass]="{
+                    'text-green-600': deconstruct.status === 'CONFIRMED',
+                    'text-red-600': deconstruct.status === 'CANCELLED',
+                    'text-yellow-400': deconstruct.status === 'PENDING',
+                    'text-neutral-600': deconstruct.status === 'EXPIRED'
+                  }"
+                >
+                  {{ deconstruct.status }}
+                </td>
+                <td>
+                  <button
+                    (click)="onAppointmentNameClick(deconstruct)"
+                    type="button"
+                    class="underline underline-offset-2"
+                  >
+                    {{ deconstruct.client }}
+                  </button>
+                </td>
+                <td>{{ deconstruct.service }}</td>
+                <td>{{ deconstruct.timeslot }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else {
+          <p-table [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Status</th>
+                <th>Client</th>
+                <th>Service</th>
+                <th>scheduled for</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <tr>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
       </div>
     </div>
   </div>
@@ -221,7 +278,14 @@
       </div>
 
       <div class="w-full h-fit flex-1 bg-white mx-auto">
-        <app-about-appointment [detail]="details" />
+        <app-about-appointment
+          [form]="form"
+          [appointmentUpdateStatus]="
+            (updateAppointmentStatus$ | async) || ApiStatus.LOADED
+          "
+          [detail]="details"
+          (updateAppointmentStatusEmitter)="updateAppointmentStatus($event)"
+        />
       </div>
     </div>
   </div>

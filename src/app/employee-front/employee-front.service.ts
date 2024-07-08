@@ -79,6 +79,7 @@ export class EmployeeFrontService {
       })
       .pipe(
         map((objs) => objs.map((obj) => AppointmentResponseMapper(obj))),
+        tap((arr) => console.log('appointment arr after ', arr)),
         catchError((err) =>
           this.toastService.messageHandleIterateError<AppointmentResponse>(err)
         )

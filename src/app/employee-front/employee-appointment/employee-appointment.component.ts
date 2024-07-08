@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AsyncPipe, NgClass } from '@angular/common';
-import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
 import {
@@ -16,10 +15,12 @@ import {
   AppointmentDetail,
   dummyDetailBuilder
 } from '@/app/employee-front/shared/about-appointment.util';
-import { DATES_TO_DISABLE, TO_HR_MINS } from '@/app/app.util';
+import { ApiStatus, DATES_TO_DISABLE, TO_HR_MINS } from '@/app/app.util';
 import {
   AppointmentDeconstruct,
-  AppointmentResponse
+  AppointmentResponse,
+  ConfirmationStatus,
+  KEY_OF_CONFIRMATION_STATUS
 } from '@/app/employee-front/employee-front.util';
 import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
@@ -28,18 +29,27 @@ import {
   CalendarMonthChangeEvent,
   CalendarYearChangeEvent
 } from 'primeng/calendar';
-import { FormsModule } from '@angular/forms';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-employee-appointment',
   standalone: true,
   imports: [
     AsyncPipe,
-    TableComponent,
     AboutAppointmentComponent,
     CalendarModule,
     FormsModule,
-    NgClass
+    NgClass,
+    TableModule,
+    SkeletonModule
   ],
   templateUrl: './employee-appointment.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -48,22 +58,23 @@ export class EmployeeAppointmentComponent {
   protected date: Date[] | undefined;
   protected selectedDate = new Date();
   protected toggleMobileCalendar = false;
+  protected readonly ApiStatus = ApiStatus;
+
+  protected readonly form: FormGroup;
 
   constructor(
     private readonly appointmentService: EmployeeAppointmentService,
-    private readonly authenticationService: AuthenticationService
+    private readonly authenticationService: AuthenticationService,
+    private readonly fb: FormBuilder
   ) {
     this.appointmentService.onUpdateCalendarMonth(this.selectedDate);
+    this.form = this.fb.group({
+      appointmentId: new FormControl(-1, [Validators.required]),
+      status: new FormControl(ConfirmationStatus.CANCELLED, [
+        Validators.required
+      ])
+    });
   }
-
-  protected readonly thead: Array<keyof AppointmentDeconstruct> = [
-    'id',
-    'status',
-    'client',
-    'service',
-    'timeslot',
-    'action'
-  ];
 
   /**
    * Returns an observable that emits a list of {@link Date}s. These dates correspond
@@ -125,8 +136,7 @@ export class EmployeeAppointmentComponent {
                   status: appointment.status,
                   service: appointment.services[0].name,
                   client: appointment.customer_name,
-                  timeslot: `${TO_HR_MINS(appointment.scheduled_for)} <---> ${TO_HR_MINS(appointment.expire_at)}`,
-                  action: 'edit'
+                  timeslot: `${TO_HR_MINS(appointment.scheduled_for)} <--> ${TO_HR_MINS(appointment.expired_at)}`
                 }) as AppointmentDeconstruct
             )
       )
@@ -187,6 +197,7 @@ export class EmployeeAppointmentComponent {
   ) => {
     const obs = this.appointmentService.subject$.pipe(
       map((objs) => objs.find((obj) => obj.appointment_id === event.id)),
+      tap(objs => console.log('component ', objs)),
       map((obj) =>
         obj
           ? ({
@@ -200,24 +211,29 @@ export class EmployeeAppointmentComponent {
               address: obj.address,
               created: obj.created_at,
               scheduledFor: obj.scheduled_for,
-              expire: obj.expire_at
+              expire: obj.expired_at
             } as AppointmentDetail)
           : dummyDetailBuilder()
       )
+    );
+    this.form.controls['appointmentId'].setValue(event.id);
+    this.form.controls['status'].setValue(
+      KEY_OF_CONFIRMATION_STATUS(event.status)
     );
     this.toggleAboutAppointment = true;
     this.appointmentDetailsSubject.next(obs);
   };
 
-  protected readonly updateAppointment$ =
+  protected readonly updateAppointmentStatus$ =
     this.appointmentService.updateAppointment$;
 
-  protected readonly updateAppointmentStatus = (
-    obj: AppointmentDeconstruct
-  ) => {
+  protected readonly updateAppointmentStatus = (obj: {
+    appointmentId: number;
+    status: ConfirmationStatus;
+  }) => {
     const user = this.authenticationService.activeUser();
     this.appointmentService.updateAppointmentStatus({
-      appointment_id: obj.id,
+      appointment_id: obj.appointmentId,
       status: obj.status,
       employee_id: user ? user.user_id : ''
     } as UpdateAppointmentStatusDto);

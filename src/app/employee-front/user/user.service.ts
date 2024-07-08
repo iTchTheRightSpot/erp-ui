@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { keyOfRole, Page, Role } from '@/app/app.util';
+import { KEY_OF_ROLE, Page, Role } from '@/app/app.util';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 import {
   catchError,
@@ -85,7 +85,7 @@ export class UserService {
               this.cacheKey(
                 Number(pageNumber),
                 Number(size),
-                keyOfRole(params.get('role')),
+                KEY_OF_ROLE(params.get('role')),
                 name
               ),
               page

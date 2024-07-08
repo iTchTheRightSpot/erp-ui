@@ -124,7 +124,7 @@ export class EmployeeGeneralService {
     this.http
       .delete<
         HttpResponse<any>
-      >(`${this.domain}?employee_id=${employeeId}&service_name=${serviceId}`, { withCredentials: true })
+      >(`${this.domain}?employee_id=${employeeId}&service_id=${serviceId}`, { withCredentials: true })
       .pipe(
         switchMap((e) => this.allServicesOfferedByEmployeeRequest(employeeId)),
         map(() => false),
