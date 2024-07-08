@@ -24,7 +24,7 @@ export class ToastService {
   private readonly subject = new Subject<IToast>();
 
   /**
-   * Emits error messages.
+   * Emits messages.
    *
    * @returns An Observable that resolves to the error message to be displayed.
    */
