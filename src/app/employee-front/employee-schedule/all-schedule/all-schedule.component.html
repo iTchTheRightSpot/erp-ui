@@ -88,6 +88,23 @@
   </div>
 
   <div class="w-full">
-    <app-table [tHead]="tHead" [tBody]="scheduleTable()" />
+    <p-table [value]="scheduleTable()" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr
+          class="text-xs text-gray-900 bg-gray-50 dark:bg-gray-700 dark:text-white"
+        >
+          <th>Date</th>
+          <th>From (time)</th>
+          <th>To (time)</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-schedule>
+        <tr>
+          <td>{{ schedule.startDate }}</td>
+          <td>{{ schedule.startTime }}</td>
+          <td>{{ schedule.endTime }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 </div>

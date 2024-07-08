@@ -7,10 +7,10 @@ import {
   FormsModule,
   Validators
 } from '@angular/forms';
-import { TO_HR_MINS } from '@/app/app.util';
+import { ApiStatus, TO_HR_MINS } from '@/app/app.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { CacheService } from '@/app/global-service/cache.service';
-import { filter, startWith, Subject, switchMap, tap } from 'rxjs';
+import { filter, Subject, switchMap, tap } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { DesiredTimeDto } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import {
@@ -35,8 +35,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateScheduleComponent {
-  protected date: Date[] | undefined;
-
   private static readonly scheduleCache = new CacheService<
     string,
     { start: Date; end: Date; duration: number }
@@ -45,6 +43,8 @@ export class CreateScheduleComponent {
   private readonly service = inject(ScheduleService);
   private readonly fb = inject(FormBuilder);
 
+  protected date: Date[] | undefined;
+  protected readonly ApiStatus = ApiStatus;
   protected selectedDate = new Date();
   protected toggle = false;
   protected dropdownToggle = false;
@@ -160,19 +160,22 @@ export class CreateScheduleComponent {
     withLatestFrom(CreateScheduleComponent.scheduleCache.values$),
     switchMap(
       ([_, objs]: [void, { start: Date; end: Date; duration: number }[]]) =>
-        this.service
-          .createSchedule(
-            this.staffId,
-            objs.map(
-              (obj) =>
-                ({
-                  start: obj.start.toISOString(),
-                  duration: obj.duration
-                }) as DesiredTimeDto
-            )
+        this.service.createSchedule(
+          this.staffId,
+          objs.map(
+            (obj) =>
+              ({
+                start: obj.start.toISOString(),
+                duration: obj.duration
+              }) as DesiredTimeDto
           )
-          .pipe(startWith(false))
-    )
+        )
+    ),
+    tap((apiStatus) => {
+      if (apiStatus === ApiStatus.LOADED) {
+        CreateScheduleComponent.scheduleCache.clear();
+      }
+    })
   );
 
   /**

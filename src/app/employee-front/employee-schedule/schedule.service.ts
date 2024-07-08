@@ -9,12 +9,22 @@ import {
   HttpErrorResponse,
   HttpResponse
 } from '@angular/common/http';
-import { catchError, delay, map, of, startWith, switchMap, tap } from 'rxjs';
-import { ToastService } from '@/app/global-service/toast.service';
+import {
+  catchError,
+  concat,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+  timer
+} from 'rxjs';
+import { Toast, ToastService } from '@/app/global-service/toast.service';
 import { UserService } from '@/app/employee-front/user/user.service';
 import { Schedule } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
 import { CacheService } from '@/app/global-service/cache.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
+import { ApiStatus } from '@/app/app.util';
 
 @Injectable({
   providedIn: 'root'
@@ -58,9 +68,7 @@ export class ScheduleService {
 
   // Method to create a schedule for an employee
   readonly createSchedule = (staffId: string, objs: DesiredTimeDto[]) =>
-    this.createRequest({ employee_id: staffId, times: objs }).pipe(
-      startWith(true)
-    );
+    this.createRequest({ employee_id: staffId, times: objs });
 
   // Private method to handle the create schedule request
   private readonly createRequest = (obj: ShiftDto) =>
@@ -76,13 +84,24 @@ export class ScheduleService {
                 date.getDate(),
                 date.getMonth(),
                 date.getFullYear()
-              ).pipe(map(() => false))
+              ).pipe(map(() => ApiStatus.LOADED))
             ),
+            tap((apiStatus) => {
+              if (apiStatus === ApiStatus.LOADED)
+                this.toastService.message({
+                  key: Toast.SUCCESS,
+                  message: 'created shift(s)!'
+                });
+            }),
+            startWith(ApiStatus.LOADING),
             catchError((e: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(e)
+              this.toastService.messageErrorApiStatus(e)
             )
           )
-      : of(false).pipe(delay(5000));
+      : concat(
+          of(ApiStatus.LOADING),
+          timer(2000).pipe(map(() => ApiStatus.LOADED))
+        );
 
   private readonly shiftsByMonthRequest = (
     dayOfMonth: number,

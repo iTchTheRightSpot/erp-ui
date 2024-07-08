@@ -7,7 +7,6 @@ import {
 import { RouterLink } from '@angular/router';
 import { EMPLOYEE_SCHEDULE_CREATE_ROUTE } from '@/app/employee-front/employee-schedule/employee-schedule.util';
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
-import { TableComponent } from '@/app/employee-front/shared/table.component';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { ScheduleTable } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
 import { BehaviorSubject, debounceTime, map, switchMap, tap } from 'rxjs';
@@ -18,17 +17,18 @@ import {
 } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { DATES_TO_DISABLE } from '@/app/app.util';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-all-schedule',
   standalone: true,
   imports: [
     RouterLink,
-    TableComponent,
     AsyncPipe,
     CalendarModule,
     FormsModule,
-    NgClass
+    NgClass,
+    TableModule
   ],
   templateUrl: './all-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -107,9 +107,20 @@ export class AllScheduleComponent {
               (shift) =>
                 ({
                   id: shift.shift_id,
-                  startDate: shift.start.toLocaleDateString(),
-                  startTime: shift.start.toLocaleTimeString(),
-                  endTime: shift.end.toLocaleTimeString()
+                  startDate: shift.start.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  }),
+                  startTime: shift.start.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }),
+                  endTime: shift.end.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })
                 }) as ScheduleTable
             )
           ),

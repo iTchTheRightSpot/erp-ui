@@ -1,5 +1,3 @@
-import { Role } from '@/app/app.util';
-
 export const EMPLOYEE_FRONT_DASHBOARD = 'dashboard';
 export const EMPLOYEE_FRONT_SCHEDULE = 'schedule';
 export const EMPLOYEE_FRONT_APPOINTMENT = 'appointment';
@@ -51,7 +49,6 @@ export interface AppointmentDeconstruct {
   service: string;
   client: string;
   timeslot: string;
-  action: string;
 }
 
 export const AppointmentResponseMapper = (obj: AppointmentResponse) => {

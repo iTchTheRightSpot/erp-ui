@@ -197,7 +197,6 @@ export class EmployeeAppointmentComponent {
   ) => {
     const obs = this.appointmentService.subject$.pipe(
       map((objs) => objs.find((obj) => obj.appointment_id === event.id)),
-      tap(objs => console.log('component ', objs)),
       map((obj) =>
         obj
           ? ({
@@ -232,10 +231,13 @@ export class EmployeeAppointmentComponent {
     status: ConfirmationStatus;
   }) => {
     const user = this.authenticationService.activeUser();
-    this.appointmentService.updateAppointmentStatus({
-      appointment_id: obj.appointmentId,
-      status: obj.status,
-      employee_id: user ? user.user_id : ''
-    } as UpdateAppointmentStatusDto);
+    this.appointmentService.updateAppointmentStatus(
+      {
+        appointment_id: obj.appointmentId,
+        status: obj.status,
+        employee_id: user ? user.user_id : ''
+      },
+      this.selectedDate
+    );
   };
 }

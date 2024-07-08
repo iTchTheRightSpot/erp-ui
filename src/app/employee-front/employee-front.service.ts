@@ -28,7 +28,7 @@ export class EmployeeFrontService {
   protected readonly authenticationService = inject(AuthenticationService);
 
   private readonly cacheKeyBuilder = (selected: Date) =>
-    `${1 + selected.getMonth()}_${selected.getFullYear()}`;
+    `${selected.getMonth()}_${selected.getFullYear()}`;
 
   /**
    * Returns an observable that emits a paginated list of {@link AppointmentResponse}
@@ -37,30 +37,33 @@ export class EmployeeFrontService {
    * we cache response received from the backend to {@link cachedService}.
    *
    * @param selected the start date to return all {@link AppointmentResponse}.
+   * @param refresh
    * @return an Observable that emits an array of {@link AppointmentResponse}.
    * */
-  readonly appointmentsOnSelectedMonth = (selected: Date) => {
+  readonly appointmentsOnSelectedMonth = (
+    selected: Date,
+    refresh: boolean = false
+  ) => {
     if (!this.production)
       return of<AppointmentResponse[]>(dummyAppointments(20));
 
     const key = this.cacheKeyBuilder(selected);
+    let params = new HttpParams();
+    params = params.append('day_of_month', selected.getDate());
+    params = params.append('month', 1 + selected.getMonth());
+    params = params.append('year', selected.getFullYear());
+    const user = this.authenticationService.activeUser();
+    params = params.append('employee_id', user ? user.user_id : '');
 
-    return EmployeeFrontService.cachedService.getItem(key).pipe(
-      switchMap((value) => {
-        if (value) return of(value);
-
-        let params = new HttpParams();
-        params = params.append('day_of_month', selected.getDate());
-        params = params.append('month', 1 + selected.getMonth());
-        params = params.append('year', selected.getFullYear());
-        const user = this.authenticationService.activeUser();
-        params = params.append('employee_id', user ? user.user_id : '');
-
-        return this.request(params).pipe(
-          tap((arr) => EmployeeFrontService.cachedService.setItem(key, arr))
-        );
-      })
+    const serverRequest = this.request(params).pipe(
+      tap((arr) => EmployeeFrontService.cachedService.setItem(key, arr))
     );
+
+    return refresh
+      ? serverRequest
+      : EmployeeFrontService.cachedService
+          .getItem(key)
+          .pipe(switchMap((value) => (value ? of(value) : serverRequest)));
   };
 
   /**
@@ -79,7 +82,6 @@ export class EmployeeFrontService {
       })
       .pipe(
         map((objs) => objs.map((obj) => AppointmentResponseMapper(obj))),
-        tap((arr) => console.log('appointment arr after ', arr)),
         catchError((err) =>
           this.toastService.messageHandleIterateError<AppointmentResponse>(err)
         )
