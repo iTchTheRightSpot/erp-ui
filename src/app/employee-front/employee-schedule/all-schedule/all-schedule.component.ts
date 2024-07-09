@@ -84,13 +84,6 @@ export class AllScheduleComponent {
   protected readonly datesToDisable = (validDates: Date[]) =>
     DATES_TO_DISABLE(validDates, this.selectedDate);
 
-  protected readonly tHead: Array<keyof ScheduleTable> = [
-    'id',
-    'startDate',
-    'startTime',
-    'endTime'
-  ];
-
   protected readonly scheduleTableToDate = (objs: ScheduleTable[]) =>
     objs?.map((obj) => new Date(obj.startDate));
 
@@ -107,6 +100,7 @@ export class AllScheduleComponent {
               (shift) =>
                 ({
                   id: shift.shift_id,
+                  isVisible: shift.is_visible,
                   startDate: shift.start.toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',

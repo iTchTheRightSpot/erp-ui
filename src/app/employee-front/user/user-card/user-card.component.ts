@@ -139,7 +139,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
       [style]="{ display: toggleUserDetailComponent ? 'block' : 'none' }"
       class="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[var(--half-black)]"
     >
-      <div class="lg-scr p-2 flex flex-col">
+      <div class="lg-scr h-full overflow-y-auto p-2 flex flex-col">
         <div class="ml-auto mt-1 w-fit">
           <button
             (click)="toggleUserDetailComponent = !toggleUserDetailComponent"
@@ -164,9 +164,7 @@ import { TrackRole } from '@/app/employee-front/user/user.util';
           </button>
         </div>
 
-        <div
-          class="w-full max-h-[500px] xl:max-h-fit overflow-y-scroll mx-auto"
-        >
+        <div class="w-full flex-1">
           <app-user-details
             [employeeId]="employeeId()"
             [image]="image()"

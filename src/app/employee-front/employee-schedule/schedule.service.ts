@@ -57,7 +57,18 @@ export class ScheduleService {
                 : this.shiftsByMonthRequest(dayOfMonth, month, year)
             )
           )
-      : of<Schedule[]>([]);
+      : of<Schedule[]>(
+          Array.from(
+            { length: 30 },
+            (_, index) =>
+              ({
+                shift_id: `${index}`,
+                is_visible: index % 2 === 0,
+                start: new Date(),
+                end: new Date()
+              }) as Schedule
+          )
+        );
 
   // Method to update the selected date
   readonly updateSelectedDate = (selected: Date) =>
@@ -110,7 +121,7 @@ export class ScheduleService {
   ) =>
     this.http
       .get<
-        { shift_id: string; start: string; end: string }[]
+        { shift_id: string; is_visible: boolean; start: string; end: string }[]
       >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month + 1}&year=${year}&employee_id=${this.authenticationService.activeUser()?.user_id}`, { withCredentials: true })
       .pipe(
         map((res) =>
@@ -118,6 +129,7 @@ export class ScheduleService {
             (obj) =>
               ({
                 shift_id: obj.shift_id,
+                is_visible: obj.is_visible,
                 start: new Date(obj.start),
                 end: new Date(obj.end)
               }) as Schedule

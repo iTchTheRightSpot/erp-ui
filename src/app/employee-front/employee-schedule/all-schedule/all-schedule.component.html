@@ -44,7 +44,7 @@
     >
       @if (shifts$ | async; as shift) {
         <p-calendar
-          class="max-w-full"
+          [style]="{ width: '100%' }"
           [(ngModel)]="date"
           [inline]="true"
           (onSelect)="onDateSelected($event)"
@@ -74,7 +74,7 @@
         </p-calendar>
       } @else {
         <p-calendar
-          class="max-w-full"
+          [style]="{ width: '100%' }"
           [(ngModel)]="date"
           [inline]="true"
           (onSelect)="onDateSelected($event)"
@@ -93,6 +93,7 @@
         <tr
           class="text-xs text-gray-900 bg-gray-50 dark:bg-gray-700 dark:text-white"
         >
+          <th>Visible</th>
           <th>Date</th>
           <th>From (time)</th>
           <th>To (time)</th>
@@ -100,6 +101,15 @@
       </ng-template>
       <ng-template pTemplate="body" let-schedule>
         <tr>
+          <td
+            class="uppercase"
+            [ngClass]="{
+              'text-green-600': schedule.isVisible === true,
+              'text-red-600': schedule.isVisible === false
+            }"
+          >
+            {{ schedule.isVisible }}
+          </td>
           <td>{{ schedule.startDate }}</td>
           <td>{{ schedule.startTime }}</td>
           <td>{{ schedule.endTime }}</td>

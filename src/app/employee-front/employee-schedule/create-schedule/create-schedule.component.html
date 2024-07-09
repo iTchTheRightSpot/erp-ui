@@ -23,7 +23,7 @@
     </button>
     <div
       [ngStyle]="{ display: toggle ? 'block' : 'none' }"
-      class="flex gap-1.5 px-1 rounded-md shadow-lg bg-white absolute top-7 left-0 right-0"
+      class="flex gap-1.5 px-1 rounded-md shadow-lg bg-white dark:text-white dark:bg-gray-900 text-gray-900 absolute top-7 left-0 right-0"
     >
       <div class="w-full py-2 relative">
         <div class="flex gap-2">
@@ -72,9 +72,8 @@
           </button>
         </div>
         @if (toggleCalendar) {
-          <div class="absolute top-10 bottom-0 left-0 z-40">
+          <div class="shadow-2xl absolute top-10 bottom-0 left-0 z-40">
             <p-calendar
-              class="max-w-full"
               [(ngModel)]="date"
               [inline]="true"
               [minDate]="minimumDateOnCalendar"
@@ -124,11 +123,14 @@
     </div>
   </div>
 
-  <div class="max-h-96 max-w-lg flex flex-col gap-3 overflow-y-auto">
+  <div class="max-h-96 max-w-3xl flex flex-col gap-3 overflow-y-auto">
     @for (entry of entries$ | async; track entry[0]; let i = $index) {
       <div
-        class="w-full px-2 py-1 grid grid-cols-3 gap-2 inline-flex items-center justify-center text-sm font-medium text-center border border-[var(--border-outline)] rounded-md shadow-lg"
+        class="w-full px-2 py-1 grid grid-cols-4 gap-2 inline-flex items-center justify-center text-xs lg:text-sm font-medium text-center border border-[var(--border-outline)] rounded-md shadow-lg"
       >
+        <div class="h-full flex items-center">
+          {{ entry[1].isVisible }}
+        </div>
         <div class="h-full flex items-center">
           {{ entry[1].start | date: 'dd MMMM yyyy' }}
         </div>

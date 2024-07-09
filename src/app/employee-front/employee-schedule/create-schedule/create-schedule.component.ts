@@ -37,7 +37,7 @@ import {
 export class CreateScheduleComponent {
   private static readonly scheduleCache = new CacheService<
     string,
-    { start: Date; end: Date; duration: number }
+    { start: Date; end: Date; duration: number; isVisible: boolean }
   >();
 
   private readonly service = inject(ScheduleService);
@@ -109,6 +109,7 @@ export class CreateScheduleComponent {
    * staff with {@link Role#EMPLOYEE}.
    */
   protected readonly form = this.fb.group({
+    isVisible: new FormControl(false, [Validators.required]),
     start: new FormControl('', [Validators.required]),
     end: new FormControl('', [Validators.required])
   });
@@ -117,13 +118,18 @@ export class CreateScheduleComponent {
    * Handles the date-time picker changes.
    * @param obj - The object containing start and end dates.
    */
-  protected readonly onDateTimePicker = (obj: { start: Date; end: Date }) => {
+  protected readonly onDateTimePicker = (obj: {
+    isVisible: boolean;
+    start: Date;
+    end: Date;
+  }) => {
     const milliseconds = obj.end.getTime() - obj.start.getTime();
     const seconds = milliseconds / 1000;
     CreateScheduleComponent.scheduleCache.setItem(obj.start.toString(), {
       start: obj.start,
       end: obj.end,
-      duration: seconds
+      duration: seconds,
+      isVisible: obj.isVisible
     });
     this.toggle = !this.toggle;
   };
@@ -139,6 +145,7 @@ export class CreateScheduleComponent {
 
   protected staffId = '';
   protected staffDisplayName = '';
+
   protected readonly onSelectedStaff = (
     staffId: string,
     staffDisplayName: string
@@ -159,14 +166,18 @@ export class CreateScheduleComponent {
   protected readonly onSubmit$ = this.submitSubject.asObservable().pipe(
     withLatestFrom(CreateScheduleComponent.scheduleCache.values$),
     switchMap(
-      ([_, objs]: [void, { start: Date; end: Date; duration: number }[]]) =>
+      ([_, objs]: [
+        void,
+        { start: Date; end: Date; duration: number; isVisible: boolean }[]
+      ]) =>
         this.service.createSchedule(
           this.staffId,
           objs.map(
             (obj) =>
               ({
                 start: obj.start.toISOString(),
-                duration: obj.duration
+                duration: obj.duration,
+                is_visible: obj.isVisible
               }) as DesiredTimeDto
           )
         )

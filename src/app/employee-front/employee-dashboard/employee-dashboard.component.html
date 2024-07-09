@@ -120,7 +120,7 @@
     <div class="hidden max-w-lg rounded-lg lg:block">
       @if (daysToHighlight$ | async; as highlight) {
         <p-calendar
-          class="max-w-full"
+          [style]="{ width: '100%' }"
           [(ngModel)]="date"
           [inline]="true"
           (onSelect)="onCalendarDateClick($event)"
@@ -150,7 +150,7 @@
         </p-calendar>
       } @else {
         <p-calendar
-          class="max-w-full"
+          [style]="{ width: '100%' }"
           [(ngModel)]="date"
           [inline]="true"
           (onSelect)="onCalendarDateClick($event)"
@@ -206,7 +206,7 @@
       <div class="bg-white max-w-lg mx-auto">
         @if (daysToHighlight$ | async; as highlight) {
           <p-calendar
-            class="max-w-full"
+            [style]="{ width: '100%' }"
             [(ngModel)]="date"
             [inline]="true"
             (onSelect)="onCalendarDateClick($event)"
@@ -236,7 +236,7 @@
           </p-calendar>
         } @else {
           <p-calendar
-            class="max-w-full"
+            [style]="{ width: '100%' }"
             [(ngModel)]="date"
             [inline]="true"
             (onSelect)="onCalendarDateClick($event)"
@@ -252,7 +252,7 @@
 
 @if (toggleAboutAppointment && (appointmentDetails$ | async); as details) {
   <div class="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[var(--half-black)]">
-    <div class="lg-scr p-2 flex flex-col">
+    <div class="lg-scr h-full overflow-y-auto p-2 flex flex-col">
       <div class="ml-auto mt-1 w-fit">
         <button
           (click)="toggleAboutAppointment = !toggleAboutAppointment"
@@ -277,7 +277,7 @@
         </button>
       </div>
 
-      <div class="w-full h-fit flex-1 bg-white mx-auto">
+      <div class="w-full flex-1">
         <app-about-appointment
           [form]="form"
           [appointmentUpdateStatus]="
