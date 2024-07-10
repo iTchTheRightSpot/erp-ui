@@ -49,7 +49,7 @@ export class EmployeeFrontService {
 
     const key = this.cacheKeyBuilder(selected);
     let params = new HttpParams();
-    params = params.append('day_of_month', selected.getDate());
+    params = params.append('day_of_month', 1);
     params = params.append('month', 1 + selected.getMonth());
     params = params.append('year', selected.getFullYear());
     const user = this.authenticationService.activeUser();

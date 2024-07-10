@@ -52,9 +52,7 @@ export class ScheduleService {
           .getItem(this.shiftsCacheKey(month, year))
           .pipe(
             switchMap((value) =>
-              value
-                ? of(value)
-                : this.shiftsByMonthRequest(dayOfMonth, month, year)
+              value ? of(value) : this.shiftsByMonthRequest(month, year)
             )
           )
       : of<Schedule[]>(
@@ -92,7 +90,6 @@ export class ScheduleService {
             map(() => new Date(obj.times[0].start)),
             switchMap((date: Date) =>
               this.shiftsByMonthRequest(
-                date.getDate(),
                 date.getMonth(),
                 date.getFullYear()
               ).pipe(map(() => ApiStatus.LOADED))
@@ -114,15 +111,11 @@ export class ScheduleService {
           timer(2000).pipe(map(() => ApiStatus.LOADED))
         );
 
-  private readonly shiftsByMonthRequest = (
-    dayOfMonth: number,
-    month: number,
-    year: number
-  ) =>
+  private readonly shiftsByMonthRequest = (month: number, year: number) =>
     this.http
       .get<
         { shift_id: string; is_visible: boolean; start: string; end: string }[]
-      >(`${this.domain}employee/shift?day_of_month=${dayOfMonth}&month=${month + 1}&year=${year}&employee_id=${this.authenticationService.activeUser()?.user_id}`, { withCredentials: true })
+      >(`${this.domain}employee/shift?day_of_month=${1}&month=${month + 1}&year=${year}&employee_id=${this.authenticationService.activeUser()?.user_id}`, { withCredentials: true })
       .pipe(
         map((res) =>
           res.map(
@@ -162,7 +155,6 @@ export class ScheduleService {
           .pipe(
             switchMap(() =>
               this.shiftsByMonthRequest(
-                date.getDate(),
                 date.getMonth(),
                 date.getFullYear()
               ).pipe(map(() => ApiStatus.LOADED))
@@ -199,7 +191,6 @@ export class ScheduleService {
           .pipe(
             switchMap(() =>
               this.shiftsByMonthRequest(
-                date.getDate(),
                 date.getMonth(),
                 date.getFullYear()
               ).pipe(map(() => ApiStatus.LOADED))
