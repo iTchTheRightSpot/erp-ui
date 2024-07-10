@@ -50,7 +50,6 @@
           (onSelect)="onDateSelected($event)"
           (onMonthChange)="onMonth($event)"
           (onYearChange)="onYear($event)"
-          [disabledDates]="datesToDisable(scheduleTableToDate(shift))"
           [showWeek]="false"
         >
           <ng-template pTemplate="date" let-date>
@@ -61,7 +60,7 @@
                   date.day,
                   date.month
                 ),
-                'line-through pointer-events-none opacity-50': !contains(
+                'line-through': !contains(
                   scheduleTableToDate(shift),
                   date.day,
                   date.month
@@ -81,8 +80,7 @@
           (onMonthChange)="onMonth($event)"
           (onYearChange)="onYear($event)"
           [showWeek]="false"
-        >
-        </p-calendar>
+        />
       }
     </div>
   </div>
@@ -110,7 +108,22 @@
           >
             {{ schedule.isVisible }}
           </td>
-          <td>{{ schedule.startDate }}</td>
+          <td>
+            <button
+              (click)="onSelectedSchedule(schedule.shiftId, schedule.startDate)"
+              type="button"
+              class="underline underline-offset-2"
+            >
+              {{
+                schedule.startDate.toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })
+              }}
+            </button>
+          </td>
           <td>{{ schedule.startTime }}</td>
           <td>{{ schedule.endTime }}</td>
         </tr>
@@ -118,3 +131,19 @@
     </p-table>
   </div>
 </div>
+
+@if (toggleUpdateScheduleDialog && selectedShift(); as obj) {
+  <app-update-schedule
+    [form]="form"
+    [updateShiftVisibilityState]="updateShiftVisibility$ | async"
+    [updateShiftDateTimeState]="updateShiftDateTime$ | async"
+    [shiftId]="obj.shiftId"
+    [localDate]="obj.localDate"
+    [toggleShiftVisibilityInStoreFrontSignal]="false"
+    [(toggleUpdateScheduleDialogSignal)]="toggleUpdateScheduleDialog"
+    (toggleShiftVisibilityInStoreFrontEmitter)="
+      updateShiftVisibilityInStoreFrontEmitter($event, obj.localDate)
+    "
+    (updateAppointmentTimeEmitter)="updateShiftDateTime($event, obj.localDate)"
+  />
+}

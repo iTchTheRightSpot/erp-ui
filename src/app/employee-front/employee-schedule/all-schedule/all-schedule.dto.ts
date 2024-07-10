@@ -6,9 +6,9 @@ export interface Schedule {
 }
 
 export interface ScheduleTable {
-  id: string;
+  shiftId: string;
   isVisible: boolean;
-  startDate: string;
+  startDate: Date;
   startTime: string;
   endTime: string;
 }

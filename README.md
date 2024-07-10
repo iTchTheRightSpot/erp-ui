@@ -4,7 +4,7 @@
 
 1. TailwindCSS.
 2. [Flag Icon](https://github.com/lipis/flag-icons).
-3. Material UI.
+3. PrimeNG.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.9.
 

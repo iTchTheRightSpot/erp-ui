@@ -145,4 +145,79 @@ export class ScheduleService {
           this.toastService.messageHandleIterateError<Schedule>(e)
         )
       );
+
+  readonly updateShiftDateTimeRequest = (
+    shiftId: string,
+    start: number,
+    duration: number,
+    date: Date
+  ) =>
+    this.production
+      ? this.http
+          .patch(
+            `${this.domain}owner/shift?employee_id=${this.authenticationService.activeUser()?.user_id}&shift_id=${shiftId}&shift_start=${start}&shift_duration=${duration}`,
+            {},
+            { withCredentials: true }
+          )
+          .pipe(
+            switchMap(() =>
+              this.shiftsByMonthRequest(
+                date.getDate(),
+                date.getMonth(),
+                date.getFullYear()
+              ).pipe(map(() => ApiStatus.LOADED))
+            ),
+            tap((apiStatus) => {
+              if (apiStatus === ApiStatus.LOADED)
+                this.toastService.message({
+                  key: Toast.SUCCESS,
+                  message: 'update!'
+                });
+            }),
+            startWith(ApiStatus.LOADING),
+            catchError((e: HttpErrorResponse) =>
+              this.toastService.messageErrorApiStatus(e)
+            )
+          )
+      : concat(
+          of(ApiStatus.LOADING),
+          timer(2000).pipe(map(() => ApiStatus.LOADED))
+        );
+
+  readonly toggleShiftVisibilityRequest = (
+    shiftId: string,
+    isVisible: boolean,
+    date: Date
+  ) =>
+    this.production
+      ? this.http
+          .patch(
+            `${this.domain}owner/shift/invalidate?shift_id=${shiftId}&is_visible=${isVisible}`,
+            {},
+            { withCredentials: true }
+          )
+          .pipe(
+            switchMap(() =>
+              this.shiftsByMonthRequest(
+                date.getDate(),
+                date.getMonth(),
+                date.getFullYear()
+              ).pipe(map(() => ApiStatus.LOADED))
+            ),
+            tap((apiStatus) => {
+              if (apiStatus === ApiStatus.LOADED)
+                this.toastService.message({
+                  key: Toast.SUCCESS,
+                  message: isVisible ? 'shift visible' : 'invalidated shift'
+                });
+            }),
+            startWith(ApiStatus.LOADING),
+            catchError((e: HttpErrorResponse) =>
+              this.toastService.messageErrorApiStatus(e)
+            )
+          )
+      : concat(
+          of(ApiStatus.LOADING),
+          timer(2000).pipe(map(() => ApiStatus.LOADED))
+        );
 }

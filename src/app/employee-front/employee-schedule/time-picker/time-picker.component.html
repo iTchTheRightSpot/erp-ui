@@ -4,21 +4,6 @@
   </h2>
   <form [formGroup]="form()">
     <div>
-      <div class="w-full flex text-center items-center gap-2 mb-3">
-        <p class="block h-full text-sm font-medium">
-          Visibility
-          <span class="text-xs">(allow clients to reserve time)</span>
-          <span class="text-red-500">*</span>
-        </p>
-        <p-toggleButton
-          styleClass="p-button-text p-2"
-          formControlName="isVisible"
-          onLabel="true"
-          offLabel="false"
-          ariaLabel="Include in store front"
-        />
-      </div>
-
       <div class="grid grid-cols-2 gap-1.5">
         <div>
           <label for="start-time" class="block mb-2 text-sm font-medium"

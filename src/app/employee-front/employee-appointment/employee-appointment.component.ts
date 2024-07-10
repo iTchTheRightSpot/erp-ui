@@ -15,14 +15,13 @@ import {
   AppointmentDetail,
   dummyDetailBuilder
 } from '@/app/employee-front/shared/about-appointment.util';
-import { ApiStatus, DATES_TO_DISABLE, TO_HR_MINS } from '@/app/app.util';
+import { ApiStatus, TO_HR_MINS } from '@/app/app.util';
 import {
   AppointmentDeconstruct,
   AppointmentResponse,
   ConfirmationStatus,
   KEY_OF_CONFIRMATION_STATUS
 } from '@/app/employee-front/employee-front.util';
-import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 import {
   CalendarModule,
@@ -178,9 +177,6 @@ export class EmployeeAppointmentComponent {
 
   protected readonly contains = (dates: Date[], date: number, month: number) =>
     dates.some((d) => d.getDate() === date && d.getMonth() === month);
-
-  protected readonly datesToDisable = (validDates: Date[]) =>
-    DATES_TO_DISABLE(validDates, this.selectedDate);
 
   protected toggleAboutAppointment = false;
 

@@ -9,15 +9,30 @@ import { EMPLOYEE_SCHEDULE_CREATE_ROUTE } from '@/app/employee-front/employee-sc
 import { ScheduleService } from '@/app/employee-front/employee-schedule/schedule.service';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { ScheduleTable } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
-import { BehaviorSubject, debounceTime, map, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  map,
+  mergeMap,
+  Observable,
+  Subject,
+  switchMap,
+  tap
+} from 'rxjs';
 import {
   CalendarModule,
   CalendarMonthChangeEvent,
   CalendarYearChangeEvent
 } from 'primeng/calendar';
-import { FormsModule } from '@angular/forms';
-import { DATES_TO_DISABLE } from '@/app/app.util';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  Validators
+} from '@angular/forms';
 import { TableModule } from 'primeng/table';
+import { UpdateScheduleComponent } from '@/app/employee-front/employee-schedule/update-schedule/update-schedule.component';
+import { ApiStatus } from '@/app/app.util';
 
 @Component({
   selector: 'app-all-schedule',
@@ -28,16 +43,21 @@ import { TableModule } from 'primeng/table';
     CalendarModule,
     FormsModule,
     NgClass,
-    TableModule
+    TableModule,
+    UpdateScheduleComponent
   ],
   templateUrl: './all-schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllScheduleComponent {
-  protected date: Date[] | undefined;
-
   private readonly service = inject(ScheduleService);
+  private readonly fb = inject(FormBuilder);
 
+  protected date: Date[] | undefined;
+  protected toggleUpdateScheduleDialog = false;
+  protected readonly selectedShift = signal<
+    { shiftId: string; localDate: Date } | undefined
+  >(undefined);
   protected selectedDate = new Date();
 
   protected readonly EMPLOYEE_SCHEDULE_CREATE_ROUTE =
@@ -81,11 +101,8 @@ export class AllScheduleComponent {
   protected readonly contains = (dates: Date[], date: number, month: number) =>
     dates.some((d) => d.getDate() === date && d.getMonth() === month);
 
-  protected readonly datesToDisable = (validDates: Date[]) =>
-    DATES_TO_DISABLE(validDates, this.selectedDate);
-
   protected readonly scheduleTableToDate = (objs: ScheduleTable[]) =>
-    objs?.map((obj) => new Date(obj.startDate));
+    objs.map((obj) => obj.startDate);
 
   protected readonly scheduleTable = signal<ScheduleTable[]>([]);
 
@@ -99,14 +116,9 @@ export class AllScheduleComponent {
             shifts.map(
               (shift) =>
                 ({
-                  id: shift.shift_id,
+                  shiftId: shift.shift_id,
                   isVisible: shift.is_visible,
-                  startDate: shift.start.toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  }),
+                  startDate: shift.start,
                   startTime: shift.start.toLocaleTimeString('en-US', {
                     hour: '2-digit',
                     minute: '2-digit'
@@ -122,4 +134,62 @@ export class AllScheduleComponent {
         )
     )
   );
+
+  protected readonly onSelectedSchedule = (shiftId: string, date: Date) => {
+    this.selectedShift.set({ shiftId: shiftId, localDate: date });
+    this.toggleUpdateScheduleDialog = !this.toggleUpdateScheduleDialog;
+  };
+
+  protected readonly form = this.fb.group({
+    start: new FormControl('', [Validators.required]),
+    end: new FormControl('', [Validators.required])
+  });
+
+  private readonly updateShiftVisibilitySubject = new Subject<
+    Observable<ApiStatus>
+  >();
+
+  protected readonly updateShiftVisibility$ = this.updateShiftVisibilitySubject
+    .asObservable()
+    .pipe(mergeMap((obs) => obs));
+
+  protected readonly updateShiftVisibilityInStoreFrontEmitter = (
+    obj: {
+      shiftId: string;
+      isVisible: boolean;
+    },
+    shiftSelected: Date
+  ) =>
+    this.updateShiftVisibilitySubject.next(
+      this.service.toggleShiftVisibilityRequest(
+        obj.shiftId,
+        obj.isVisible,
+        shiftSelected
+      )
+    );
+
+  private readonly updateShiftDateTimeSubject = new Subject<
+    Observable<ApiStatus>
+  >();
+
+  protected readonly updateShiftDateTime$ = this.updateShiftDateTimeSubject
+    .asObservable()
+    .pipe(mergeMap((obs) => obs));
+
+  protected readonly updateShiftDateTime = (
+    obj: {
+      shiftId: string;
+      start: number;
+      duration: number;
+    },
+    shiftSelected: Date
+  ) =>
+    this.updateShiftDateTimeSubject.next(
+      this.service.updateShiftDateTimeRequest(
+        obj.shiftId,
+        obj.start,
+        obj.duration,
+        shiftSelected
+      )
+    );
 }

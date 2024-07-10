@@ -126,7 +126,6 @@
           (onSelect)="onCalendarDateClick($event)"
           (onMonthChange)="onMonth($event)"
           (onYearChange)="onYear($event)"
-          [disabledDates]="datesToDisable(highlight)"
           [showWeek]="false"
         >
           <ng-template pTemplate="date" let-date>
@@ -137,11 +136,7 @@
                   date.day,
                   date.month
                 ),
-                'line-through pointer-events-none opacity-50': !contains(
-                  highlight,
-                  date.day,
-                  date.month
-                )
+                'line-through': !contains(highlight, date.day, date.month)
               }"
             >
               {{ date.day }}
@@ -212,7 +207,6 @@
             (onSelect)="onCalendarDateClick($event)"
             (onMonthChange)="onMonth($event)"
             (onYearChange)="onYear($event)"
-            [disabledDates]="datesToDisable(highlight)"
             [showWeek]="false"
           >
             <ng-template pTemplate="date" let-date>
@@ -223,11 +217,7 @@
                     date.day,
                     date.month
                   ),
-                  'line-through pointer-events-none opacity-50': !contains(
-                    highlight,
-                    date.day,
-                    date.month
-                  )
+                  'line-through': !contains(highlight, date.day, date.month)
                 }"
               >
                 {{ date.day }}
