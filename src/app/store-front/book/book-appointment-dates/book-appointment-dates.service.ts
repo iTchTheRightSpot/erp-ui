@@ -67,7 +67,8 @@ export class BookAppointmentDatesService {
 
     const serviceNames = services.map((s) => s.service_name).join('_');
 
-    const key = `${staffId}_${serviceNames}${selected.getMonth()}_${selected.getFullYear()}`;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const key = `${staffId}_${serviceNames}${selected.getMonth()}_${selected.getFullYear()}_${timezone}`;
 
     return BookAppointmentDatesService.VALID_TIMES_SERVER_RESPONSE_CACHE.getItem(
       key
@@ -89,6 +90,7 @@ export class BookAppointmentDatesService {
         params = params.append('day', selected.getDate());
         params = params.append('month', 1 + selected.getMonth());
         params = params.append('year', selected.getFullYear());
+        params = params.append('timezone', timezone);
 
         // call to backend
         return this.http

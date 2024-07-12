@@ -54,7 +54,7 @@ export class CheckoutService {
       ? this.http
           .post<
             HttpResponse<any>
-          >(`${this.domain}appointment`, data, { observe: 'response', withCredentials: true })
+          >(`${this.domain}appointment?timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone}`, data, { observe: 'response', withCredentials: true })
           .pipe(
             map(() => {
               this.toastService.message({
