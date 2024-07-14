@@ -13,11 +13,7 @@ import {
   BOOK_STAFF_ROUTE
 } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
-import {
-  DATES_TO_DISABLE,
-  EPOCH_SECONDS_TO_DATE,
-  FORMAT_SECONDS
-} from '@/app/app.util';
+import { DATES_TO_DISABLE, FORMAT_SECONDS } from '@/app/app.util';
 import {
   CalendarModule,
   CalendarMonthChangeEvent,
@@ -89,8 +85,8 @@ export class BookAppointmentDatesComponent {
   protected readonly validTimeObjectsToDates = (objs: ValidTime[]) =>
     objs.map((obj) => obj.date);
 
-  protected readonly epochSecondsToDate = (seconds: number) =>
-    EPOCH_SECONDS_TO_DATE(seconds);
+  protected readonly epochMilliSecondsToDate = (epochMilliSeconds: number) =>
+    new Date(epochMilliSeconds);
 
   protected readonly contains = (dates: Date[], date: number, month: number) =>
     dates.some((d) => d.getDate() === date && d.getMonth() === month);

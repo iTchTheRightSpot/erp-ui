@@ -72,7 +72,7 @@
               class="p-3 py-2 w-fit h-fit border text-black rounded text-center inline-flex items-center text-xs font-medium bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
             >
               {{
-                epochSecondsToDate(seconds).toLocaleTimeString('en-US', {
+                epochMilliSecondsToDate(seconds).toLocaleTimeString('en-US', {
                   hour: '2-digit',
                   minute: '2-digit'
                 })

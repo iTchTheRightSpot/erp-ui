@@ -27,8 +27,6 @@ export enum ApiStatus {
   ERROR = 'ERROR'
 }
 
-export const EPOCH_SECONDS_TO_DATE = (secs: number) => new Date(secs * 1000);
-
 export const DATES_TO_DISABLE = (dates: Date[], selected: Date) =>
   dates && dates.length > 0
     ? [

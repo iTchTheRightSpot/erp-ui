@@ -3,7 +3,7 @@ import { CheckoutService } from '@/app/store-front/book/checkout/checkout.servic
 import { FormComponent } from '@/app/store-front/book/checkout/form.component';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 import { AsyncPipe } from '@angular/common';
-import { ApiStatus, EPOCH_SECONDS_TO_DATE, TO_HR_MINS } from '@/app/app.util';
+import { ApiStatus, TO_HR_MINS } from '@/app/app.util';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
 
@@ -50,8 +50,8 @@ export class CheckoutComponent {
     description: new FormControl('', [Validators.required, Validators.max(255)])
   });
 
-  protected readonly toHrMins = (epochSeconds: number) =>
-    TO_HR_MINS(EPOCH_SECONDS_TO_DATE(epochSeconds));
+  protected readonly toHrMins = (epochMilliSeconds: number) =>
+    TO_HR_MINS(new Date(epochMilliSeconds));
 
   protected readonly transform = (objs: BookServiceOfferedDto[]) =>
     objs.map((obj) => ({ service_name: obj.service_name }));
