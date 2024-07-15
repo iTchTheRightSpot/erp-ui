@@ -63,7 +63,9 @@
         }
         <div class="w-full flex flex-wrap gap-2">
           @for (
-            seconds of validAppointmentTimesInEpochSeconds();
+            seconds of validAppointmentTimesInEpochSecondsSorter(
+              validAppointmentTimesInEpochSeconds()
+            );
             track seconds
           ) {
             <button

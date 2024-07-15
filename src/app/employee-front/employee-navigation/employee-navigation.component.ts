@@ -18,6 +18,7 @@ import { SafeHtml } from '@angular/platform-browser';
     <button
       (click)="this.toggle = !this.toggle"
       (mousedown)="onMouseDown($event)"
+      (touchstart)="onTouchStart($event)"
       data-drawer-target="toggle-sidebar-btn"
       data-drawer-toggle="toggle-sidebar-btn"
       aria-controls="toggle-sidebar-btn"
@@ -142,28 +143,56 @@ export class EmployeeNavigationComponent {
 
   protected readonly logoutClick = () => this.logoutEmitter.emit();
 
+  @HostListener('document:mouseup')
+  protected readonly onMouseUp = () => {
+    this.isDragging = false;
+  };
+
   @HostListener('document:mousemove', ['$event'])
   protected readonly onMouseMove = (event: MouseEvent) => {
-    const selector = document.querySelector(`.draggable-button`);
-    if (this.isDragging && selector) {
-      const element = selector as HTMLElement;
-      element.style.left = `${event.clientX - this.startX}px`;
-      element.style.top = `${event.clientY - this.startY}px`;
+    this.handleMove(event.clientX, event.clientY);
+  };
+
+  @HostListener('document:touchmove', ['$event'])
+  protected readonly onTouchMove = (event: TouchEvent) => {
+    if (event.touches.length > 0) {
+      const touch = event.touches[0];
+      this.handleMove(touch.clientX, touch.clientY);
     }
+  };
+
+  @HostListener('document:touchend')
+  protected readonly onTouchEnd = () => {
+    this.isDragging = false;
   };
 
   protected readonly onMouseDown = (event: MouseEvent) => {
     event.preventDefault();
-    const element = document.querySelector(`.draggable-button`);
-    if (element) {
-      this.isDragging = true;
-      this.startX = event.clientX - element.getBoundingClientRect().left;
-      this.startY = event.clientY - element.getBoundingClientRect().top;
+    this.handleStart(event.clientX, event.clientY);
+  };
+
+  protected readonly onTouchStart = (event: TouchEvent) => {
+    if (event.touches.length > 0) {
+      const touch = event.touches[0];
+      this.handleStart(touch.clientX, touch.clientY);
     }
   };
 
-  @HostListener('document:mouseup')
-  protected readonly onMouseUp = () => {
-    this.isDragging = false;
+  private readonly handleMove = (clientX: number, clientY: number) => {
+    const selector = document.querySelector('.draggable-button');
+    if (this.isDragging && selector) {
+      const element = selector as HTMLElement;
+      element.style.left = `${clientX - this.startX}px`;
+      element.style.top = `${clientY - this.startY}px`;
+    }
+  };
+
+  private readonly handleStart = (clientX: number, clientY: number) => {
+    const element = document.querySelector('.draggable-button');
+    if (element) {
+      this.isDragging = true;
+      this.startX = clientX - element.getBoundingClientRect().left;
+      this.startY = clientY - element.getBoundingClientRect().top;
+    }
   };
 }

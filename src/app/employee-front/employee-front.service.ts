@@ -3,7 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   AppointmentResponse,
   AppointmentResponseMapper,
-  dummyAppointments
+  ConfirmationStatus,
+  dummyAppointments,
+  ServiceName
 } from '@/app/employee-front/employee-front.util';
 import { environment } from '@/environments/environment';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
@@ -27,9 +29,6 @@ export class EmployeeFrontService {
   private readonly toastService = inject(ToastService);
   protected readonly authenticationService = inject(AuthenticationService);
 
-  private readonly cacheKeyBuilder = (selected: Date) =>
-    `${selected.getMonth()}_${selected.getFullYear()}`;
-
   /**
    * Returns an observable that emits a paginated list of {@link AppointmentResponse}
    * based on the day selected. The backend returns all appointments that fall
@@ -47,13 +46,16 @@ export class EmployeeFrontService {
     if (!this.production)
       return of<AppointmentResponse[]>(dummyAppointments(20));
 
-    const key = this.cacheKeyBuilder(selected);
+    const user = this.authenticationService.activeUser();
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const key = `${selected.getMonth()}_${selected.getFullYear()}_${timezone}`;
+
     let params = new HttpParams();
     params = params.append('day_of_month', 1);
     params = params.append('month', 1 + selected.getMonth());
     params = params.append('year', selected.getFullYear());
-    const user = this.authenticationService.activeUser();
     params = params.append('employee_id', user ? user.user_id : '');
+    params = params.append('timezone', timezone);
 
     const serverRequest = this.request(params).pipe(
       tap((arr) => EmployeeFrontService.cachedService.setItem(key, arr))
@@ -76,14 +78,53 @@ export class EmployeeFrontService {
    * */
   private readonly request = (params: HttpParams) =>
     this.http
-      .get<AppointmentResponse[]>(`${this.domain}employee/appointment`, {
+      .get<IAppointmentResponse[]>(`${this.domain}employee/appointment`, {
         withCredentials: true,
         params: params
       })
       .pipe(
+        map((objs) =>
+          IAppointmentResponse_ARRAY_TO_AppointmentResponse_ARRAY(objs)
+        ),
         map((objs) => objs.map((obj) => AppointmentResponseMapper(obj))),
         catchError((err) =>
           this.toastService.messageHandleIterateError<AppointmentResponse>(err)
         )
       );
 }
+
+interface IAppointmentResponse {
+  appointment_id: number;
+  customer_name: string;
+  customer_email: string;
+  detail: string;
+  address: string;
+  phone: string;
+  image: string;
+  status: ConfirmationStatus;
+  created_at: number;
+  scheduled_for: number;
+  expired_at: number;
+  services: ServiceName[];
+}
+
+const IAppointmentResponse_ARRAY_TO_AppointmentResponse_ARRAY = (
+  arr: IAppointmentResponse[]
+) =>
+  arr.map(
+    (obj) =>
+      ({
+        appointment_id: obj.appointment_id,
+        customer_name: obj.customer_name,
+        customer_email: obj.customer_email,
+        detail: obj.detail,
+        address: obj.address,
+        phone: obj.phone,
+        image: obj.image,
+        status: obj.status,
+        created_at: new Date(obj.created_at),
+        scheduled_for: new Date(obj.scheduled_for),
+        expired_at: new Date(obj.expired_at),
+        services: obj.services
+      }) as AppointmentResponse
+  );

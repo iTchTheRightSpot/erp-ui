@@ -98,7 +98,7 @@ export class ScheduleService {
               if (apiStatus === ApiStatus.LOADED)
                 this.toastService.message({
                   key: Toast.SUCCESS,
-                  message: 'created shift(s)!'
+                  message: 'shift(s) created!'
                 });
             }),
             startWith(ApiStatus.LOADING),
@@ -114,8 +114,8 @@ export class ScheduleService {
   private readonly shiftsByMonthRequest = (month: number, year: number) =>
     this.http
       .get<
-        { shift_id: string; is_visible: boolean; start: string; end: string }[]
-      >(`${this.domain}employee/shift?day_of_month=${1}&month=${month + 1}&year=${year}&employee_id=${this.authenticationService.activeUser()?.user_id}`, { withCredentials: true })
+        { shift_id: string; is_visible: boolean; start: number; end: number }[]
+      >(`${this.domain}employee/shift?day_of_month=${1}&month=${month + 1}&year=${year}&employee_id=${this.authenticationService.activeUser()?.user_id}&timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone}`, { withCredentials: true })
       .pipe(
         map((res) =>
           res.map(

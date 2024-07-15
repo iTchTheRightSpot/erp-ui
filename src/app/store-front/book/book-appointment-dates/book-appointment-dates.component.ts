@@ -52,6 +52,10 @@ export class BookAppointmentDatesComponent {
     new Date()
   );
 
+  protected readonly validAppointmentTimesInEpochSecondsSorter = (
+    arr: number[]
+  ) => arr.sort((a, b) => (a === b ? 0 : a < b ? -1 : 1));
+
   protected readonly validAppointmentDays$ = this.onCalendarDateClickSubject
     .asObservable()
     .pipe(

@@ -18,7 +18,11 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
     <div class="h-full w-full flex flex-col gap-3 bg-white">
       <div class="w-full p-2 flex justify-between">
         <!-- left cancel btn -->
-        <button type="button" (click)="toggle.set(false)">
+        <button
+          type="button"
+          [ngStyle]="{ display: isStaff() ? 'block' : 'none' }"
+          (click)="toggle.set(false)"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -121,7 +125,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
       <ul class="flex-col list-none flex gap-3">
         @for (link of links; track link) {
           <li
-            class="p-2.5 border-b cursor-pointer active:border-black active:border-2 focus:border-black focus:border-2"
+            class="p-2.5 hidden border-b cursor-pointer active:border-black active:border-t-2 focus:border-black focus:border-2"
           >
             <a
               [routerLink]="link"
@@ -132,7 +136,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
           </li>
         }
         <li
-          class="p-2.5 border-b cursor-pointer active:border-black active:border-2 focus:border-black focus:border-2"
+          class="p-2.5 border-y cursor-pointer active:border-black active:border-2 focus:border-black focus:border-2"
         >
           <a
             [routerLink]="EMPLOYEE_ROUTE"

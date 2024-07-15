@@ -95,7 +95,7 @@ export class BookAppointmentDatesService {
         // call to backend
         return this.http
           .get<
-            { date: string; times: number[] }[]
+            { date: number; times: number[] }[]
           >(`${this.domain}appointment`, { withCredentials: true, params })
           .pipe(
             map((response) =>

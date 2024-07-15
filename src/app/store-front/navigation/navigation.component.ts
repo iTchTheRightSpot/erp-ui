@@ -25,6 +25,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
       <!-- burger -->
       <button
         (click)="toggle = !toggle"
+        [style]="{ display: isSignedIn() ? 'block' : 'none' }"
         type="button"
         class="bg-transparent border-none cursor-pointer relative"
       >
@@ -150,7 +151,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
         <li class="flex gap-8">
           <a
             [routerLink]="ABOUT_ROUTE"
-            class="h-full relative flex gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
+            class="h-full relative hidden gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
           >
             about
             <svg
@@ -171,7 +172,7 @@ import { EMPLOYEE_FRONT_HOME } from '@/app/app.util';
 
           <a
             [routerLink]="SERVICE_ROUTE"
-            class="h-full relative flex gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
+            class="h-full relative hidden gap-1 items-center cursor-pointer uppercase text-[var(--app-theme)] hover:text-[var(--app-theme-hover)]"
           >
             service
             <svg
