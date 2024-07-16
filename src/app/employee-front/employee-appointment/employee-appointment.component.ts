@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
@@ -15,7 +15,7 @@ import {
   AppointmentDetail,
   dummyDetailBuilder
 } from '@/app/employee-front/shared/about-appointment.util';
-import { ApiStatus, TO_HR_MINS } from '@/app/app.util';
+import { ApiStatus, TIMEZONE, TO_HR_MINS } from '@/app/app.util';
 import {
   AppointmentDeconstruct,
   AppointmentResponse,
@@ -37,6 +37,7 @@ import {
   FormsModule,
   Validators
 } from '@angular/forms';
+import { GalleriaModule } from 'primeng/galleria';
 
 @Component({
   selector: 'app-employee-appointment',
@@ -48,7 +49,8 @@ import {
     FormsModule,
     NgClass,
     TableModule,
-    SkeletonModule
+    SkeletonModule,
+    GalleriaModule
   ],
   templateUrl: './employee-appointment.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -58,6 +60,7 @@ export class EmployeeAppointmentComponent {
   protected selectedDate = new Date();
   protected toggleMobileCalendar = false;
   protected readonly ApiStatus = ApiStatus;
+  protected readonly TIMEZONE = TIMEZONE;
 
   protected readonly form: FormGroup;
 
@@ -114,6 +117,8 @@ export class EmployeeAppointmentComponent {
     this.selectedDate
   );
 
+  protected readonly _appointments$ = this.appointments$;
+
   protected get appointments$(): Observable<AppointmentDeconstruct[]> {
     return this.calendarDateSubject.asObservable().pipe(
       switchMap((date) =>
@@ -134,6 +139,7 @@ export class EmployeeAppointmentComponent {
                   id: appointment.appointment_id,
                   status: appointment.status,
                   service: appointment.services[0].name,
+                  image_key: appointment.image_key,
                   client: appointment.customer_name,
                   timeslot: `${TO_HR_MINS(appointment.scheduled_for)} <--> ${TO_HR_MINS(appointment.expired_at)}`
                 }) as AppointmentDeconstruct
@@ -199,7 +205,7 @@ export class EmployeeAppointmentComponent {
               name: obj.customer_name,
               email: obj.customer_email,
               phone: obj.phone,
-              image: obj.image,
+              image_key: obj.image_key,
               status: obj.status,
               services: obj.services.map((names) => names.name),
               detail: obj.detail,
@@ -235,5 +241,32 @@ export class EmployeeAppointmentComponent {
       },
       this.selectedDate
     );
+  };
+
+  protected toggleImageGallery = false;
+  protected readonly responsiveOptions: any[] = [
+    {
+      breakpoint: '1500px',
+      numVisible: 5
+    },
+    {
+      breakpoint: '1024px',
+      numVisible: 3
+    },
+    {
+      breakpoint: '768px',
+      numVisible: 2
+    },
+    {
+      breakpoint: '560px',
+      numVisible: 1
+    }
+  ];
+
+  protected readonly appointmentImagesSignal = signal<string[]>([]);
+
+  protected readonly selectedAppointmentImage = (imageKey: string) => {
+    this.appointmentImagesSignal.set([imageKey]);
+    this.toggleImageGallery = true;
   };
 }

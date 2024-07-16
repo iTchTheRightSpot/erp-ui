@@ -4,7 +4,7 @@ export interface AppointmentDetail {
   name: string;
   email: string;
   phone: string;
-  image: string;
+  image_key: string;
   status: ConfirmationStatus;
   services: string[];
   detail: string;
@@ -19,7 +19,7 @@ export const dummyDetailBuilder = () => {
     name: '',
     email: '',
     phone: '',
-    image: '',
+    image_key: '',
     status: ConfirmationStatus.CANCELLED,
     services: [] as string[],
     detail: '',

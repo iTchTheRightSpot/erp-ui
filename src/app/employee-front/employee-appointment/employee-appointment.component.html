@@ -88,12 +88,23 @@
     </h1>
 
     <div class="w-full">
-      @if (appointments$ | async; as appointments) {
+      <div
+        class="mb-3 text-base font-light text-gray-700 dark:text-gray-400 tracking-tight leading-none"
+      >
+        <h3>
+          Dates and Times are in
+          <strong class="text-black dark:text-white">{{ TIMEZONE }}</strong>
+          timezone
+        </h3>
+      </div>
+
+      @if (_appointments$ | async; as appointments) {
         <p-table [value]="appointments" [tableStyle]="{ 'min-width': '50rem' }">
           <ng-template pTemplate="header">
             <tr
               class="text-xs text-gray-900 uppercase bg-gray-50 dark:bg-gray-700 dark:text-white"
             >
+              <th>image</th>
               <th>status</th>
               <th>client</th>
               <th>service</th>
@@ -102,6 +113,39 @@
           </ng-template>
           <ng-template pTemplate="body" let-deconstruct>
             <tr>
+              <td>
+                @if (
+                  deconstruct.image_key && deconstruct.image_key?.length > 0
+                ) {
+                  <button
+                    type="button"
+                    class="text-blue-600"
+                    (click)="selectedAppointmentImage(deconstruct.image_key)"
+                  >
+                    view
+                  </button>
+                  <p-galleria
+                    [value]="appointmentImagesSignal()"
+                    [(visible)]="toggleImageGallery"
+                    [responsiveOptions]="responsiveOptions"
+                    [containerStyle]="{ 'max-width': '80%' }"
+                    [numVisible]="9"
+                    [circular]="true"
+                    [fullScreen]="true"
+                    [showItemNavigators]="true"
+                  >
+                    <ng-template pTemplate="item" let-item>
+                      <img
+                        [src]="item"
+                        style="width: 100%; display: block"
+                        alt="job-location-image"
+                      />
+                    </ng-template>
+                  </p-galleria>
+                } @else {
+                  <p class="text-neutral-600">no image available</p>
+                }
+              </td>
               <td
                 [ngClass]="{
                   'text-green-600': deconstruct.status === 'CONFIRMED',

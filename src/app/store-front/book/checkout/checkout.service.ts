@@ -19,7 +19,7 @@ import {
   Subject,
   timer
 } from 'rxjs';
-import { ApiStatus } from '@/app/app.util';
+import { ApiStatus, TIMEZONE } from '@/app/app.util';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +54,7 @@ export class CheckoutService {
       ? this.http
           .post<
             HttpResponse<any>
-          >(`${this.domain}appointment?timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone}`, data, { observe: 'response', withCredentials: true })
+          >(`${this.domain}appointment?timezone=${TIMEZONE}`, data, { observe: 'response', withCredentials: true })
           .pipe(
             map(() => {
               this.toastService.message({

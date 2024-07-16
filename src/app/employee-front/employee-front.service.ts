@@ -12,6 +12,7 @@ import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { ToastService } from '@/app/global-service/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
+import { TIMEZONE } from '@/app/app.util';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +48,7 @@ export class EmployeeFrontService {
       return of<AppointmentResponse[]>(dummyAppointments(20));
 
     const user = this.authenticationService.activeUser();
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timezone = TIMEZONE;
     const key = `${selected.getMonth()}_${selected.getFullYear()}_${timezone}`;
 
     let params = new HttpParams();
@@ -120,7 +121,7 @@ const IAppointmentResponse_ARRAY_TO_AppointmentResponse_ARRAY = (
         detail: obj.detail,
         address: obj.address,
         phone: obj.phone,
-        image: obj.image,
+        image_key: obj.image,
         status: obj.status,
         created_at: new Date(obj.created_at),
         scheduled_for: new Date(obj.scheduled_for),

@@ -13,7 +13,7 @@ import {
   BOOK_STAFF_ROUTE
 } from '@/app/store-front/book/book.util';
 import { BOOK_ROUTE } from '@/app/store-front/store-front.util';
-import { DATES_TO_DISABLE, FORMAT_SECONDS } from '@/app/app.util';
+import { DATES_TO_DISABLE, FORMAT_SECONDS, TIMEZONE } from '@/app/app.util';
 import {
   CalendarModule,
   CalendarMonthChangeEvent,
@@ -31,17 +31,15 @@ import { ValidTime } from '@/app/store-front/book/book-appointment-dates/book-ap
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookAppointmentDatesComponent {
-  protected date: Date[] | undefined;
-
   private readonly router = inject(Router);
   private readonly service = inject(BookAppointmentDatesService);
 
+  protected date: Date[] | undefined;
   protected readonly today = new Date();
   protected selected: Date | undefined;
   protected onCalendarPreviousNextBtn = new Date();
 
-  protected readonly timezone =
-    Intl.DateTimeFormat().resolvedOptions().timeZone;
+  protected readonly timezone = TIMEZONE;
 
   protected readonly details = this.service.bookingInfoSignal();
   protected readonly validAppointmentTimesSignal = signal<ValidTime[]>([]);

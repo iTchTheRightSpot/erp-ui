@@ -35,7 +35,7 @@ export interface AppointmentResponse {
   detail: string;
   address: string;
   phone: string;
-  image: string;
+  image_key: string;
   status: ConfirmationStatus;
   created_at: Date;
   scheduled_for: Date;
@@ -47,6 +47,7 @@ export interface AppointmentDeconstruct {
   id: number;
   status: string;
   service: string;
+  image_key: string;
   client: string;
   timeslot: string;
 }
@@ -59,7 +60,7 @@ export const AppointmentResponseMapper = (obj: AppointmentResponse) => {
     detail: obj.detail,
     address: obj.address,
     phone: obj.phone,
-    image: obj.image,
+    image_key: obj.image_key,
     status: obj.status,
     created_at: new Date(obj.created_at),
     scheduled_for: new Date(obj.scheduled_for),
@@ -84,7 +85,7 @@ export const dummyAppointments = (num: number) => {
       detail: lorem,
       address: address,
       phone: '0000000000',
-      image:
+      image_key:
         i % 2 === 0
           ? 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png'
           : 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',

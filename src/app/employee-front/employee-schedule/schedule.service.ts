@@ -24,7 +24,7 @@ import { UserService } from '@/app/employee-front/user/user.service';
 import { Schedule } from '@/app/employee-front/employee-schedule/all-schedule/all-schedule.dto';
 import { CacheService } from '@/app/global-service/cache.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
-import { ApiStatus } from '@/app/app.util';
+import { ApiStatus, TIMEZONE } from '@/app/app.util';
 
 @Injectable({
   providedIn: 'root'
@@ -115,7 +115,7 @@ export class ScheduleService {
     this.http
       .get<
         { shift_id: string; is_visible: boolean; start: number; end: number }[]
-      >(`${this.domain}employee/shift?day_of_month=${1}&month=${month + 1}&year=${year}&employee_id=${this.authenticationService.activeUser()?.user_id}&timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone}`, { withCredentials: true })
+      >(`${this.domain}employee/shift?day_of_month=${1}&month=${month + 1}&year=${year}&employee_id=${this.authenticationService.activeUser()?.user_id}&timezone=${TIMEZONE}`, { withCredentials: true })
       .pipe(
         map((res) =>
           res.map(

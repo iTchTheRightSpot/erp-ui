@@ -21,14 +21,6 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
     <div
       class="min-w-full px-2 pt-4 pb-10 bg-white flex flex-col md:flex-row gap-3 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
-      @if (detail().image && detail().image.length > 0) {
-        <img
-          class="w-36 h-36 md:w-52 md:h-52"
-          [src]="detail().image"
-          alt="appointment picture"
-        />
-      }
-
       <div class="w-full">
         <!-- customer info -->
         <div class="">

@@ -32,7 +32,7 @@ import {
 } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { UpdateScheduleComponent } from '@/app/employee-front/employee-schedule/update-schedule/update-schedule.component';
-import { ApiStatus } from '@/app/app.util';
+import { ApiStatus, TIMEZONE } from '@/app/app.util';
 
 @Component({
   selector: 'app-all-schedule',
@@ -192,4 +192,5 @@ export class AllScheduleComponent {
         shiftSelected
       )
     );
+  protected readonly TIMEZONE = TIMEZONE;
 }

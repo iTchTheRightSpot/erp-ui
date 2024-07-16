@@ -111,3 +111,5 @@ const secImpl = (seconds: number) => {
   }
   return `${seconds} secs`;
 };
+
+export const TIMEZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;

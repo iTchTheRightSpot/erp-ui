@@ -10,6 +10,7 @@ import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { BookService } from '@/app/store-front/book/book.service';
 import { Toast, ToastService } from '@/app/global-service/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
+import { TIMEZONE } from '@/app/app.util';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +68,7 @@ export class BookAppointmentDatesService {
 
     const serviceNames = services.map((s) => s.service_name).join('_');
 
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timezone = TIMEZONE;
     const key = `${staffId}_${serviceNames}${selected.getMonth()}_${selected.getFullYear()}_${timezone}`;
 
     return BookAppointmentDatesService.VALID_TIMES_SERVER_RESPONSE_CACHE.getItem(

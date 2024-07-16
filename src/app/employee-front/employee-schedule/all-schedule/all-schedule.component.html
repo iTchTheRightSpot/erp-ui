@@ -86,6 +86,15 @@
   </div>
 
   <div class="w-full">
+    <div
+      class="my-3 text-medium font-light text-gray-700 dark:text-gray-400 tracking-tight leading-none"
+    >
+      <h3>
+        Dates and Times are in
+        <strong class="text-black dark:text-white">{{ TIMEZONE }}</strong>
+        timezone
+      </h3>
+    </div>
     <p-table [value]="scheduleTable()" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr
