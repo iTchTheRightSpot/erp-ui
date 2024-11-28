@@ -3,7 +3,9 @@ import { CheckoutService } from '@/app/store-front/book/checkout/checkout.servic
 import { FormComponent } from '@/app/store-front/book/checkout/form.component';
 import { BookServiceOfferedDto } from '@/app/store-front/book/book-service-offered/book-service-offered.dto';
 import { AsyncPipe } from '@angular/common';
-import { toHrMins } from '@/app/app.util';
+import { ApiStatus, TO_HR_MINS } from '@/app/app.util';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-checkout',
@@ -13,12 +15,43 @@ import { toHrMins } from '@/app/app.util';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckoutComponent {
+  private readonly fb = inject(FormBuilder);
   private readonly service = inject(CheckoutService);
 
+  protected readonly ApiStatus = ApiStatus;
   protected readonly bookingInfo = this.service.bookingInfoSignal();
-  protected readonly loadingBtn = this.service.submit$;
+  protected readonly loadingBtn = this.service.submit$.pipe(
+    tap((obj) => {
+      if (obj && obj === ApiStatus.LOADED)
+        this.form.reset({
+          name: '',
+          email: '',
+          phone: null,
+          address: '',
+          city: '',
+          province: '',
+          postcode: '',
+          description: ''
+        });
+    })
+  );
 
-  protected readonly toHrMins = (time: Date) => toHrMins(time);
+  protected readonly form = this.fb.group({
+    name: new FormControl('', [Validators.required, Validators.max(50)]),
+    email: new FormControl('', [Validators.required, Validators.max(255)]),
+    phone: new FormControl(null, [
+      Validators.required,
+      Validators.pattern('^[0-9]{3}[0-9]{3}[0-9]{4}$')
+    ]),
+    address: new FormControl('', [Validators.required]),
+    city: new FormControl('', [Validators.required]),
+    province: new FormControl('', [Validators.required]),
+    postcode: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required, Validators.max(255)])
+  });
+
+  protected readonly toHrMins = (epochMilliSeconds: number) =>
+    TO_HR_MINS(new Date(epochMilliSeconds));
 
   protected readonly transform = (objs: BookServiceOfferedDto[]) =>
     objs.map((obj) => ({ service_name: obj.service_name }));

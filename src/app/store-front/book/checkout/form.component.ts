@@ -1,18 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
   input,
   output
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CheckoutDto } from '@/app/store-front/book/checkout/checkout.dto';
 import { NgClass } from '@angular/common';
+import { ApiStatus } from '@/app/app.util';
 
 @Component({
   selector: 'app-form',
@@ -23,27 +18,14 @@ import { NgClass } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormComponent {
-  private readonly fb = inject(FormBuilder);
+  protected readonly ApiStatus = ApiStatus;
 
-  empEmail = input.required<string>();
+  form = input.required<FormGroup>();
+  staffId = input.required<string>();
   services = input.required<{ service_name: string }[]>();
-  dateTime = input.required<Date>();
-  buttonLoading = input.required<boolean>();
+  epochSeconds = input.required<number>();
+  buttonLoading = input.required<ApiStatus>();
   readonly formEmitter = output<FormData>();
-
-  protected readonly form = this.fb.group({
-    name: new FormControl('', [Validators.required, Validators.max(50)]),
-    email: new FormControl('', [Validators.required, Validators.max(255)]),
-    phone: new FormControl(null, [
-      Validators.required,
-      Validators.pattern('^[0-9]{3}[0-9]{3}[0-9]{4}$')
-    ]),
-    address: new FormControl('', [Validators.required]),
-    city: new FormControl('', [Validators.required]),
-    province: new FormControl('', [Validators.required]),
-    postcode: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required, Validators.max(255)])
-  });
 
   protected readonly provinces = [
     { abbreviation: 'AB', country: 'Alberta' },
@@ -58,14 +40,15 @@ export class FormComponent {
   ];
 
   private readonly buildForm = () => {
-    const name = this.form.controls['name'].value;
-    const email = this.form.controls['email'].value;
-    const phone = this.form.controls['phone'].value;
-    const address = this.form.controls['address'].value;
-    const city = this.form.controls['city'].value;
-    const postcode = this.form.controls['postcode'].value;
-    const province = this.form.controls['province'].value;
-    const description = this.form.controls['description'].value;
+    const form = this.form();
+    const name = form.controls['name'].value;
+    const email = form.controls['email'].value;
+    const phone = form.controls['phone'].value;
+    const address = form.controls['address'].value;
+    const city = form.controls['city'].value;
+    const postcode = form.controls['postcode'].value;
+    const province = form.controls['province'].value;
+    const description = form.controls['description'].value;
 
     return {
       name: name ? name : '',
@@ -89,14 +72,14 @@ export class FormComponent {
     this.file = files.item(0);
   };
 
-  protected readonly submit = () => {
+  protected readonly submit = (epochSeconds: number) => {
     const builder = this.buildForm();
 
     const dto: CheckoutDto = {
       services: this.services(),
       name: builder.name,
-      employee_email: this.empEmail(),
-      start: this.dateTime(),
+      employee_id: this.staffId(),
+      start: epochSeconds,
       email: builder.email,
       phone: builder.phone,
       description: builder.description,
@@ -108,7 +91,8 @@ export class FormComponent {
       'dto',
       new Blob([JSON.stringify(dto)], { type: 'application/json' })
     );
-    data.append('files', this.file ? this.file : new Blob());
+
+    if (this.file !== null) data.append('files', this.file);
 
     this.formEmitter.emit(data);
   };

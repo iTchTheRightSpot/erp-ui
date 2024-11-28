@@ -5,7 +5,7 @@ import {
   HttpErrorResponse,
   HttpResponse
 } from '@angular/common/http';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import {
   DummyServices,
   ServiceOfferedDto

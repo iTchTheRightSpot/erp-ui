@@ -1,9 +1,9 @@
 <div class="lg-scr mg-top px-1.5">
   <div class="mb-6 flex flex-col gap-2">
     <h1
-      class="h-fit font-normal underline underline-offset-4 decoration-1 text-xl md:text-2xl lg:text-4xl"
+      class="h-fit font-light underline underline-offset-4 decoration-1 text-xl md:text-2xl lg:text-4xl"
     >
-      Pre-schedule an appointment
+      Provide your details to pre-book an appointment
     </h1>
   </div>
 
@@ -18,10 +18,11 @@
       <!-- form -->
       <div class="order-2 sm:order-1 pb-2">
         <app-form
-          [empEmail]="bookingInfo.staff.email"
+          [staffId]="bookingInfo.staff.user_id"
           [services]="transform(bookingInfo.servicesOffered)"
-          [dateTime]="bookingInfo.time"
-          [buttonLoading]="(loadingBtn | async) || false"
+          [form]="form"
+          [epochSeconds]="bookingInfo.time"
+          [buttonLoading]="(loadingBtn | async) || ApiStatus.LOADED"
           (formEmitter)="onSubmit($event)"
         />
       </div>
@@ -30,7 +31,7 @@
       <div class="flex flex-col gap-2 order-1 sm:order-2">
         <div class="mb-1.5">
           <h2
-            class="font-medium underline underline-offset-4 decoration-1 text-base lg:text-lg"
+            class="font-light underline underline-offset-4 decoration-1 text-base lg:text-lg"
           >
             Appointment Summary
           </h2>
@@ -97,7 +98,7 @@
             </div>
             <div class="flex-1 min-w-0 pl-2 lg:pl-3 border-l border-gray-300">
               <p class="text-xs lg:text-base font-medium">
-                {{ bookingInfo.staff.name }}
+                {{ bookingInfo.staff.display_name }}
               </p>
             </div>
           </div>

@@ -1,52 +1,123 @@
 <div class="lg-scr mg-top px-1.5">
-  <div class="mb-2 flex flex-col gap-2">
+  <div class="mb-4 flex flex-col gap-2">
     <h1
-      class="h-fit font-normal underline underline-offset-4 decoration-1 text-base sm:text-xl md:text-2xl lg:text-4xl"
+      class="h-fit font-light underline underline-offset-4 decoration-1 text-xl md:text-2xl lg:text-4xl"
     >
-      Schedule an appointment
+      Select a day and time
     </h1>
-    <h4 class="h-fit text-sm sm:text-base md:text-lg">
-      Select a day and time for your appointment
-    </h4>
   </div>
 
   <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- calendar -->
     <div class="order-2 sm:order-1 flex flex-col gap-4 pb-2">
-      <app-calendar
-        [minimumDateOnCalendar]="today"
-        [datesToHighlight]="toHighlight()"
-        (onCalendarDateSelectedEmitter)="onSelectedAppointmentDate($event)"
-        (onPreviousNextCalendarDateEmitter)="onPreviousOrNextBtn($event)"
-      />
-      <p>
-        Available time slots on
-        <span class="font-medium">{{ format(selected) }}</span>
-      </p>
-      <div class="w-full flex flex-wrap gap-2">
-        @for (date of dates$ | async; track date) {
-          <button
-            type="button"
-            (click)="selectedAppointmentTime(date)"
-            class="p-3 py-2 w-fit h-fit border rounded text-center inline-flex items-center text-xs font-medium bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
-          >
-            {{ toHrMins(date) }}
-          </button>
-        } @empty {
-          <h4 class="h-fit text-sm sm:text-base md:text-lg">No bookings</h4>
+      @if (validAppointmentDays$ | async; as validTimesObject) {
+        <p-calendar
+          [style]="{ width: '100%' }"
+          class="rounded-lg shadow-xl"
+          [(ngModel)]="date"
+          [inline]="true"
+          [minDate]="today"
+          (onSelect)="onSelectedCalendarDay($event)"
+          (onMonthChange)="onSelectedCalendarMonth($event)"
+          (onYearChange)="onSelectedCalendarYear($event)"
+          [disabledDates]="
+            datesToDisable(validTimeObjectsToDates(validTimesObject))
+          "
+          [readonlyInput]="true"
+          [showWeek]="false"
+        >
+          <ng-template pTemplate="date" let-date>
+            <span
+              [ngClass]="{
+                'font-medium text-black': contains(
+                  validTimeObjectsToDates(validTimesObject),
+                  date.day,
+                  date.month
+                ),
+                'line-through pointer-events-none opacity-50': !contains(
+                  validTimeObjectsToDates(validTimesObject),
+                  date.day,
+                  date.month
+                )
+              }"
+            >
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </p-calendar>
+        <p class="w-full text-center font-light text-sm">
+          Times are shown in <strong>{{ timezone }}</strong>
+        </p>
+        @if (selected) {
+          <p class="w-full text-left font-medium text-medium">
+            Selected:
+            <span>{{
+              selected.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })
+            }}</span>
+          </p>
         }
-      </div>
+        <div class="w-full flex flex-wrap gap-2">
+          @for (
+            seconds of validAppointmentTimesInEpochSecondsSorter(
+              validAppointmentTimesInEpochSeconds()
+            );
+            track seconds
+          ) {
+            <button
+              type="button"
+              (click)="selectedAppointmentTime(seconds)"
+              class="p-3 py-2 w-fit h-fit border text-black rounded text-center inline-flex items-center text-xs font-medium bg-[var(--list-of-items-background)] hover:bg-[var(--list-of-items-background-hover)]"
+            >
+              {{
+                epochMilliSecondsToDate(seconds).toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              }}
+            </button>
+          } @empty {
+            <p class="h-fit font-light text-sm">No booking times available</p>
+          }
+        </div>
+      } @else {
+        <p-calendar
+          [style]="{ width: '100%' }"
+          [(ngModel)]="date"
+          [inline]="true"
+          [minDate]="today"
+          (onSelect)="onSelectedCalendarDay($event)"
+          (onMonthChange)="onSelectedCalendarMonth($event)"
+          (onYearChange)="onSelectedCalendarYear($event)"
+          [disabledDates]="datesToDisable([])"
+          [readonlyInput]="true"
+          [showWeek]="false"
+        >
+          <ng-template pTemplate="date" let-date>
+            <span class="line-through pointer-events-none opacity-50">
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </p-calendar>
+        <p class="w-full text-left font-light text-sm">No bookings available</p>
+      }
     </div>
 
     <!-- appointment summary -->
     <div class="flex flex-col gap-2 order-1 sm:order-2">
       <div class="mb-1.5">
-        <h3 class="font-medium text-xs sm:text-sm md:text-base lg:text-lg">
+        <h1
+          class="font-light underline underline-offset-4 decoration-1 text-base lg:text-lg"
+        >
           Appointment summary
-        </h3>
+        </h1>
       </div>
 
-      @if (details && details.servicesOffered && details.staff) {
+      @if (selected && details && details.servicesOffered && details.staff) {
         <div class="w-full p-1 flex gap-2">
           <img
             [src]="details.staff.image_key"
@@ -54,7 +125,7 @@
             class="max-h-[4.5rem] max-w-[4.5rem] rounded-full overflow-hidden object-cover object-center ring-2 ring-gray-400"
           />
           <h3 class="capitalize text-xs sm:text-sm md:text-base lg:text-lg">
-            {{ details.staff.name }}
+            {{ details.staff.display_name }}
           </h3>
         </div>
 
@@ -67,16 +138,26 @@
               <time
                 class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
               >
-                February 2022
+                {{
+                  selected.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })
+                }}
               </time>
               <h3 class="text-base font-medium py-1">
                 {{ service.service_name }}
               </h3>
               <p
-                class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400"
+                class="mb-4 text-base font-normal text-xs sm:text-sm whitespace-nowrap"
               >
-                <span> Price varies but starts at: {{ service.price }} </span>
-                <span> Duration: {{ formatSeconds(service.duration) }} </span>
+                Starts at: {{ '$' + service.price }}
+                <strong
+                  class="inline-block w-2 h-2 rounded-full bg-[var(--calendar-background)] mx-1"
+                ></strong>
+                {{ formatSeconds(service.duration) }}
               </p>
               <button
                 (click)="route()"
@@ -105,7 +186,21 @@
           }
         </ol>
       } @else {
-        no appointment
+        <div class="border-round border-1 surface-border p-4 surface-card">
+          <div class="flex mb-3">
+            <p-skeleton shape="circle" size="4rem" styleClass="mr-2" />
+            <div>
+              <p-skeleton width="10rem" styleClass="mb-2" />
+              <p-skeleton width="5rem" styleClass="mb-2" />
+              <p-skeleton height=".5rem" />
+            </div>
+          </div>
+          <p-skeleton width="100%" height="150px" />
+          <div class="flex justify-content-between mt-3">
+            <p-skeleton width="4rem" height="2rem" />
+            <p-skeleton width="4rem" height="2rem" />
+          </div>
+        </div>
       }
     </div>
   </div>

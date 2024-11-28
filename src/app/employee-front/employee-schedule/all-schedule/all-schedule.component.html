@@ -20,6 +20,7 @@
         />
       </svg>
     </a>
+
     <button type="button" (click)="toggleCalendar = !toggleCalendar">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -37,20 +38,121 @@
       </svg>
     </button>
 
-    @if (toggleCalendar) {
-      <div
-        class="w-full max-w-lg rounded-lg absolute top-10 bottom-0 left-0 z-40"
-      >
-        <app-calendar
-          [selectedDate]="currentDate"
-          (onCalendarDateSelectedEmitter)="onDateSelected($event)"
-          (onPreviousNextCalendarDateEmitter)="onPrevNextCalendar($event)"
+    <div
+      class="w-full max-w-lg rounded-lg absolute top-10 bottom-0 left-0 z-40"
+      [style]="{ display: toggleCalendar ? 'block' : 'none' }"
+    >
+      @if (shifts$ | async; as shift) {
+        <p-calendar
+          [style]="{ width: '100%' }"
+          [(ngModel)]="date"
+          [inline]="true"
+          (onSelect)="onDateSelected($event)"
+          (onMonthChange)="onMonth($event)"
+          (onYearChange)="onYear($event)"
+          [showWeek]="false"
+        >
+          <ng-template pTemplate="date" let-date>
+            <span
+              [ngClass]="{
+                'font-medium text-black': contains(
+                  scheduleTableToDate(shift),
+                  date.day,
+                  date.month
+                ),
+                'line-through': !contains(
+                  scheduleTableToDate(shift),
+                  date.day,
+                  date.month
+                )
+              }"
+            >
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </p-calendar>
+      } @else {
+        <p-calendar
+          [style]="{ width: '100%' }"
+          [(ngModel)]="date"
+          [inline]="true"
+          (onSelect)="onDateSelected($event)"
+          (onMonthChange)="onMonth($event)"
+          (onYearChange)="onYear($event)"
+          [showWeek]="false"
         />
-      </div>
-    }
+      }
+    </div>
   </div>
 
   <div class="w-full">
-    <app-table [tHead]="tHead" [tBody]="(shifts$ | async) || []" />
+    <div
+      class="my-3 text-medium font-light text-gray-700 dark:text-gray-400 tracking-tight leading-none"
+    >
+      <h3>
+        Dates and Times are in
+        <strong class="text-black dark:text-white">{{ TIMEZONE }}</strong>
+        timezone
+      </h3>
+    </div>
+    <p-table [value]="scheduleTable()" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr
+          class="text-xs text-gray-900 bg-gray-50 dark:bg-gray-700 dark:text-white"
+        >
+          <th>Visible</th>
+          <th>Date</th>
+          <th>From (time)</th>
+          <th>To (time)</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-schedule>
+        <tr>
+          <td
+            class="uppercase"
+            [ngClass]="{
+              'text-green-600': schedule.isVisible === true,
+              'text-red-600': schedule.isVisible === false
+            }"
+          >
+            {{ schedule.isVisible }}
+          </td>
+          <td>
+            <button
+              (click)="onSelectedSchedule(schedule.shiftId, schedule.startDate)"
+              type="button"
+              class="underline underline-offset-2"
+            >
+              {{
+                schedule.startDate.toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })
+              }}
+            </button>
+          </td>
+          <td>{{ schedule.startTime }}</td>
+          <td>{{ schedule.endTime }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 </div>
+
+@if (toggleUpdateScheduleDialog && selectedShift(); as obj) {
+  <app-update-schedule
+    [form]="form"
+    [updateShiftVisibilityState]="updateShiftVisibility$ | async"
+    [updateShiftDateTimeState]="updateShiftDateTime$ | async"
+    [shiftId]="obj.shiftId"
+    [localDate]="obj.localDate"
+    [toggleShiftVisibilityInStoreFrontSignal]="false"
+    [(toggleUpdateScheduleDialogSignal)]="toggleUpdateScheduleDialog"
+    (toggleShiftVisibilityInStoreFrontEmitter)="
+      updateShiftVisibilityInStoreFrontEmitter($event, obj.localDate)
+    "
+    (updateAppointmentTimeEmitter)="updateShiftDateTime($event, obj.localDate)"
+  />
+}

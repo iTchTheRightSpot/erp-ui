@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'primeng/resources/themes/lara-light-blue/theme.css';
+@import 'primeng/resources/primeng.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -30,8 +33,7 @@
 
 button.mat-calendar-dates-to-highlight {
   border-radius: 100% !important;
-  box-shadow: 0 0 0 var(--mat-calendar-highlight-border-thickness)
-    var(--mat-calendar-highlight-default-colour) inset !important;
+  box-shadow: 0 0 0 var(--mat-calendar-highlight-border-thickness) black inset !important;
 }
 
 html,

@@ -48,12 +48,113 @@
         Appointment(s) - {{ selectedDate.toDateString() }}
       </h1>
 
-      <div class="">
-        <app-table
-          [tHead]="thead"
-          [tBody]="(apps$ | async) || []"
-          (rowClickEmitter)="onAppointmentNameClick($event)"
-        />
+      <div>
+        <div
+          class="mb-3 text-base font-light text-gray-700 dark:text-gray-400 tracking-tight leading-none"
+        >
+          <h3>
+            Dates and Times are in
+            <strong class="text-black dark:text-white">{{ TIMEZONE }}</strong>
+            timezone
+          </h3>
+        </div>
+        @if (apps$ | async; as appointments) {
+          <p-table
+            [value]="appointments"
+            [tableStyle]="{ 'min-width': '50rem' }"
+          >
+            <ng-template pTemplate="header">
+              <tr
+                class="text-xs text-gray-900 uppercase bg-gray-50 dark:bg-gray-700 dark:text-white"
+              >
+                <th>image</th>
+                <th>status</th>
+                <th>client</th>
+                <th>service</th>
+                <th>scheduled for</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-deconstruct>
+              <tr>
+                <td>
+                  @if (
+                    deconstruct.image_key && deconstruct.image_key?.length > 0
+                  ) {
+                    <button
+                      type="button"
+                      class="text-blue-600"
+                      (click)="selectedAppointmentImage(deconstruct.image_key)"
+                    >
+                      view
+                    </button>
+
+                    <p-galleria
+                      [value]="appointmentImagesSignal()"
+                      [(visible)]="toggleImageGallery"
+                      [responsiveOptions]="responsiveOptions"
+                      [containerStyle]="{ 'max-width': '80%' }"
+                      [numVisible]="3"
+                      [circular]="true"
+                      [fullScreen]="true"
+                      [showItemNavigators]="true"
+                    >
+                      <ng-template pTemplate="item" let-item>
+                        <img
+                          [src]="item"
+                          style="width: 100%; display: block"
+                          alt="job-location-image"
+                        />
+                      </ng-template>
+                    </p-galleria>
+                  } @else {
+                    <p class="text-neutral-600">no image available</p>
+                  }
+                </td>
+                <td
+                  [ngClass]="{
+                    'text-green-600': deconstruct.status === 'CONFIRMED',
+                    'text-red-600': deconstruct.status === 'CANCELLED',
+                    'text-yellow-400': deconstruct.status === 'PENDING',
+                    'text-neutral-600': deconstruct.status === 'EXPIRED'
+                  }"
+                >
+                  {{ deconstruct.status }}
+                </td>
+                <td>
+                  <button
+                    (click)="onAppointmentNameClick(deconstruct)"
+                    type="button"
+                    class="underline underline-offset-2"
+                  >
+                    {{ deconstruct.client }}
+                  </button>
+                </td>
+                <td>{{ deconstruct.service }}</td>
+                <td>{{ deconstruct.timeslot }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else {
+          <p-table [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Status</th>
+                <th>Client</th>
+                <th>Service</th>
+                <th>scheduled for</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <tr>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+                <td><p-skeleton /></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
       </div>
     </div>
   </div>
@@ -61,12 +162,43 @@
   <!-- right -->
   <div class="flex flex-col gap-2 2xl:max-w-[75%]">
     <div class="hidden max-w-lg rounded-lg lg:block">
-      <app-calendar
-        [selectedDate]="selectedDate"
-        [datesToHighlight]="(daysToHighlight$ | async) || []"
-        (onCalendarDateSelectedEmitter)="onCalendarDateClick($event)"
-        (onPreviousNextCalendarDateEmitter)="onPrevNextCalendarClick($event)"
-      />
+      @if (daysToHighlight$ | async; as highlight) {
+        <p-calendar
+          [style]="{ width: '100%' }"
+          [(ngModel)]="date"
+          [inline]="true"
+          (onSelect)="onCalendarDateClick($event)"
+          (onMonthChange)="onMonth($event)"
+          (onYearChange)="onYear($event)"
+          [showWeek]="false"
+        >
+          <ng-template pTemplate="date" let-date>
+            <span
+              [ngClass]="{
+                'font-medium text-black': contains(
+                  highlight,
+                  date.day,
+                  date.month
+                ),
+                'line-through': !contains(highlight, date.day, date.month)
+              }"
+            >
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </p-calendar>
+      } @else {
+        <p-calendar
+          [style]="{ width: '100%' }"
+          [(ngModel)]="date"
+          [inline]="true"
+          (onSelect)="onCalendarDateClick($event)"
+          (onMonthChange)="onMonth($event)"
+          (onYearChange)="onYear($event)"
+          [showWeek]="false"
+        >
+        </p-calendar>
+      }
     </div>
 
     <div class="mt-5">
@@ -111,12 +243,42 @@
       </div>
 
       <div class="bg-white max-w-lg mx-auto">
-        <app-calendar
-          [selectedDate]="selectedDate"
-          [datesToHighlight]="(daysToHighlight$ | async) || []"
-          (onCalendarDateSelectedEmitter)="onCalendarDateClick($event)"
-          (onPreviousNextCalendarDateEmitter)="onPrevNextCalendarClick($event)"
-        />
+        @if (daysToHighlight$ | async; as highlight) {
+          <p-calendar
+            [style]="{ width: '100%' }"
+            [(ngModel)]="date"
+            [inline]="true"
+            (onSelect)="onCalendarDateClick($event)"
+            (onMonthChange)="onMonth($event)"
+            (onYearChange)="onYear($event)"
+            [showWeek]="false"
+          >
+            <ng-template pTemplate="date" let-date>
+              <span
+                [ngClass]="{
+                  'font-medium text-black': contains(
+                    highlight,
+                    date.day,
+                    date.month
+                  ),
+                  'line-through': !contains(highlight, date.day, date.month)
+                }"
+              >
+                {{ date.day }}
+              </span>
+            </ng-template>
+          </p-calendar>
+        } @else {
+          <p-calendar
+            [style]="{ width: '100%' }"
+            [(ngModel)]="date"
+            [inline]="true"
+            (onSelect)="onCalendarDateClick($event)"
+            (onMonthChange)="onMonth($event)"
+            (onYearChange)="onYear($event)"
+            [showWeek]="false"
+          />
+        }
       </div>
     </div>
   </div>
@@ -124,7 +286,7 @@
 
 @if (toggleAboutAppointment && (appointmentDetails$ | async); as details) {
   <div class="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[var(--half-black)]">
-    <div class="lg-scr p-2 flex flex-col">
+    <div class="lg-scr h-full overflow-y-auto p-2 flex flex-col">
       <div class="ml-auto mt-1 w-fit">
         <button
           (click)="toggleAboutAppointment = !toggleAboutAppointment"
@@ -149,8 +311,15 @@
         </button>
       </div>
 
-      <div class="w-full h-fit flex-1 bg-white mx-auto">
-        <app-about-appointment [detail]="details" />
+      <div class="w-full flex-1">
+        <app-about-appointment
+          [form]="form"
+          [appointmentUpdateStatus]="
+            (updateAppointmentStatus$ | async) || ApiStatus.LOADED
+          "
+          [detail]="details"
+          (updateAppointmentStatusEmitter)="updateAppointmentStatus($event)"
+        />
       </div>
     </div>
   </div>

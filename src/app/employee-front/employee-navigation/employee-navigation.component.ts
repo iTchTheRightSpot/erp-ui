@@ -1,28 +1,29 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostListener,
   input,
   output
 } from '@angular/core';
 import { EmployeeMobileNavigationComponent } from '@/app/employee-front/employee-navigation/employee-mobile-navigation.component';
 import { EMPLOYEE_FRONT_DASHBOARD } from '@/app/employee-front/employee-front.util';
 import { RouterLink } from '@angular/router';
-import { CdkDrag } from '@angular/cdk/drag-drop';
 import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-employee-navigation',
   standalone: true,
-  imports: [EmployeeMobileNavigationComponent, RouterLink, CdkDrag],
+  imports: [EmployeeMobileNavigationComponent, RouterLink],
   template: `
     <button
-      cdkDrag
-      (click)="toggle = !toggle"
-      data-drawer-target="logo-sidebar"
-      data-drawer-toggle="logo-sidebar"
-      aria-controls="logo-sidebar"
+      (click)="this.toggle = !this.toggle"
+      (mousedown)="onMouseDown($event)"
+      (touchstart)="onTouchStart($event)"
+      data-drawer-target="toggle-sidebar-btn"
+      data-drawer-toggle="toggle-sidebar-btn"
+      aria-controls="toggle-sidebar-btn"
       type="button"
-      class="lg:hidden inline-flex items-center p-2 mt-2 ms-3 text-sm bg-gray-600 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 fixed top-0 left-0 z-40"
+      class="draggable-button lg:hidden inline-flex items-center p-2 mt-2 ms-3 text-sm bg-gray-600 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 fixed top-0 left-0 z-80"
     >
       <span class="sr-only">Open sidebar</span>
       <svg
@@ -128,12 +129,70 @@ import { SafeHtml } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeNavigationComponent {
-  logout = input.required<boolean>();
-  routes = input.required<{ link: string; html: SafeHtml }[]>();
+  private isDragging = false;
+  private startX = 0;
+  private startY = 0;
   protected readonly logo = './assets/images/logo.jpeg';
   protected toggle = false;
   protected readonly DASHBOARD_ROUTE = EMPLOYEE_FRONT_DASHBOARD;
 
+  logout = input.required<boolean>();
+  routes = input.required<{ link: string; html: SafeHtml }[]>();
+
   protected readonly logoutEmitter = output<void>();
+
   protected readonly logoutClick = () => this.logoutEmitter.emit();
+
+  @HostListener('document:mouseup')
+  protected readonly onMouseUp = () => {
+    this.isDragging = false;
+  };
+
+  @HostListener('document:mousemove', ['$event'])
+  protected readonly onMouseMove = (event: MouseEvent) => {
+    this.handleMove(event.clientX, event.clientY);
+  };
+
+  @HostListener('document:touchmove', ['$event'])
+  protected readonly onTouchMove = (event: TouchEvent) => {
+    if (event.touches.length > 0) {
+      const touch = event.touches[0];
+      this.handleMove(touch.clientX, touch.clientY);
+    }
+  };
+
+  @HostListener('document:touchend')
+  protected readonly onTouchEnd = () => {
+    this.isDragging = false;
+  };
+
+  protected readonly onMouseDown = (event: MouseEvent) => {
+    event.preventDefault();
+    this.handleStart(event.clientX, event.clientY);
+  };
+
+  protected readonly onTouchStart = (event: TouchEvent) => {
+    if (event.touches.length > 0) {
+      const touch = event.touches[0];
+      this.handleStart(touch.clientX, touch.clientY);
+    }
+  };
+
+  private readonly handleMove = (clientX: number, clientY: number) => {
+    const selector = document.querySelector('.draggable-button');
+    if (this.isDragging && selector) {
+      const element = selector as HTMLElement;
+      element.style.left = `${clientX - this.startX}px`;
+      element.style.top = `${clientY - this.startY}px`;
+    }
+  };
+
+  private readonly handleStart = (clientX: number, clientY: number) => {
+    const element = document.querySelector('.draggable-button');
+    if (element) {
+      this.isDragging = true;
+      this.startX = clientX - element.getBoundingClientRect().left;
+      this.startY = clientY - element.getBoundingClientRect().top;
+    }
+  };
 }

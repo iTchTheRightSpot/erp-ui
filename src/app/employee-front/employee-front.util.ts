@@ -12,6 +12,18 @@ export enum ConfirmationStatus {
   EXPIRED = 'EXPIRED'
 }
 
+export const KEY_OF_CONFIRMATION_STATUS = (
+  status: string
+): ConfirmationStatus => {
+  const statusMap: { [key: string]: ConfirmationStatus } = {
+    [ConfirmationStatus.PENDING]: ConfirmationStatus.PENDING,
+    [ConfirmationStatus.CONFIRMED]: ConfirmationStatus.CONFIRMED,
+    [ConfirmationStatus.CANCELLED]: ConfirmationStatus.CANCELLED,
+    [ConfirmationStatus.EXPIRED]: ConfirmationStatus.EXPIRED
+  };
+  return statusMap[status];
+};
+
 export interface ServiceName {
   name: string;
 }
@@ -23,11 +35,11 @@ export interface AppointmentResponse {
   detail: string;
   address: string;
   phone: string;
-  image: string;
+  image_key: string;
   status: ConfirmationStatus;
   created_at: Date;
   scheduled_for: Date;
-  expire_at: Date;
+  expired_at: Date;
   services: ServiceName[];
 }
 
@@ -35,9 +47,9 @@ export interface AppointmentDeconstruct {
   id: number;
   status: string;
   service: string;
+  image_key: string;
   client: string;
   timeslot: string;
-  action: string;
 }
 
 export const AppointmentResponseMapper = (obj: AppointmentResponse) => {
@@ -48,11 +60,11 @@ export const AppointmentResponseMapper = (obj: AppointmentResponse) => {
     detail: obj.detail,
     address: obj.address,
     phone: obj.phone,
-    image: obj.image,
+    image_key: obj.image_key,
     status: obj.status,
     created_at: new Date(obj.created_at),
     scheduled_for: new Date(obj.scheduled_for),
-    expire_at: new Date(obj.expire_at),
+    expired_at: new Date(obj.expired_at),
     services: obj.services
   } as AppointmentResponse;
 };
@@ -73,7 +85,7 @@ export const dummyAppointments = (num: number) => {
       detail: lorem,
       address: address,
       phone: '0000000000',
-      image:
+      image_key:
         i % 2 === 0
           ? 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png'
           : 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png',
@@ -85,7 +97,7 @@ export const dummyAppointments = (num: number) => {
         today.getMonth(),
         today.getDate() + i
       ),
-      expire_at: new Date(
+      expired_at: new Date(
         today.getFullYear(),
         today.getMonth(),
         today.getDate() + i

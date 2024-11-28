@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { keyOfRole, Page, Role } from '@/app/app.util';
+import { KEY_OF_ROLE, Page, Role } from '@/app/app.util';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 import {
   catchError,
@@ -19,7 +19,7 @@ import {
   HttpResponse
 } from '@angular/common/http';
 import { environment } from '@/environments/environment';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { CacheService } from '@/app/global-service/cache.service';
 import { dummyUsers$ } from '@/app/employee-front/user/user.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
@@ -85,7 +85,7 @@ export class UserService {
               this.cacheKey(
                 Number(pageNumber),
                 Number(size),
-                keyOfRole(params.get('role')),
+                KEY_OF_ROLE(params.get('role')),
                 name
               ),
               page

@@ -63,13 +63,13 @@ export class BookService {
   /**
    * Sets the selected time for booking.
    *
-   * @param time The selected time for booking.
+   * @param epochSeconds The selected time for booking.
    */
-  readonly setTimeSelected = (time: Date) =>
+  readonly setTimeSelected = (epochSeconds: number) =>
     this.bookingInfoSignal.set({
       servicesOffered: this.bookingInfoSignal().servicesOffered,
       staff: this.bookingInfoSignal().staff,
       selectedDate: this.bookingInfoSignal().selectedDate,
-      time: time
+      time: epochSeconds
     });
 }

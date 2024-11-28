@@ -4,7 +4,7 @@ import {
   input,
   output
 } from '@angular/core';
-import { keyOfRole, Role } from '@/app/app.util';
+import { KEY_OF_ROLE, Role } from '@/app/app.util';
 import { TrackRole } from '@/app/employee-front/user/user.util';
 
 @Component({
@@ -175,7 +175,7 @@ export class UserDetailsComponent {
 
   private selectedRoleToUpdateTo: Role | null = null;
   protected readonly onUpdateRoleStatus = (event: Event) =>
-    (this.selectedRoleToUpdateTo = keyOfRole(
+    (this.selectedRoleToUpdateTo = KEY_OF_ROLE(
       (event.target as HTMLSelectElement).value
     ));
 

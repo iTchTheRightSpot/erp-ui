@@ -19,7 +19,7 @@ import {
   DummyServices,
   ServiceOfferedDto
 } from '@/app/employee-front/employee-service/employee-service.util';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
 
 @Injectable({
@@ -83,28 +83,24 @@ export class EmployeeGeneralService {
           )
       : of(DummyServices(6));
 
-  readonly addServiceToEmployee = (serviceName: string) => {
-    const user = this.authenticationService.activeUser();
+  readonly addServiceToEmployee = (serviceName: string) =>
     this.addServiceToEmployeeSubject.next(
       this.production
         ? this.addServiceToEmployeeRequest(
-            user?.email,
-            user?.user_id,
+            this.authenticationService.activeUser()?.user_id,
             serviceName
           )
         : concat(of(true), timer(5000).pipe(concatMap(() => of(false))))
     );
-  };
 
   private readonly addServiceToEmployeeRequest = (
-    employeeEmail: string | undefined,
     employeeId: string | undefined,
     serviceName: string
   ) =>
     this.http
       .patch<
         HttpResponse<any>
-      >(`${this.domain}?employee_email=${employeeEmail}&service_name=${serviceName}`, {}, { withCredentials: true })
+      >(`${this.domain}?employee_id=${employeeId}&service_name=${serviceName}`, {}, { withCredentials: true })
       .pipe(
         switchMap((e) => this.allServicesOfferedByEmployeeRequest(employeeId)),
         map(() => false),
@@ -128,7 +124,7 @@ export class EmployeeGeneralService {
     this.http
       .delete<
         HttpResponse<any>
-      >(`${this.domain}?employee_id=${employeeId}&service_name=${serviceId}`, { withCredentials: true })
+      >(`${this.domain}?employee_id=${employeeId}&service_id=${serviceId}`, { withCredentials: true })
       .pipe(
         switchMap((e) => this.allServicesOfferedByEmployeeRequest(employeeId)),
         map(() => false),

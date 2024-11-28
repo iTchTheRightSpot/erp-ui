@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
-import { TableComponent } from '@/app/employee-front/shared/table.component';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { EmployeeAppointmentService } from '@/app/employee-front/employee-appointment/employee-appointment.service';
 import { AboutAppointmentComponent } from '@/app/employee-front/shared/about-appointment.component';
 import {
@@ -16,46 +15,68 @@ import {
   AppointmentDetail,
   dummyDetailBuilder
 } from '@/app/employee-front/shared/about-appointment.util';
-import { toHrMins } from '@/app/app.util';
+import { ApiStatus, TIMEZONE, TO_HR_MINS } from '@/app/app.util';
 import {
   AppointmentDeconstruct,
-  AppointmentResponse
+  AppointmentResponse,
+  ConfirmationStatus,
+  KEY_OF_CONFIRMATION_STATUS
 } from '@/app/employee-front/employee-front.util';
-import { UpdateAppointmentStatusDto } from '@/app/employee-front/employee-appointment/employee-appointmen.util';
 import { AuthenticationService } from '@/app/global-service/authentication.service';
-import { CalendarComponent } from '@/app/shared-components/calendar/calendar.component';
+import {
+  CalendarModule,
+  CalendarMonthChangeEvent,
+  CalendarYearChangeEvent
+} from 'primeng/calendar';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  Validators
+} from '@angular/forms';
+import { GalleriaModule } from 'primeng/galleria';
 
 @Component({
   selector: 'app-employee-appointment',
   standalone: true,
   imports: [
     AsyncPipe,
-    TableComponent,
     AboutAppointmentComponent,
-    CalendarComponent
+    CalendarModule,
+    FormsModule,
+    NgClass,
+    TableModule,
+    SkeletonModule,
+    GalleriaModule
   ],
   templateUrl: './employee-appointment.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeAppointmentComponent {
+  protected date: Date[] | undefined;
   protected selectedDate = new Date();
   protected toggleMobileCalendar = false;
+  protected readonly ApiStatus = ApiStatus;
+  protected readonly TIMEZONE = TIMEZONE;
+
+  protected readonly form: FormGroup;
 
   constructor(
     private readonly appointmentService: EmployeeAppointmentService,
-    private readonly authenticationService: AuthenticationService
+    private readonly authenticationService: AuthenticationService,
+    private readonly fb: FormBuilder
   ) {
     this.appointmentService.onUpdateCalendarMonth(this.selectedDate);
+    this.form = this.fb.group({
+      appointmentId: new FormControl(-1, [Validators.required]),
+      status: new FormControl(ConfirmationStatus.CANCELLED, [
+        Validators.required
+      ])
+    });
   }
-
-  protected readonly thead: Array<keyof AppointmentDeconstruct> = [
-    'id',
-    'status',
-    'client',
-    'service',
-    'timeslot',
-    'action'
-  ];
 
   /**
    * Returns an observable that emits a list of {@link Date}s. These dates correspond
@@ -96,6 +117,8 @@ export class EmployeeAppointmentComponent {
     this.selectedDate
   );
 
+  protected readonly _appointments$ = this.appointments$;
+
   protected get appointments$(): Observable<AppointmentDeconstruct[]> {
     return this.calendarDateSubject.asObservable().pipe(
       switchMap((date) =>
@@ -116,9 +139,9 @@ export class EmployeeAppointmentComponent {
                   id: appointment.appointment_id,
                   status: appointment.status,
                   service: appointment.services[0].name,
+                  image_key: appointment.image_key,
                   client: appointment.customer_name,
-                  timeslot: `${toHrMins(appointment.scheduled_for)} <---> ${toHrMins(appointment.expire_at)}`,
-                  action: 'edit'
+                  timeslot: `${TO_HR_MINS(appointment.scheduled_for)} <--> ${TO_HR_MINS(appointment.expired_at)}`
                 }) as AppointmentDeconstruct
             )
       )
@@ -132,10 +155,34 @@ export class EmployeeAppointmentComponent {
     if (selected) this.calendarDateSubject.next((this.selectedDate = selected));
   };
 
-  protected readonly onPrevNextCalendarClick = (date: Date) =>
-    this.appointmentService.updateParentOnChangeMonthYear(
-      (this.selectedDate = date)
-    );
+  protected readonly onMonth = (event: CalendarMonthChangeEvent) => {
+    const year = event.year;
+    const month = event.month;
+    if (year && month)
+      this.appointmentService.updateParentOnChangeMonthYear(
+        (this.selectedDate = new Date(
+          year,
+          month - 1,
+          this.selectedDate.getDate()
+        ))
+      );
+  };
+
+  protected readonly onYear = (event: CalendarYearChangeEvent) => {
+    const year = event.year;
+    const month = event.month;
+    if (year && month)
+      this.appointmentService.updateParentOnChangeMonthYear(
+        (this.selectedDate = new Date(
+          year,
+          month - 1,
+          this.selectedDate.getDate()
+        ))
+      );
+  };
+
+  protected readonly contains = (dates: Date[], date: number, month: number) =>
+    dates.some((d) => d.getDate() === date && d.getMonth() === month);
 
   protected toggleAboutAppointment = false;
 
@@ -158,33 +205,68 @@ export class EmployeeAppointmentComponent {
               name: obj.customer_name,
               email: obj.customer_email,
               phone: obj.phone,
-              image: obj.image,
+              image_key: obj.image_key,
               status: obj.status,
               services: obj.services.map((names) => names.name),
               detail: obj.detail,
               address: obj.address,
               created: obj.created_at,
               scheduledFor: obj.scheduled_for,
-              expire: obj.expire_at
+              expire: obj.expired_at
             } as AppointmentDetail)
           : dummyDetailBuilder()
       )
+    );
+    this.form.controls['appointmentId'].setValue(event.id);
+    this.form.controls['status'].setValue(
+      KEY_OF_CONFIRMATION_STATUS(event.status)
     );
     this.toggleAboutAppointment = true;
     this.appointmentDetailsSubject.next(obs);
   };
 
-  protected readonly updateAppointment$ =
+  protected readonly updateAppointmentStatus$ =
     this.appointmentService.updateAppointment$;
 
-  protected readonly updateAppointmentStatus = (
-    obj: AppointmentDeconstruct
-  ) => {
+  protected readonly updateAppointmentStatus = (obj: {
+    appointmentId: number;
+    status: ConfirmationStatus;
+  }) => {
     const user = this.authenticationService.activeUser();
-    this.appointmentService.updateAppointmentStatus({
-      appointment_id: obj.id,
-      status: obj.status,
-      employee_id: user ? user.user_id : ''
-    } as UpdateAppointmentStatusDto);
+    this.appointmentService.updateAppointmentStatus(
+      {
+        appointment_id: obj.appointmentId,
+        status: obj.status,
+        employee_id: user ? user.user_id : ''
+      },
+      this.selectedDate
+    );
+  };
+
+  protected toggleImageGallery = false;
+  protected readonly responsiveOptions: any[] = [
+    {
+      breakpoint: '1500px',
+      numVisible: 5
+    },
+    {
+      breakpoint: '1024px',
+      numVisible: 3
+    },
+    {
+      breakpoint: '768px',
+      numVisible: 2
+    },
+    {
+      breakpoint: '560px',
+      numVisible: 1
+    }
+  ];
+
+  protected readonly appointmentImagesSignal = signal<string[]>([]);
+
+  protected readonly selectedAppointmentImage = (imageKey: string) => {
+    this.appointmentImagesSignal.set([imageKey]);
+    this.toggleImageGallery = true;
   };
 }

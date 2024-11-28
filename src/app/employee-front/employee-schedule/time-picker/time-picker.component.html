@@ -1,91 +1,91 @@
-<div class="max-w-full px-2.5 py-3">
-  <h2 class="mb-4 text-base font-medium lg:text-lg font-base text-gray-900">
+<div class="max-w-full px-2.5 py-3 dark:text-white text-gray-900">
+  <h2 class="mb-4 text-base font-medium lg:text-lg font-base">
     {{ selected() | date: 'dd MMMM yyyy' }}
   </h2>
   <form [formGroup]="form()">
-    <div class="grid grid-cols-2 gap-1.5">
-      <div>
-        <label
-          for="start-time"
-          class="block mb-2 text-sm font-medium text-gray-900"
-          >Start time <span class="text-red-500">*</span>
-        </label>
-        <div class="relative">
-          <div
-            class="cursor-pointer absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none"
-          >
-            <svg
-              class="w-4 h-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
+    <div>
+      <div class="grid grid-cols-2 gap-1.5">
+        <div>
+          <label for="start-time" class="block mb-2 text-sm font-medium"
+            >Start time <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <div
+              class="cursor-pointer absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none"
             >
-              <path
-                fill-rule="evenodd"
-                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
-                clip-rule="evenodd"
-              />
-            </svg>
+              <svg
+                class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <input
+              formControlName="start"
+              type="time"
+              id="start-time"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              min="09:00"
+              max="18:00"
+              value="00:00"
+            />
           </div>
-          <input
-            formControlName="start"
-            type="time"
-            id="start-time"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            min="09:00"
-            max="18:00"
-            value="00:00"
-          />
+          @if (
+            form().controls['start'].invalid && form().controls['start'].touched
+          ) {
+            <div>
+              <small class="text-red-500">Start is required</small>
+            </div>
+          }
         </div>
-        @if (
-          form().controls['start'].invalid && form().controls['start'].touched
-        ) {
-          <div>
-            <small class="text-red-500">Start is required</small>
-          </div>
-        }
-      </div>
 
-      <div>
-        <label
-          for="end-time"
-          class="block mb-2 text-sm font-medium text-gray-900"
-          >End time <span class="text-red-500">*</span>
-        </label>
-        <div class="relative">
-          <div
-            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none"
-          >
-            <svg
-              class="w-4 h-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
+        <div>
+          <label for="end-time" class="block mb-2 text-sm font-medium"
+            >End time <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none"
             >
-              <path
-                fill-rule="evenodd"
-                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
-                clip-rule="evenodd"
-              />
-            </svg>
+              <svg
+                class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <input
+              formControlName="end"
+              type="time"
+              id="end-time"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              min="09:00"
+              max="18:00"
+              value="00:00"
+            />
           </div>
-          <input
-            formControlName="end"
-            type="time"
-            id="end-time"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            min="09:00"
-            max="18:00"
-            value="00:00"
-          />
+          @if (
+            form().controls['end'].invalid && form().controls['end'].touched
+          ) {
+            <div>
+              <small class="text-red-500">End is required</small>
+            </div>
+          }
         </div>
-        @if (form().controls['end'].invalid && form().controls['end'].touched) {
-          <div>
-            <small class="text-red-500">End is required</small>
-          </div>
-        }
       </div>
     </div>
 

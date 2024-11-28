@@ -18,10 +18,12 @@ import {
   Observable,
   of,
   startWith,
-  Subject
+  Subject,
+  switchMap
 } from 'rxjs';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { AppointmentResponse } from '@/app/employee-front/employee-front.util';
+import { ApiStatus } from '@/app/app.util';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +41,7 @@ export class EmployeeAppointmentService {
   >(of([]));
 
   private readonly updateAppointmentStatusSubject = new Subject<
-    Observable<boolean>
+    Observable<ApiStatus>
   >();
 
   readonly subject$ = this.subject.asObservable().pipe(
@@ -64,21 +66,30 @@ export class EmployeeAppointmentService {
   readonly updateParentOnChangeMonthYear = (selected: Date) =>
     this.subject.next(this.parentService.appointmentsOnSelectedMonth(selected));
 
-  readonly updateAppointmentStatus = (dto: UpdateAppointmentStatusDto) =>
-    this.updateAppointmentStatusSubject.next(this.updateRequest(dto));
+  readonly updateAppointmentStatus = (
+    dto: UpdateAppointmentStatusDto,
+    date: Date
+  ) => this.updateAppointmentStatusSubject.next(this.updateRequest(dto, date));
 
-  private readonly updateRequest = (dto: UpdateAppointmentStatusDto) =>
+  private readonly updateRequest = (
+    dto: UpdateAppointmentStatusDto,
+    date: Date
+  ) =>
     this.production
       ? this.http
           .put<
             HttpResponse<any>
           >(`${this.domain}employee/appointment`, dto, { withCredentials: true })
           .pipe(
-            map(() => false),
-            catchError((e: HttpErrorResponse) =>
-              this.toastService.messageErrorBool(e)
+            switchMap(() =>
+              this.parentService
+                .appointmentsOnSelectedMonth(date, true)
+                .pipe(map(() => ApiStatus.LOADED))
             ),
-            startWith(true)
+            startWith(ApiStatus.LOADING),
+            catchError((e: HttpErrorResponse) =>
+              this.toastService.messageErrorApiStatus(e)
+            )
           )
-      : merge(of(true), of(false).pipe(delay(5000)));
+      : merge(of(ApiStatus.LOADING), of(ApiStatus.LOADED).pipe(delay(5000)));
 }

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@/environments/environment';
 import { catchError, delay, map, merge, of, startWith, tap } from 'rxjs';
 import { Role } from '@/app/app.util';
-import { ToastService } from '@/app/shared-components/toast/toast.service';
+import { ToastService } from '@/app/global-service/toast.service';
 import { UserDto } from '@/app/store-front/book/book-staff/book-staff.dto';
 
 @Injectable({
